@@ -5,7 +5,7 @@ use utf8;
 use 5.010_001;
 
 use Lingua::JA::Regular::Unicode qw/katakana2hiragana/;
-;
+use Term::ANSIColor;
 
 sub debug {
     print "$_[0]\n" if $ENV{DEBUG};
@@ -32,6 +32,8 @@ sub parse_body {
         $yomi =~ s!&lt;ref&gt;.*!!g; # <ref>.*</ref>
         $yomi =~ s/&lt;!--.*--&gt;//g;
         $kanji =~ s/\{\{JIS2004フォント\|(.+)\}\}/$1/g; # '''司馬 {{JIS2004フォント|遼󠄁}}太郎'''
+        $kanji =~ s/\{\{linktext\|(.+)\}\}/$1/g; # '''{{linktext|六根}}'''（ろっこん）
+        $kanji =~ s/\{\{CP932フォント\|(.+)\}\}/$1/g; # {{CP932フォント|髙}}千代酒造
 
         # '''[[葉状体]]'''（ようじょうたい）
         # '''[[瘀血]]証'''（おけつしょう）
@@ -52,6 +54,12 @@ sub parse_body {
             next;
         }
 
+        # ''w3m'''（ダブリューサンエム または ダブリュースリーエム）
+        # このケースは、両方登録しなくていいのではないか。
+        if ($yomi =~ / または /) {
+            next;
+        }
+
         # 、 以後は除去
         $yomi =~ s/、.*//;
 
@@ -67,7 +75,97 @@ sub parse_body {
         debug("    CODE<<$kanji>> YOMI<<$yomi>> @{[ length($yomi) ]}\n");
         push @results, [$kanji, katakana2hiragana($yomi)];
     }
-    return @results;
+    return \@results;
+}
+
+sub parse_page {
+    my $page = shift;
+
+    my $title = W::parse_title($page);
+    for my $re (
+        qr/一覧$/, # '国の一覧' or 'ゲーム会社一覧'
+        qr/^Wikipedia:/,
+        qr/^\d+月\d+日$/,
+        qr/曖昧さ回避/, qr/^常用漢字$/) {
+        if ($title =~ $re) {
+            print colored(['yellow'], "   [DEBUG] Skip due to title contains $re($title)\n");
+            next LOOP_PAGE;
+        }
+    }
+
+    # TODO: TITLE<<アフガニスタン紛争 (2001年-)>> KANJI<<アフガニスタン紛争（2001年-現在）>> YOMI<<あふがにすたんふんそう>> 11
+    # TODO: TITLE<<アフガニスタン紛争 (1978年-1989年)>> KANJI<<1979年-1989年のアフガニスタン紛争>> YOMI<<あふがにすたんふんそう>> 11                 
+    # TODO: TITLE<<十大弟子>> KANJI<<目連|摩訶目&amp;#x728d;連>> YOMI<<まかもっけんれん>> 8
+    # TODO: TITLE<<名古屋駅>> KANJI<<名古屋駅#名駅（めいえき）|名駅>> YOMI<<めいえき>> 4
+    # TODO: TITLE<<阿羅漢>> KANJI<<賓頭盧|賓度羅跋囉惰闍>> YOMI<<びんどらばらだじゃ>> 9
+    # TODO: TITLE<<日本酒>> KANJI<<&amp;#37211;>> YOMI<<もと>> 2
+    # TODO: TITLE<<日本酒>> KANJI<<&amp;#37211;桶>> YOMI<<もとおけ>> 4
+    # TODO: TITLE<<日本酒>> KANJI<<生&amp;#37211;系>> YOMI<<きもとけい>> 5
+    # TODO: TITLE<<日本酒>> KANJI<<無ろ過|濾過酒>> YOMI<<むろかしゅ>> 5
+    # TODO: TITLE<<武士>> KANJI<<武者(※本項へのリダイレクト暫定回避)|武者>> YOMI<<むしゃ>> 3
+    # TODO: TITLE<<包丁>> KANJI<<{{Anchor|穴子包丁}}>> YOMI<<あなごぼうちょう>> 8
+    # TODO: TITLE<<日本の企業一覧 (その他製品)>> KANJI<<日本の企業一覧(その他製造)>> YOMI<<にほんのきぎょういちらんそのたせいぞう>> 19
+    # TODO: TITLE<<日本の企業一覧 (空運)>> KANJI<<日本の企業一覧(空運)>> YOMI<<にほんのきぎょういちらんくううん>> 16
+    # TODO: TITLE<<プロジェクト:日本の市町村>> KANJI<<○○市町村>> YOMI<<ふりがな>> 4
+    # TODO: TITLE<<阪口大助>> KANJI<<「れべる☆じゃんぷ」>> YOMI<<ぽんちゃん>> 5
+    # TODO: TITLE<<イタリアのユーロ硬貨>> KANJI<<&amp;#8364;2の縁>> YOMI<<へり>> 2
+    # TODO: TITLE<<四字熟語>> KANJI<<#成語|成語>> YOMI<<せいご>> 3
+    # TODO: TITLE<<擬態>> KANJI<<ヘンリー・ウォルター・ベイツ|ベイツ型擬態>> YOMI<<べいつがたぎたい>> 8
+    # TODO: TITLE<<擬態>> KANJI<<フリッツ・ミューラー|ミューラー型擬態>> YOMI<<みゅーらーがたぎたい>> 10
+    # TODO: TITLE<<儀鳳暦>> KANJI<<麟徳暦:zh:麟德曆|（中国語）>> YOMI<<りんとくれき>> 6
+    # TODO: TITLE<<フィンランドのユーロ硬貨>> KANJI<<&amp;#8364;2の縁>> YOMI<<へり>> 2
+    # TODO: TITLE<<フィンランドのユーロ硬貨>> KANJI<<&amp;#8364;2の縁>> YOMI<<へり>> 2
+    # TODO: TITLE<<苦竹駅>> KANJI<<新田駅(宮城電気鉄道)|新田駅>> YOMI<<しんでんえき>> 6
+    # TODO: TITLE<<江頭2:50>> KANJI<<江頭2&lt;nowiki&gt;:&lt;/nowiki&gt;50>> YOMI<<えがしらにじごじっぷん>> 11
+    # TODO: TITLE<<ロンドンブーツ1号2号>> KANJI<<田村淳|田村淳>> YOMI<<たむらあつし>> 6
+    # TODO: TITLE<<ロンドンブーツ1号2号>> KANJI<<田村亮(お笑い芸人)|田村亮>> YOMI<<たむらりょう>> 6
+    # TODO: TITLE<<三重エフエム放送>> KANJI<<radio&lt;sup&gt;3&lt;/sup&gt;（レディオキューブFM三重）>> YOMI<<れでぃおきゅーぶえふえむみえ>> 14
+    # TODO: TITLE<<瓢箪山駅 (大阪府)>> KANJI<<瓢{{lang|ja|簞}}山駅>> YOMI<<ひょうたんやまえき>> 9
+    # TODO: TITLE<<東リ>> KANJI<<東リ株式会社>> YOMI<<とうり>> 3
+    # TODO: TITLE<<東京っ子NIGHTお遊びジョーズ!!>> KANJI<<GAGROOM1134>> YOMI<<はがきねたのこーなー>> 10
+    # TODO: TITLE<<カワサキ・GPZ400R>> KANJI<<カワサキ・GPZ400R>> YOMI<<じーぴーぜっとよんひゃくあーる>> 15
+    # TODO: TITLE<<上市場駅>> KANJI<<三信上市場停留所|停留場>> YOMI<<さんしんかみいちばていりゅうじょう>> 17
+    # TODO: TITLE<<少年画報社>> KANJI<<株式会社少年画報社>> YOMI<<しょうねんがほうしゃ>> 10 のようなエントリを除外
+    my @results;
+    my $entries = W::parse_body($page);
+    LOOP_ENTRY: for my $entry (@$entries) {
+        my ($kanji, $yomi) = @$entry;
+
+        for my $re (
+            qr/^\p{Hiragana}+$/,
+            qr/\[/,
+            qr/^\d+(月|世紀|年代)$/,
+            qr/^.$/, # 一文字の漢字は、SKK-JISYO.L に入ってるので除外。
+            qr/^\d+月\d+日 (旧暦)$/,
+            qr/^\d+$/, # TITLE<<Intel 4004>> KANJI<<4004>> YOMI<<よんまるまるよん>> 8
+            qr/\{\{仮リンク/, # TITLE<<四川省>> KANJI<<{{仮リンク|巴蜀(歴史)|zh|巴蜀|label=巴蜀}}>> YOMI<<はしょく>> 4
+            qr/^日本の企業一覧/,
+        ) {
+            if ($kanji =~ $re) {
+                print colored(['yellow'], "   [DEBUG] Skip due to kanji contains $re(kanji=$kanji, yomi=$yomi)\n");
+                next LOOP_ENTRY;
+            }
+        }
+
+        for my $re (
+            qr/^(本名|作画)：/,
+            qr/・/,
+            qr/^-/,
+            qr/^または$/,
+        ) {
+            if ($yomi =~ $re) {
+                print colored(['yellow'], "   [DEBUG] Skip due to yomi contains $re(kanji=$kanji, yomi=$yomi)\n");
+                next LOOP_ENTRY;
+            }
+        }
+        unless ($yomi =~ qr/^\p{Hiragana}+$/) {
+            print colored(['yellow'], "   [DEBUG] Skip due to yomi contains is not hiragana(yomi=$yomi, kanji=$kanji, title=$title)\n");
+            next LOOP_ENTRY;
+        }
+
+        push @results, [$title, $kanji, $yomi];
+    }
+    return \@results;
 }
 
 1;
