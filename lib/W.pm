@@ -157,7 +157,6 @@ sub parse_page {
     # TODO: TITLE<<狸御殿>> KANJI<<1.『狸御殿(1939年の映画)|狸御殿』>> YOMI<<たぬきごてん>> 6
     # TODO: TITLE<<公私混同>> KANJI<<『公共|公』>> YOMI<<おおやけ>> 4
     # TODO: TITLE<<公私混同>> KANJI<<『私』>> YOMI<<わたくし>> 4
-    # TODO: TITLE<<Intel486>> KANJI<<Intel486>> YOMI<<いんてるよんはちろく>> 10
     my @results;
     my $entries = W::parse_body($page);
     LOOP_ENTRY: for my $entry (@$entries) {

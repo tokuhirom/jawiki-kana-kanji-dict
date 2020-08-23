@@ -37,6 +37,7 @@ sub main {
         next if $@;
         warn "#   [DEBUG] Decoded @{[ length($decoded) // '-' ]} @{[ $@ // 'NO_ERROR' ]}\n";
 
+        my $n = 0;
         LOOP_PAGE: while ($decoded =~ s!<page>(.+?)</page>!!s) {
             my $results = W::parse_page($1);
             for my $result (@$results) {
@@ -44,6 +45,7 @@ sub main {
                 printf "%-30s %-30s %-30s\n",
                     "KANJI:<<<$kanji>>>", "YOMI:<<<$yomi>>>", "TITLE:<<<$title>>>";
             }
+            exit if $n++ > 100;
         }
     }
 }

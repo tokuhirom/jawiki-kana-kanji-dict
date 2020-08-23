@@ -2,7 +2,7 @@ use strict;
 use warnings;
 use utf8;
 use LWP::UserAgent;
-use File::Path qw(make_path);
+use File::Path qw(make_path remove_tree);
 
 make_path('src');
 
