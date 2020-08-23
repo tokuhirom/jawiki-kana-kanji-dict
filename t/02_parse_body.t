@@ -17,7 +17,7 @@ filters {
 };
 
 for my $block (blocks) {
-    my $got = W::parse_body($block->input);
+    my $got = W::parse_text('<text>'.$block->input.'</text>');
     note Dump($got, $block->expected);
     is_deeply($got, $block->expected);
 }
@@ -113,4 +113,46 @@ __DATA__
 '''&amp;#39641;崎ひとみ'''（たかさきひとみ）
 --- expected
 [[qw/髙崎ひとみ たかさきひとみ/]]
+
+===
+--- input
+'''摩訶目&amp;#x728d;連'''（まかもっけんれん）
+--- expected
+[[qw/摩訶目犍連 まかもっけんれん/]]
+
+===
+--- input
+'''安保&quot;Suginho&quot;一生'''（あんぼすぎーにょいっせい）
+--- expected
+[[qw/安保"Suginho"一生 あんぼすぎーにょいっせい/]]
+
+===
+--- input
+'''{{lang|en|AMBAC}}'''（あんばっく）
+--- expected
+[[qw/AMBAC あんばっく/]]
+
+===
+--- input
+'''月輪大師&lt;ref&gt;1883(明治)年宣下、明治天皇&lt;/ref&gt;'''（がちりんだいし）
+--- expected
+[[qw/月輪大師 がちりんだいし/]]
+
+===
+--- input
+この音は'''ハーフ・ストップ'''（あるいはエコー、ハーフ・ミュート）と呼ばれる。
+--- expected
+[]
+
+===
+--- input
+'''椎井 康雄&lt;ref group=&quot;注&quot;&gt;『新訂 政治家人名事典 明治～昭和』292頁では「靖雄」。&lt;/ref&gt;'''（しい やすお、[[1906年]]（[[明治]]39年）
+--- expected
+[['椎井康雄', 'しいやすお']]
+
+===
+--- input
+'''&amp;epsilon;-&amp;delta; 論法'''（イプシロンデルタろんぽう、(ε,&amp;nbsp;δ)-definition of limit）
+--- expected
+[['ε-δ論法', 'いぷしろんでるたろんぽう']]
 

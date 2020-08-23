@@ -6,6 +6,7 @@ use 5.010_001;
 
 use Lingua::JA::Regular::Unicode qw/katakana2hiragana/;
 use Term::ANSIColor;
+use HTML::Entities qw/decode_entities/;
 
 sub debug {
     print "$_[0]\n" if $ENV{DEBUG};
@@ -18,22 +19,38 @@ sub parse_title {
     return $1;
 }
 
+
 sub parse_body {
     my $page = shift;
 
+    if ($page =~ m{<text[^>]*>(.*)</text>}s) {
+        return parse_text($1);
+    } else {
+        die "Missing text part: $page";
+    }
+}
+
+sub parse_text {
+    my $text_part = shift;
+
     my @results;
 
-    while ($page =~ s/'''(.+?)'''（(.+?)）//) {
+    while ($text_part =~ s/'''(.+?)'''（(.+?)）//) {
         my $kanji = $1;
         my $yomi  = $2;
 
-        $yomi =~ s/\{\{lang-en-short\|.+?\}\}//g;
-        $yomi =~ s/\{\{lang-en\|.+?\}\}//g;
-        $yomi =~ s!&lt;ref&gt;.*!!g; # <ref>.*</ref>
-        $yomi =~ s/&lt;!--.*--&gt;//g;
-        $kanji =~ s/\{\{JIS2004フォント\|(.+)\}\}/$1/g; # '''司馬 {{JIS2004フォント|遼󠄁}}太郎'''
-        $kanji =~ s/\{\{linktext\|(.+)\}\}/$1/g; # '''{{linktext|六根}}'''（ろっこん）
-        $kanji =~ s/\{\{CP932フォント\|(.+)\}\}/$1/g; # {{CP932フォント|髙}}千代酒造
+        for (\$kanji, \$yomi) {
+            $$_ =~ s!&lt;ref.*?&gt;.*?&lt;/ref&gt;!!g; # &lt;ref&gt;1883(明治)年宣下、明治天皇&lt;/ref&gt;
+            $$_ =~ s!&lt;ref&gt;.*!!g; # unmatched <ref> tag(maybe broken parsing in this tool)
+            $$_ =~ s/\{\{lang-en-short\|.+?\}\}//g;
+            $$_ =~ s/\{\{lang-en\|.+?\}\}//g;
+            $$_ =~ s/&lt;!--.*--&gt;//g;
+            $$_ =~ s/\{\{lang\|[a-zA-Z_-]+\|(.+?)\}\}/$1/g; # {{lang|en|AMBAC}}
+            $$_ =~ s/\{\{JIS2004フォント\|(.+)\}\}/$1/g; # '''司馬 {{JIS2004フォント|遼󠄁}}太郎'''
+            $$_ =~ s/\{\{linktext\|(.+)\}\}/$1/g; # '''{{linktext|六根}}'''（ろっこん）
+            $$_ =~ s/\{\{CP932フォント\|(.+)\}\}/$1/g; # {{CP932フォント|髙}}千代酒造
+            $$_ =~ s/\{\{Anchor\|(.+)\}\}/$1/g; # {{Anchor|穴子包丁}}
+        }
 
         # [[ページ名|リンクラベル]] 
         $kanji =~ s!\[\[(.*)\|(.*)\]\]!$2!g;
@@ -56,6 +73,10 @@ sub parse_body {
         if ($yomi =~ /^ただし、/) {
             next;
         }
+        # この音は'''ハーフ・ストップ'''（あるいはエコー、ハーフ・ミュート）と呼ばれる。
+        if ($yomi =~ /^あるいは/) {
+            next;
+        }
 
         # ''w3m'''（ダブリューサンエム または ダブリュースリーエム）
         # このケースは、両方登録しなくていいのではないか。
@@ -68,6 +89,7 @@ sub parse_body {
 
         # 空白除去
         $kanji =~ s/ //g;
+        $kanji =~ s/　//g;
         $yomi =~ s/ //g;
 
         if ($kanji =~ /'''/) {
@@ -102,7 +124,10 @@ sub parse_body {
             }
         }
 
-        $kanji =~ s/&amp;#(\d+);/pack "U", $1/ge;
+        $kanji =~ s/(&amp;)/decode_entities $1/gei;
+        $kanji =~ s/(&[a-z0-9_-]+;)/decode_entities $1/gei;
+        $kanji =~ s/&#x([a-f0-9]+);/pack "U", hex($1)/gei;
+        $kanji =~ s/&#(\d+);/pack "U", $1/ge;
 
         debug("    CODE<<$kanji>> YOMI<<$yomi>> @{[ length($yomi) ]}\n");
         push @results, [$kanji, katakana2hiragana($yomi)];
@@ -112,29 +137,29 @@ sub parse_body {
 
 sub parse_page {
     my $page = shift;
+    my $skip_logger = shift // sub { };
 
     my $title = W::parse_title($page);
     for my $re (
         qr/一覧$/, # '国の一覧' or 'ゲーム会社一覧'
         qr/^Wikipedia:/,
+        qr/^Template:/,
+        qr/^MediaWiki:/,
+        qr/^Portal:/,
         qr/^\d+月\d+日$/,
         qr/曖昧さ回避/, qr/^常用漢字$/) {
         if ($title =~ $re) {
-            print colored(['yellow'], "   [DEBUG] Skip due to title contains $re($title)\n");
+            $skip_logger->("Skip due to title contains $re($title)");
             return [];
         }
     }
 
-    # TODO: TITLE<<アフガニスタン紛争 (2001年-)>> KANJI<<アフガニスタン紛争（2001年-現在）>> YOMI<<あふがにすたんふんそう>> 11
-    # TODO: TITLE<<アフガニスタン紛争 (1978年-1989年)>> KANJI<<1979年-1989年のアフガニスタン紛争>> YOMI<<あふがにすたんふんそう>> 11                 
-    # TODO: TITLE<<十大弟子>> KANJI<<目連|摩訶目&amp;#x728d;連>> YOMI<<まかもっけんれん>> 8
     # TODO: TITLE<<名古屋駅>> KANJI<<名古屋駅#名駅（めいえき）|名駅>> YOMI<<めいえき>> 4
     # TODO: TITLE<<日本酒>> KANJI<<&amp;#37211;>> YOMI<<もと>> 2
     # TODO: TITLE<<日本酒>> KANJI<<&amp;#37211;桶>> YOMI<<もとおけ>> 4
     # TODO: TITLE<<日本酒>> KANJI<<生&amp;#37211;系>> YOMI<<きもとけい>> 5
     # TODO: TITLE<<日本酒>> KANJI<<無ろ過|濾過酒>> YOMI<<むろかしゅ>> 5
     # TODO: TITLE<<武士>> KANJI<<武者(※本項へのリダイレクト暫定回避)|武者>> YOMI<<むしゃ>> 3
-    # TODO: TITLE<<包丁>> KANJI<<{{Anchor|穴子包丁}}>> YOMI<<あなごぼうちょう>> 8
     # TODO: TITLE<<プロジェクト:日本の市町村>> KANJI<<○○市町村>> YOMI<<ふりがな>> 4
     # TODO: TITLE<<阪口大助>> KANJI<<「れべる☆じゃんぷ」>> YOMI<<ぽんちゃん>> 5
     # TODO: TITLE<<イタリアのユーロ硬貨>> KANJI<<&amp;#8364;2の縁>> YOMI<<へり>> 2
@@ -155,8 +180,6 @@ sub parse_page {
     # TODO: TITLE<<カワサキ・GPZ400R>> KANJI<<カワサキ・GPZ400R>> YOMI<<じーぴーぜっとよんひゃくあーる>> 15
     # TODO: TITLE<<上市場駅>> KANJI<<三信上市場停留所|停留場>> YOMI<<さんしんかみいちばていりゅうじょう>> 17
     # TODO: TITLE<<狸御殿>> KANJI<<1.『狸御殿(1939年の映画)|狸御殿』>> YOMI<<たぬきごてん>> 6
-    # TODO: TITLE<<公私混同>> KANJI<<『公共|公』>> YOMI<<おおやけ>> 4
-    # TODO: TITLE<<公私混同>> KANJI<<『私』>> YOMI<<わたくし>> 4
     my @results;
     my $entries = W::parse_body($page);
     LOOP_ENTRY: for my $entry (@$entries) {
@@ -172,9 +195,10 @@ sub parse_page {
             qr/\{\{仮リンク/, # TITLE<<四川省>> KANJI<<{{仮リンク|巴蜀(歴史)|zh|巴蜀|label=巴蜀}}>> YOMI<<はしょく>> 4
             qr/^日本の企業一覧/, # TITLE<<日本の企業一覧 (その他製品)>> KANJI<<日本の企業一覧(その他製造)>> YOMI<<にほんのきぎょういちらんそのたせいぞう>> 19
             qr/の登場人物$/, # TITLE<<ときめきメモリアル2の登場人物>> KANJI<<ときめきメモリアル2の登場人物>> YOMI<<ときめきめもりあるつーのとうじょうじんぶつ>> 21
+            qr{/}, # '''Keyboard / kAoru ikArAshi / 五十嵐 馨'''（いからし かおる）
         ) {
             if ($kanji =~ $re) {
-                print colored(['yellow'], "   [DEBUG] Skip due to kanji contains $re(kanji=$kanji, yomi=$yomi)\n");
+                $skip_logger->("Skip due to kanji contains $re(kanji=$kanji, yomi=$yomi, title=$title)");
                 next LOOP_ENTRY;
             }
         }
@@ -182,19 +206,21 @@ sub parse_page {
         for my $re (
             qr/^(本名|作画)：/,
             qr/・/,
+            qr/、/,
             qr/^-/,
             qr/^または$/,
             qr/^.$/, # 一文字のよみは、ノイズの可能性が高い。
         ) {
             if ($yomi =~ $re) {
-                print colored(['yellow'], "   [DEBUG] Skip due to yomi contains $re(kanji=$kanji, yomi=$yomi)\n");
+                $skip_logger->("Skip due to yomi contains $re(kanji=$kanji, yomi=$yomi, title=$title)");
                 next LOOP_ENTRY;
             }
         }
         unless ($yomi =~ qr/^\p{Hiragana}+$/) {
-            print colored(['yellow'], "   [DEBUG] Skip due to yomi doesn't contain hiragana(yomi=$yomi, kanji=$kanji, title=$title)\n");
+            $skip_logger->("Skip due to yomi doesn't contain hiragana(yomi=$yomi, kanji=$kanji, title=$title)");
             next LOOP_ENTRY;
         }
+        next if length($kanji) == 0;
 
         push @results, [$title, $kanji, $yomi];
     }
