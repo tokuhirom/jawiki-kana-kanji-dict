@@ -85,40 +85,41 @@ sub get_dst_file {
     return "extracted/$base.dict";
 }
 
+sub commify {
+    my $text = reverse $_[0];
+    $text =~ s/(\d\d\d)(?=\d)(?!\d*\.)/$1,/g;
+    return scalar reverse $text;
+}
+
 sub run {
     my ( $skip_logger, $srcfile, $dstfile ) = @_;
 
-    my $z = IO::Uncompress::Bunzip2->new($srcfile)
-      or die "bunzip2 failed: $Bunzip2Error\n";
+    open my $srcfh, '<:encoding(utf-8)', $srcfile;
+    open my $fh, '>:encoding(utf-8)', $dstfile;
 
-    open my $fh, '>:encoding(utf-8)', $dstfile
-      or die "Cannot open $dstfile: $!";
+    my $t0 = [gettimeofday];
 
     my $buffer = '';
-    my $readcnt;
-    my $decoded = '';
-  LOOP: while (1) {
-        my $buf;
-        my $status = $z->read( $buf, 10 * 1024 * 1024 );
+    my $total_size = -s $srcfile;
+    my $read_size = 0;
+    my $loopcnt;
+  LOOP: while (!eof($srcfh)) {
+        my $status = $srcfh->read( $buffer, 10 * 1024 * 1024, length($buffer) );
         if ($status == 0) {
-            warn "#   [$$] [DEBUG] bz2 file handle reached EOF\n";
+            warn "#   [$$] [DEBUG] file handle reached EOF\n";
             last LOOP;
         }
-        if ($status < 0) {
-            die "#   [$$] [DEBUG] bz2 file handle throw an error: $Bunzip2Error\n";
+        if (not defined $status) {
+            die "#   [$$] [DEBUG] file handle throw an error: $!\n";
         }
-        $buffer .= $buf;
-        warn "#   [$$] [DEBUG] READ $readcnt @{[ length($buffer) ]} $status\n"
-          if $readcnt++;
+        $read_size += $status;
 
-        my $d = eval { Encode::decode( 'utf-8', $buffer, Encode::FB_CROAK ) };
-        next if $@;
-        $decoded .= $d;
-        warn "#   [$$] [DEBUG] Decoded @{[ length($decoded) // '-' ]} @{[ $@ // 'NO_ERROR' ]}\n";
-        $buffer = '';
+        printf STDERR "#   [$$] %d [%-60s] READ %s/%s=%.2f%% remaining=%.2f sec\n",
+            ++$loopcnt, $srcfile, commify($read_size), commify($total_size), 100.0*$read_size/$total_size,
+            (tv_interval($t0) * ($total_size/$read_size)) - tv_interval($t0);
 
         my $n = 0;
-      LOOP_PAGE: while ( $decoded =~ s!(.+?)</page>!!s ) {
+      LOOP_PAGE: while ( $buffer =~ s!(.+?)</page>!!s ) {
             my $results = W::parse_page($1, $skip_logger);
             for my $result (@$results) {
                 my ( $title, $kanji, $yomi ) = @$result;

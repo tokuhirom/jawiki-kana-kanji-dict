@@ -26,7 +26,7 @@ sub parse_body {
     if ($page =~ m{<text[^>]*>(.*)</text>}s) {
         return parse_text($1);
     } else {
-        die "Missing text part: $page";
+        warn "Missing text part: $page";
     }
 }
 
@@ -49,7 +49,10 @@ sub parse_text {
             $$_ =~ s/\{\{JIS2004フォント\|(.+)\}\}/$1/g; # '''司馬 {{JIS2004フォント|遼󠄁}}太郎'''
             $$_ =~ s/\{\{linktext\|(.+)\}\}/$1/g; # '''{{linktext|六根}}'''（ろっこん）
             $$_ =~ s/\{\{CP932フォント\|(.+)\}\}/$1/g; # {{CP932フォント|髙}}千代酒造
+            $$_ =~ s/\{\{JIS90フォント\|(.+)\}\}/$1/g; # つじかおり /{{JIS90フォント|辻}}香緒里/
+            $$_ =~ s/\{\{unicode\|(.+)\}\}/$1/g; # まっちでーじぇいりーぐ /マッチデー{{unicode|♥}}Jリーグ/
             $$_ =~ s/\{\{Anchor\|(.+)\}\}/$1/g; # {{Anchor|穴子包丁}}
+            $$_ =~ s/\{\{Vanchor\|(.+)\}\}/$1/g; # うじょう /{{Vanchor|羽状}}/
         }
 
         # [[ページ名|リンクラベル]] 
@@ -148,6 +151,7 @@ sub parse_page {
         qr/^Wikipedia:/,
         qr/^Template:/,
         qr/^MediaWiki:/,
+        qr/^モジュール:/,
         qr/^Portal:/,
         qr/^\d+月\d+日$/,
         qr/曖昧さ回避/, qr/^常用漢字$/) {

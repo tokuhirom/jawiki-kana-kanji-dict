@@ -16,7 +16,7 @@ extracted/_SUCCESS: src/_SUCCESS
 	perl bin/extract.pl
 
 SKK-JISYO.jawiki: extracted/_SUCCESS
-	perl bin/extracted2skkdic.pl
+	perl bin/extracted2skkdic.pl /usr/share/skk/SKK-JISYO.L
 
 .PHONY: all distclean test
 
