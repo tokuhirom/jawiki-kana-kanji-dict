@@ -129,6 +129,9 @@ sub parse_text {
         $kanji =~ s/&#x([a-f0-9]+);/pack "U", hex($1)/gei;
         $kanji =~ s/&#(\d+);/pack "U", $1/ge;
 
+        # '''池の平スノーパーク（旧白樺リゾートスキー場）'''（いけのたいらすのーぱーく）
+        $kanji =~ s/（旧.*）//;
+
         debug("    CODE<<$kanji>> YOMI<<$yomi>> @{[ length($yomi) ]}\n");
         push @results, [$kanji, katakana2hiragana($yomi)];
     }
