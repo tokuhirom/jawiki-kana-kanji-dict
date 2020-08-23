@@ -29,7 +29,7 @@ sub main {
     my $readcnt;
     LOOP: while (1) {
         my $buf;
-        my $status = $z->read($buf, 10*1024*1024);
+        my $status = $z->read($buf, 100*1024*1024);
         $buffer .= $buf;
         print STDERR "#   [DEBUG] READ $readcnt @{[ length($buffer) ]}\n" if $readcnt++;
 
@@ -41,7 +41,8 @@ sub main {
             my $results = W::parse_page($1);
             for my $result (@$results) {
                 my ($title, $kanji, $yomi) = @$result;
-                print "KANJI:<<<$kanji>>> YOMI:<<<$yomi>>> TITLE:<<<$title>>>\n";
+                printf "%-30s %-30s %-30s\n",
+                    "KANJI:<<<$kanji>>>", "YOMI:<<<$yomi>>>", "TITLE:<<<$title>>>";
             }
         }
     }

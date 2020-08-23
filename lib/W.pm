@@ -35,9 +35,12 @@ sub parse_body {
         $kanji =~ s/\{\{linktext\|(.+)\}\}/$1/g; # '''{{linktext|六根}}'''（ろっこん）
         $kanji =~ s/\{\{CP932フォント\|(.+)\}\}/$1/g; # {{CP932フォント|髙}}千代酒造
 
+        # [[ページ名|リンクラベル]] 
+        $kanji =~ s!\[\[(.*)\|(.*)\]\]!$2!g;
+
         # '''[[葉状体]]'''（ようじょうたい）
         # '''[[瘀血]]証'''（おけつしょう）
-        $kanji =~ s!\[\[(.*)\]\]!$1!;
+        $kanji =~ s!\[\[(.*)\]\]!$1!g;
 
         # よみがないものは除外。
         if (length($yomi) == 0) {
@@ -72,6 +75,35 @@ sub parse_body {
             next;
         }
 
+        # 株式会社少年画報社:しょうねんがほうしゃ -> 少年画報社:しょうねんがほうしゃ
+        # 京浜急行電鉄株式会社:けいひんきゅうこうでんてつ -> 京浜急行電鉄:けいひんきゅうこうでんてつ
+        for my $type (
+            [qw/株式会社 かぶしきがいしゃ/],
+            [qw/一般社団法人 いっぱんしゃだんほうじん/],
+            [qw/学校法人 がっこうほうじん/],
+            [qw/公益財団法人 こうえきざいだんほうじん/],
+            [qw/公益社団法人 こうえきしゃだんほうじん/],
+            [qw/特定非営利活動法人 とくていひえいりかつどうほうじん/],
+        ) {
+            my ($k, $y) = @$type;
+            if ($kanji =~ /^$k/ && $yomi !~ /^$y/) {
+                $kanji =~ s/^$k//;
+            }
+            if ($kanji =~ /^$k/ && $yomi =~ /^$y/) {
+                $kanji =~ s/^$k//;
+                $yomi =~ s/^$y//;
+            }
+            if ($kanji =~ /$k$/ && $yomi !~ /$y$/) {
+                $kanji =~ s/$k$//;
+            }
+            if ($kanji =~ /$k$/ && $yomi =~ /$y$/) {
+                $kanji =~ s/$k$//;
+                $yomi =~ s/$y$//;
+            }
+        }
+
+        $kanji =~ s/&amp;#(\d+);/pack "U", $1/ge;
+
         debug("    CODE<<$kanji>> YOMI<<$yomi>> @{[ length($yomi) ]}\n");
         push @results, [$kanji, katakana2hiragana($yomi)];
     }
@@ -89,7 +121,7 @@ sub parse_page {
         qr/曖昧さ回避/, qr/^常用漢字$/) {
         if ($title =~ $re) {
             print colored(['yellow'], "   [DEBUG] Skip due to title contains $re($title)\n");
-            next LOOP_PAGE;
+            return [];
         }
     }
 
@@ -97,15 +129,12 @@ sub parse_page {
     # TODO: TITLE<<アフガニスタン紛争 (1978年-1989年)>> KANJI<<1979年-1989年のアフガニスタン紛争>> YOMI<<あふがにすたんふんそう>> 11                 
     # TODO: TITLE<<十大弟子>> KANJI<<目連|摩訶目&amp;#x728d;連>> YOMI<<まかもっけんれん>> 8
     # TODO: TITLE<<名古屋駅>> KANJI<<名古屋駅#名駅（めいえき）|名駅>> YOMI<<めいえき>> 4
-    # TODO: TITLE<<阿羅漢>> KANJI<<賓頭盧|賓度羅跋囉惰闍>> YOMI<<びんどらばらだじゃ>> 9
     # TODO: TITLE<<日本酒>> KANJI<<&amp;#37211;>> YOMI<<もと>> 2
     # TODO: TITLE<<日本酒>> KANJI<<&amp;#37211;桶>> YOMI<<もとおけ>> 4
     # TODO: TITLE<<日本酒>> KANJI<<生&amp;#37211;系>> YOMI<<きもとけい>> 5
     # TODO: TITLE<<日本酒>> KANJI<<無ろ過|濾過酒>> YOMI<<むろかしゅ>> 5
     # TODO: TITLE<<武士>> KANJI<<武者(※本項へのリダイレクト暫定回避)|武者>> YOMI<<むしゃ>> 3
     # TODO: TITLE<<包丁>> KANJI<<{{Anchor|穴子包丁}}>> YOMI<<あなごぼうちょう>> 8
-    # TODO: TITLE<<日本の企業一覧 (その他製品)>> KANJI<<日本の企業一覧(その他製造)>> YOMI<<にほんのきぎょういちらんそのたせいぞう>> 19
-    # TODO: TITLE<<日本の企業一覧 (空運)>> KANJI<<日本の企業一覧(空運)>> YOMI<<にほんのきぎょういちらんくううん>> 16
     # TODO: TITLE<<プロジェクト:日本の市町村>> KANJI<<○○市町村>> YOMI<<ふりがな>> 4
     # TODO: TITLE<<阪口大助>> KANJI<<「れべる☆じゃんぷ」>> YOMI<<ぽんちゃん>> 5
     # TODO: TITLE<<イタリアのユーロ硬貨>> KANJI<<&amp;#8364;2の縁>> YOMI<<へり>> 2
@@ -125,7 +154,10 @@ sub parse_page {
     # TODO: TITLE<<東京っ子NIGHTお遊びジョーズ!!>> KANJI<<GAGROOM1134>> YOMI<<はがきねたのこーなー>> 10
     # TODO: TITLE<<カワサキ・GPZ400R>> KANJI<<カワサキ・GPZ400R>> YOMI<<じーぴーぜっとよんひゃくあーる>> 15
     # TODO: TITLE<<上市場駅>> KANJI<<三信上市場停留所|停留場>> YOMI<<さんしんかみいちばていりゅうじょう>> 17
-    # TODO: TITLE<<少年画報社>> KANJI<<株式会社少年画報社>> YOMI<<しょうねんがほうしゃ>> 10 のようなエントリを除外
+    # TODO: TITLE<<狸御殿>> KANJI<<1.『狸御殿(1939年の映画)|狸御殿』>> YOMI<<たぬきごてん>> 6
+    # TODO: TITLE<<公私混同>> KANJI<<『公共|公』>> YOMI<<おおやけ>> 4
+    # TODO: TITLE<<公私混同>> KANJI<<『私』>> YOMI<<わたくし>> 4
+    # TODO: TITLE<<Intel486>> KANJI<<Intel486>> YOMI<<いんてるよんはちろく>> 10
     my @results;
     my $entries = W::parse_body($page);
     LOOP_ENTRY: for my $entry (@$entries) {
@@ -139,7 +171,8 @@ sub parse_page {
             qr/^\d+月\d+日 (旧暦)$/,
             qr/^\d+$/, # TITLE<<Intel 4004>> KANJI<<4004>> YOMI<<よんまるまるよん>> 8
             qr/\{\{仮リンク/, # TITLE<<四川省>> KANJI<<{{仮リンク|巴蜀(歴史)|zh|巴蜀|label=巴蜀}}>> YOMI<<はしょく>> 4
-            qr/^日本の企業一覧/,
+            qr/^日本の企業一覧/, # TITLE<<日本の企業一覧 (その他製品)>> KANJI<<日本の企業一覧(その他製造)>> YOMI<<にほんのきぎょういちらんそのたせいぞう>> 19
+            qr/の登場人物$/, # TITLE<<ときめきメモリアル2の登場人物>> KANJI<<ときめきメモリアル2の登場人物>> YOMI<<ときめきめもりあるつーのとうじょうじんぶつ>> 21
         ) {
             if ($kanji =~ $re) {
                 print colored(['yellow'], "   [DEBUG] Skip due to kanji contains $re(kanji=$kanji, yomi=$yomi)\n");
@@ -152,6 +185,7 @@ sub parse_page {
             qr/・/,
             qr/^-/,
             qr/^または$/,
+            qr/^.$/, # 一文字のよみは、ノイズの可能性が高い。
         ) {
             if ($yomi =~ $re) {
                 print colored(['yellow'], "   [DEBUG] Skip due to yomi contains $re(kanji=$kanji, yomi=$yomi)\n");
@@ -159,7 +193,7 @@ sub parse_page {
             }
         }
         unless ($yomi =~ qr/^\p{Hiragana}+$/) {
-            print colored(['yellow'], "   [DEBUG] Skip due to yomi contains is not hiragana(yomi=$yomi, kanji=$kanji, title=$title)\n");
+            print colored(['yellow'], "   [DEBUG] Skip due to yomi doesn't contain hiragana(yomi=$yomi, kanji=$kanji, title=$title)\n");
             next LOOP_ENTRY;
         }
 
