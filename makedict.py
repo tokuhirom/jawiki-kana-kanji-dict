@@ -33,6 +33,8 @@ IGNORE_ENTRIES = set(
         # あむすてるだむ /IPTP Limited/オランダのコーヒーショップ/
         # '''IPTP Limited'''（アムステルダム、ホラン）
         'あむすてるだむ',
+        # おりじなるからおけ /APlaceUndertheSun/BoomBoomMyHeart〈TVMIX〉/CHEERSFORYOU/Darlin'/GETLOVE/HERO/HERO（アカペラバージョン）/
+        'おりじなるからおけ',
     ])
 
 def parse_skkdict(path):
