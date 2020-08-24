@@ -1,12 +1,27 @@
-import regex
 import re
 import jaconv
 import html
 
-HIRAGANA_PATTERN = regex.compile(r'^[\p{Hiragana}ー]+$')
+# TODO move following Japanese character related things to jawiki.chars
+
+# https://note.nkmk.me/python-re-regex-character-type/
+HIRAGANA_BLOCK = r'\u3041-\u309Fー'
+KATAKANA_BLOCK = r'\u30A1-\u30FFー'
+KANJI_BLOCK = r'\u2E80-\u2FDF\u3005-\u3007\u3400-\u4DBF\u4E00-\u9FFF\uF900-\uFAFF\u21000-\u213FF\U00020000-\U0002EBEF'
+
+HIRAGANA_PATTERN = re.compile(r'^[' + HIRAGANA_BLOCK + ']+$')
+KANJI_PATTERN = re.compile(r'^[' + KANJI_BLOCK + ']+$')
+
+NAMEISH_PATTERN = re.compile(r'([' + HIRAGANA_BLOCK + KANJI_BLOCK + KATAKANA_BLOCK + ']+)\s+([' + HIRAGANA_BLOCK + KANJI_BLOCK + KATAKANA_BLOCK + ']+)')
 
 def is_hiragana(s):
     if HIRAGANA_PATTERN.match(s):
+        return True
+    else:
+        return False
+
+def is_kanji(s):
+    if KANJI_PATTERN.match(s):
         return True
     else:
         return False
@@ -69,6 +84,11 @@ class WikipediaFilter:
                 yomi = jaconv.kata2hira(yomi)
                 kanji, yomi = self.hojin_filter(kanji, yomi)
 
+                # remove spaces in yomi
+                yomi = re.sub(r'\s', r'', yomi)
+                # 全角スペースを半角に
+                kanji = re.sub(r'\s', r' ', kanji)
+
                 if not self.validate_phase2(kanji, yomi):
                     continue
 
@@ -107,7 +127,7 @@ class WikipediaFilter:
             self.log_skip('kanji is hiragana', [kanji, yomi])
             return False
 
-        for kanji_prefix in ['〜', '『', '「', '〈','《']:
+        for kanji_prefix in ['〜', '『', '「', '〈','《', '／']:
             if kanji.startswith(kanji_prefix):
                 self.log_skip('kanji starts with %s' % kanji_prefix, [kanji, yomi])
                 return False
@@ -185,12 +205,16 @@ class WikipediaFilter:
 
         token = re.sub(r'、.*', r'', token)
 
-        token = re.sub(r'\s', r'', token)
-
         token = re.sub(r'&amp;', r'&', token)
         token = re.sub(r'(&(?:[a-z_-]+|#[0-9]+|#x[0-9A-Fa-f]+);)', lambda x: html.unescape(x[1]), token)
 
-        return token
+        # '山田 太朗' → 山田太朗
+        while True:
+            token, number_of_subs_made = re.subn(NAMEISH_PATTERN, r'\1\2', token)
+            if number_of_subs_made==0:
+                break
+
+        return token.strip()
 
     # 株式会社少年画報社:しょうねんがほうしゃ -> 少年画報社:しょうねんがほうしゃ
     # 京浜急行電鉄株式会社:けいひんきゅうこうでんてつ -> 京浜急行電鉄:けいひんきゅうこうでんてつ

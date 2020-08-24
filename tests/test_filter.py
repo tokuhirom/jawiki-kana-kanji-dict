@@ -3,6 +3,9 @@ from jawiki import filter
 
 class TestWikipediaFilter(unittest.TestCase):
 
+    def test_is_kanji(self):
+        self.assertEqual(filter.is_kanji('粟飯原首胤度'), True)
+
     def test_is_hiragana(self):
         self.assertEqual(filter.is_hiragana('めもり'), True)
         self.assertEqual(filter.is_hiragana('メモリ'), False)
@@ -16,6 +19,9 @@ class TestWikipediaFilter(unittest.TestCase):
         self.assertEqual(f.basic_filter('&amp;epsilon;-&amp;delta;論法'), 'ε-δ論法')
         self.assertEqual(f.basic_filter('I&amp;#9829;OGI'), 'I♥OGI')
         self.assertEqual(f.basic_filter('赤&#x2123D;眞弓'), '赤𡈽眞弓')
+        self.assertEqual(f.basic_filter('山田 太郎'), '山田太郎')
+        self.assertEqual(f.basic_filter('阿坂城跡附 高城跡枳城跡'), '阿坂城跡附高城跡枳城跡')
+        self.assertEqual(f.basic_filter('足利 右兵衛督 成氏'), '足利右兵衛督成氏')
 
     def test_hojin_filter(self):
         f = filter.WikipediaFilter()
