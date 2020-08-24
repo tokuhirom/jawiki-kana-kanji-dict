@@ -43,6 +43,7 @@ class TestWikipediaFilter(unittest.TestCase):
         self.assertEqual(f.validate_phase2('ウルトラQの登場怪獣', 'うるとらきゅーのとうじょうかいじゅう'), False)
         self.assertEqual(f.validate_phase2('仮面ライダー555の登場仮面ライダー', 'かめんらいだーふぁいずのとうじょうきゃらくたー'), False)
         self.assertEqual(f.validate_phase2('10.『七変化狸御殿』', 'しちへんげ たぬきごてん'), False)
+        self.assertEqual(f.validate_phase2('第43話 - 第45話', 'ものくろ'), False)
 
 if __name__ == '__main__':
     unittest.main()
