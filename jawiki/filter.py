@@ -75,7 +75,7 @@ class WikipediaFilter:
                 yield (kanji, yomi)
 
     def validate_phase1(self, kanji, yomi):
-        for yomi_prefix in ['[[', 'いま、', 'または、', 'あるいは、']:
+        for yomi_prefix in ['[[', 'いま、', 'または、', 'あるいは']:
             if yomi.startswith(yomi_prefix):
                 self.log_skip('ignorable yomi prefix: %s' % (yomi_prefix), [kanji, yomi])
                 return False
