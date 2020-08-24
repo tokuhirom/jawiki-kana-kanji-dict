@@ -59,6 +59,10 @@ class WikipediaFilter:
                     self.log_skip('kanji is page link', [kanji, yomi])
                     continue
 
+                if yomi.startswith('[['):
+                    self.log_skip('yomi is page link', [kanji, yomi])
+                    continue
+
                 kanji = self.basic_filter(kanji)
                 yomi = self.basic_filter(yomi)
                 yomi = jaconv.kata2hira(yomi)
