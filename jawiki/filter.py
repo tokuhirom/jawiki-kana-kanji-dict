@@ -20,7 +20,7 @@ INVALID_KANJI_PATTERNS = [
     # r/^日本の企業一覧/, # TITLE<<日本の企業一覧 (その他製品)>> KANJI<<日本の企業一覧(その他製造)>> YOMI<<にほんのきぎょういちらんそのたせいぞう>> 19
     re.compile(r'^日本の企業一覧'),
     #   qr/の登場人物$/, # TITLE<<ときめきメモリアル2の登場人物>> KANJI<<ときめきメモリアル2の登場人物>> YOMI<<ときめきめもりあるつーのとうじょうじんぶつ>> 21
-    re.compile(r'の登場人物$'),
+    re.compile(r'.*の登場(?:人物|キャラクター|仮面ライダー|怪獣|メカ|兵器|組織|馬|人物一覧|レスラー|人物の索引)$'),
 ]
 
 HOJIN_PATTERNS = [
@@ -90,14 +90,18 @@ class WikipediaFilter:
             self.log_skip('yomi contains non-hiragana char', [kanji, yomi])
             return False
 
-        for prefix in [
-            '〜', '『', '「', '〈','《',
+        for kanji_prefix in ['〜', '『', '「', '〈','《']:
+            if kanji.startswith(kanji_prefix):
+                self.log_skip('kanji starts with %s' % kanji_prefix, [kanji, yomi])
+                return False
+
+        for yomi_prefix in [
             # '''[[マイクロソフト]]'''（ただし、[[Xbox 360]]はどちらの規格にも対応せず、[[Microsoft Windows Vista]]は両規格に対応していた）
             'ただし、'
             # この音は'''ハーフ・ストップ'''（あるいはエコー、ハーフ・ミュート）と呼ばれる。
             'あるいは']:
-            if yomi.startswith(prefix):
-                self.log_skip('yomi starts with %s' % prefix, [kanji, yomi])
+            if yomi.startswith(yomi_prefix):
+                self.log_skip('yomi starts with %s' % yomi_prefix, [kanji, yomi])
                 return False
 
         # yomi infx
@@ -124,7 +128,7 @@ class WikipediaFilter:
 
         for pattern in INVALID_KANJI_PATTERNS:
             if pattern.match(kanji):
-                self.log_skip('date-ish', [kanji, yomi])
+                self.log_skip('Invalid kanji pattern', [kanji, yomi])
                 return False
 
 
@@ -157,6 +161,7 @@ class WikipediaFilter:
         # '''[[葉状体]]'''（ようじょうたい）
         # '''[[瘀血]]証'''（おけつしょう）
         token = re.sub(r'\[\[(.*)\]\]', r'\1', token)
+
 
         # '''池の平スノーパーク（旧白樺リゾートスキー場）'''（いけのたいらすのーぱーく）
         token = re.sub(r'（旧.*）', r'', token)

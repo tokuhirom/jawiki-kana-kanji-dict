@@ -32,6 +32,10 @@ class TestWikipediaFilter(unittest.TestCase):
         self.assertEqual(f.is_valid('3月', 'さんがつ'), False)
         self.assertEqual(f.is_valid('4004', 'よんまるまるよん'), False)
         self.assertEqual(f.is_valid('Keyboard / kAoru ikArAshi / 五十嵐 馨', 'いがらしかおる'), False)
+        self.assertEqual(f.is_valid('ARIAの登場人物', 'ありあのとうじょうじんぶつ'), False)
+        self.assertEqual(f.is_valid('アークライズファンタジアの登場キャラクター', 'あーくらいずふぁんたじあのとうじょうきゃらくたー'), False)
+        self.assertEqual(f.is_valid('ウルトラQの登場怪獣', 'うるとらきゅーのとうじょうかいじゅう'), False)
+        self.assertEqual(f.is_valid('仮面ライダー555の登場仮面ライダー', 'かめんらいだーふぁいずのとうじょうきゃらくたー'), False)
 
 if __name__ == '__main__':
     unittest.main()
