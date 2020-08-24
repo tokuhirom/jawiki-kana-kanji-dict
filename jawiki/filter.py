@@ -61,8 +61,7 @@ class WikipediaFilter:
                     self.log_skip('kanji is page link', [kanji, yomi])
                     continue
 
-                if yomi.startswith('[['):
-                    self.log_skip('yomi is page link', [kanji, yomi])
+                if not self.validate_phase1(kanji, yomi):
                     continue
 
                 kanji = self.basic_filter(kanji)
@@ -70,12 +69,20 @@ class WikipediaFilter:
                 yomi = jaconv.kata2hira(yomi)
                 kanji, yomi = self.hojin_filter(kanji, yomi)
 
-                if not self.is_valid(kanji, yomi):
+                if not self.validate_phase2(kanji, yomi):
                     continue
 
                 yield (kanji, yomi)
 
-    def is_valid(self, kanji, yomi):
+    def validate_phase1(self, kanji, yomi):
+        for yomi_prefix in ['[[', 'いま、', 'または、', 'あるいは、']:
+            if yomi.startswith(yomi_prefix):
+                self.log_skip('ignorable yomi prefix: %s' % (yomi_prefix), [kanji, yomi])
+                return False
+
+        return True
+
+    def validate_phase2(self, kanji, yomi):
         if len(kanji) == 0:
             self.log_skip('kanji is empty', [kanji, yomi])
             return False

@@ -23,20 +23,20 @@ class TestWikipediaFilter(unittest.TestCase):
         # 京浜急行電鉄株式会社:けいひんきゅうこうでんてつ -> 京浜急行電鉄:けいひんきゅうこうでんてつ
         self.assertEqual([f.hojin_filter('株式会社少年画報社', 'しょうねんがほうしゃ')], [('少年画報社', 'しょうねんがほうしゃ')])
 
-    def test_is_valid(self):
+    def test_validate_phase2(self):
         f = filter.WikipediaFilter()
 
-        self.assertEqual(f.is_valid('山田タロウ', 'やまだたろう'), True)
+        self.assertEqual(f.validate_phase2('山田タロウ', 'やまだたろう'), True)
 
-        self.assertEqual(f.is_valid('w3m', 'ダブリューサンエム または ダブリュースリーエム'), False)
-        self.assertEqual(f.is_valid('3月', 'さんがつ'), False)
-        self.assertEqual(f.is_valid('4004', 'よんまるまるよん'), False)
-        self.assertEqual(f.is_valid('Keyboard / kAoru ikArAshi / 五十嵐 馨', 'いがらしかおる'), False)
-        self.assertEqual(f.is_valid('ARIAの登場人物', 'ありあのとうじょうじんぶつ'), False)
-        self.assertEqual(f.is_valid('アークライズファンタジアの登場キャラクター', 'あーくらいずふぁんたじあのとうじょうきゃらくたー'), False)
-        self.assertEqual(f.is_valid('ウルトラQの登場怪獣', 'うるとらきゅーのとうじょうかいじゅう'), False)
-        self.assertEqual(f.is_valid('仮面ライダー555の登場仮面ライダー', 'かめんらいだーふぁいずのとうじょうきゃらくたー'), False)
-        self.assertEqual(f.is_valid('10.『七変化狸御殿』', 'しちへんげ たぬきごてん'), False)
+        self.assertEqual(f.validate_phase2('w3m', 'ダブリューサンエム または ダブリュースリーエム'), False)
+        self.assertEqual(f.validate_phase2('3月', 'さんがつ'), False)
+        self.assertEqual(f.validate_phase2('4004', 'よんまるまるよん'), False)
+        self.assertEqual(f.validate_phase2('Keyboard / kAoru ikArAshi / 五十嵐 馨', 'いがらしかおる'), False)
+        self.assertEqual(f.validate_phase2('ARIAの登場人物', 'ありあのとうじょうじんぶつ'), False)
+        self.assertEqual(f.validate_phase2('アークライズファンタジアの登場キャラクター', 'あーくらいずふぁんたじあのとうじょうきゃらくたー'), False)
+        self.assertEqual(f.validate_phase2('ウルトラQの登場怪獣', 'うるとらきゅーのとうじょうかいじゅう'), False)
+        self.assertEqual(f.validate_phase2('仮面ライダー555の登場仮面ライダー', 'かめんらいだーふぁいずのとうじょうきゃらくたー'), False)
+        self.assertEqual(f.validate_phase2('10.『七変化狸御殿』', 'しちへんげ たぬきごてん'), False)
 
 if __name__ == '__main__':
     unittest.main()
