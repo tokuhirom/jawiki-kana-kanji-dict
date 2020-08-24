@@ -1,22 +1,25 @@
 all: SKK-JISYO.jawiki
 
 clean:
-	rm -f src/_SUCCESS extracted/_SUCCESS SKK-JISYO.jawiki
+	rm -f jawiki-latest-pages-articles.xml.bz2 jawiki-latest-pages-articles.xml scanned.tsv filtered.tsv SKK-JISYO.jawiki skipped.tsv
 
 test:
-	prove -lr t/
+	python -m unittest tests/test_filter.py
 
-distclean:
-	rm -rf src/ extracted/
+jawiki-latest-pages-articles.xml.bz2:
+	wget -nc https://dumps.wikimedia.org/jawiki/latest/jawiki-latest-pages-articles.xml.bz2
 
-src/_SUCCESS:
-	perl bin/download-src.pl
+jawiki-latest-pages-articles.xml: jawiki-latest-pages-articles.xml.bz2
+	bunzip2 --keep jawiki-latest-pages-articles.xml.bz2
 
-extracted/_SUCCESS: src/_SUCCESS
-	perl bin/extract.pl
+scanned.tsv: jawiki-latest-pages-articles.xml scanner.py
+	python scanner.py jawiki-latest-pages-articles.xml
 
-SKK-JISYO.jawiki: extracted/_SUCCESS
-	perl bin/extracted2skkdic.pl /usr/share/skk/SKK-JISYO.L
+filtered.tsv: scanned.tsv filter.py jawiki/filter.py
+	python filter.py scanned.tsv
 
-.PHONY: all distclean test
+SKK-JISYO.jawiki: filtered.tsv makedict.py /usr/share/skk/SKK-JISYO.L
+	python makedict.py /usr/share/skk/SKK-JISYO.L
+
+.PHONY: all test
 

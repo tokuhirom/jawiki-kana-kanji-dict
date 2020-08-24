@@ -9,6 +9,12 @@
 
 TODO: KKC に utf-8 辞書をよむ能力あるか確認
 
+## Requirements
+
+ * python 3.4+
+    * regex
+    * jaconv
+
 ## knownn issues
 
 ### todo

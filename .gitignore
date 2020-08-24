@@ -1,6 +1,6 @@
-/log.*
 /jawiki-latest-pages-articles.xml.bz2
-/src/
-/extracted/
 /jawiki-latest-pages-articles.xml
+/extracted/
 /SKK-JISYO.jawiki.orig
+/skipped.tsv
+/scanned.tsv
