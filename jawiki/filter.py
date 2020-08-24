@@ -119,7 +119,7 @@ class WikipediaFilter:
         for infix in [
                 # '''Keyboard / kAoru ikArAshi / 五十嵐 馨'''（いからし かおる）
                 '/',
-                "'''",
+                "''",
                 '{{',
             ]:
             if infix in kanji:
