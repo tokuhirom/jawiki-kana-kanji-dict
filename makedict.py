@@ -30,6 +30,9 @@ IGNORE_ENTRIES = set(
         'または',
         # ぼーなすとらっく /AllYouMiss/AnswertoThisFlower/CircleofLife/DreamingStar/Ican'tfollowyou/KeepInThePockets[Remix]/
         'ぼーなすとらっく',
+        # あむすてるだむ /IPTP Limited/オランダのコーヒーショップ/
+        # '''IPTP Limited'''（アムステルダム、ホラン）
+        'あむすてるだむ',
     ])
 
 def parse_skkdict(path):
