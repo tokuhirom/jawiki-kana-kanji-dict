@@ -43,8 +43,8 @@ TODO: KKC に utf-8 辞書をよむ能力あるか確認
 - ぐあむのたたかい /グアムの戦い/グアムの戦い (1941年)
 - しょくぎょうくんれんしどういん /職業訓練指導員/職業訓練指導員 (さく井科)/職業訓練指導員 (ほうろう製品科)/職業訓練指導員 (インテリア科)/職業訓練指導員 (ガラス科)/職業訓練指導員 (クレーン科
 - にほんのびじゅつがっこう /日本の美術学校 (近代期)/
-- ぼーなすとらっく /AllYouMiss/AnswertoThisFlower/CircleofLife/DreamingStar/Ican'tfollowyou/KeepInThePockets[Remix]/
-- またはなき /7 - シチケン/
+- あおやませいずせんもんがっこう /・青山製図専門学校/
+
 
 ### waiting confirm
 
@@ -53,7 +53,8 @@ TODO: KKC に utf-8 辞書をよむ能力あるか確認
 
 ### resolved
 
-
+- ぼーなすとらっく /AllYouMiss/AnswertoThisFlower/CircleofLife/DreamingStar/Ican'tfollowyou/KeepInThePockets[Remix]/
+- またはなき /7 - シチケン/
 - ものくろ /MONOQLO/monokuro/第43話 - 第45話/
 - いぷしろんでるたろんぽう /&epsilon;-&delta;論法/
 - いけのたいらすのーぱーく /池の平スノーパーク（旧白樺リゾートスキー場）/
