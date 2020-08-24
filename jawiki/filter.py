@@ -15,6 +15,8 @@ INVALID_KANJI_PATTERNS = [
     re.compile(r'^\d+(月|世紀|年代)'),
     # TITLE<<Intel 4004>> KANJI<<4004>> YOMI<<よんまるまるよん>> 8
     re.compile(r'^[0-9]+$'),
+    # '''10.『七変化狸御殿』'''（しちへんげ たぬきごてん）
+    re.compile(r'^[0-9]+\.『'),
     # TITLE<<四川省>> KANJI<<{{仮リンク|巴蜀(歴史)|zh|巴蜀|label=巴蜀}}>> YOMI<<はしょく>> 4
     re.compile(r'\{\{仮リンク'),
     # r/^日本の企業一覧/, # TITLE<<日本の企業一覧 (その他製品)>> KANJI<<日本の企業一覧(その他製造)>> YOMI<<にほんのきぎょういちらんそのたせいぞう>> 19

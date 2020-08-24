@@ -36,6 +36,7 @@ class TestWikipediaFilter(unittest.TestCase):
         self.assertEqual(f.is_valid('アークライズファンタジアの登場キャラクター', 'あーくらいずふぁんたじあのとうじょうきゃらくたー'), False)
         self.assertEqual(f.is_valid('ウルトラQの登場怪獣', 'うるとらきゅーのとうじょうかいじゅう'), False)
         self.assertEqual(f.is_valid('仮面ライダー555の登場仮面ライダー', 'かめんらいだーふぁいずのとうじょうきゃらくたー'), False)
+        self.assertEqual(f.is_valid('10.『七変化狸御殿』', 'しちへんげ たぬきごてん'), False)
 
 if __name__ == '__main__':
     unittest.main()
