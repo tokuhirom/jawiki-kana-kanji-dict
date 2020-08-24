@@ -90,6 +90,10 @@ class WikipediaFilter:
             self.log_skip('yomi contains non-hiragana char', [kanji, yomi])
             return False
 
+        if is_hiragana(kanji):
+            self.log_skip('kanji is hiragana', [kanji, yomi])
+            return False
+
         for kanji_prefix in ['〜', '『', '「', '〈','《']:
             if kanji.startswith(kanji_prefix):
                 self.log_skip('kanji starts with %s' % kanji_prefix, [kanji, yomi])
