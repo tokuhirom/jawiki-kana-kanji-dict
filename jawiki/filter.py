@@ -192,6 +192,7 @@ class WikipediaFilter:
                 "''",
                 '{{',
                 '[[',
+                '(',
             ]:
             if infix in kanji:
                 self.log_skip('kanji contains %s' % infix, [kanji, yomi])
@@ -241,7 +242,11 @@ class WikipediaFilter:
         token = re.sub(r'\[\[(.*)\]\]', r'\1', token)
 
         # '''池の平スノーパーク（旧白樺リゾートスキー場）'''（いけのたいらすのーぱーく）
-        token = re.sub(r'（旧.*）', r'', token)
+        # '''砂川奈美(旧姓:伊藤)'''（いさがわなみ、[[1991年]][[1月23日]] - ）
+        token = re.sub(r'（旧.*?）', r'', token)
+        token = re.sub(r'[（\(]旧姓:.*?[）\)]', r'', token)
+        token = re.sub(r'（(\d+|[一-九])代目?）', r'', token)
+        token = re.sub(r'（初代）', r'', token)
 
         token = re.sub(r'、.*', r'', token)
 
