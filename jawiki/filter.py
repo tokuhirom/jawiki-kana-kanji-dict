@@ -121,8 +121,12 @@ class WikipediaFilter:
                 self.log_skip('ignorable yomi prefix: %s' % (yomi_prefix), [kanji, yomi])
                 return False
 
-        # カッコ内に元になったマイクロンが入っているので無視。
-        if title in ['トランスフォーマー ギャラクシーフォース']:
+        if title in [
+            # カッコ内に元になったマイクロンが入っているので無視。
+            'トランスフォーマー ギャラクシーフォース',
+            # 読み仮名が中途半端に入っている。古いアプリの情報なので一次情報をたどるのが難しくwikipedia川を修正するのが困難なので無視。
+            'アイドル・ジェネレーション 第2次・萌えっ子大戦争!!',
+        ]:
             self.log_skip('Title is in the blacklist', [title, kanji, yomi])
             return False
 
