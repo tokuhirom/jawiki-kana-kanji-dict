@@ -31,6 +31,7 @@ class TestWikipediaFilter(unittest.TestCase):
         self.assertEqual(f.basic_filter('阿坂城跡附 高城跡枳城跡'), '阿坂城跡附高城跡枳城跡')
         self.assertEqual(f.basic_filter('足利 右兵衛督 成氏'), '足利右兵衛督成氏')
         self.assertEqual(f.basic_filter('砂川奈美(旧姓:伊藤)'), '砂川奈美')
+        self.assertEqual(f.basic_filter('篠宮慶子（本名：篠宮景子）'), '篠宮慶子')
 
     def test_hojin_filter(self):
         f = filter.WikipediaFilter()
