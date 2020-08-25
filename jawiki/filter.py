@@ -126,6 +126,8 @@ class WikipediaFilter:
             'トランスフォーマー ギャラクシーフォース',
             # 読み仮名が中途半端に入っている。古いアプリの情報なので一次情報をたどるのが難しくwikipedia川を修正するのが困難なので無視。
             'アイドル・ジェネレーション 第2次・萌えっ子大戦争!!',
+            # ライトノベル独自用語
+            'Dクラッカーズ',
         ]:
             self.log_skip('Title is in the blacklist', [title, kanji, yomi])
             return False
