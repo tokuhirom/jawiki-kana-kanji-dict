@@ -11,6 +11,10 @@ class TestWikipediaFilter(unittest.TestCase):
         self.assertEqual(filter.is_hiragana('メモリ'), False)
         self.assertEqual(filter.is_hiragana('あいのめもりー'), True)
 
+    def test_is_katakana(self):
+        self.assertEqual(filter.is_katakana('メモリ'), True)
+        self.assertEqual(filter.is_katakana('アイ・エム・アイ'), False)
+
     def test_basic_filter(self):
         f = filter.WikipediaFilter()
         self.assertEqual(f.basic_filter('がちりん&lt;ref&gt;1883(明治)年宣下、明治天皇&lt;/ref&gt;'), 'がちりん')
@@ -52,6 +56,9 @@ class TestWikipediaFilter(unittest.TestCase):
         self.assertEqual(f.validate_phase2('仮面ライダー555の登場仮面ライダー', 'かめんらいだーふぁいずのとうじょうきゃらくたー'), False)
         self.assertEqual(f.validate_phase2('10.『七変化狸御殿』', 'しちへんげ たぬきごてん'), False)
         self.assertEqual(f.validate_phase2('第43話 - 第45話', 'ものくろ'), False)
+        self.assertEqual(f.validate_phase2('キノミヤ信仰', 'しんこう'), False)
+        self.assertEqual(f.validate_phase2('アイコナール近似', 'あいこなーるきんじ'), True)
+        self.assertEqual(f.validate_phase2('アイム・キンキ理容美容専門学校', 'あいむきんきりようびようせんもんがっこう'), True)
 
 if __name__ == '__main__':
     unittest.main()

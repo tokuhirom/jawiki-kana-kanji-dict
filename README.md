@@ -18,8 +18,17 @@ TODO: KKC に utf-8 辞書をよむ能力あるか確認
 
 ### todo
 
+- さっくす /朝本千可/柴田康平/石井淳/
+- さん /ぴろし3/天井/
+- さんこみっくす /学生たちの道/
+- さんばーすと /GibsonLesPaulStandard1959HistoricCollection/
+- くらっしゅ /Krush/Scattorbrain/堕落/
+- おめが /冥王計画ゼオライマーΩ/闘神都市Ω/
+- おーすとらりあ /（英語）/
+- おりじなる /TotheFarSeas -はるかな海へ-/原型/呪われた海/
+- えっくす /400X/EX/○ごとX/
 - しょうぼうじ -> ['大梅拈華山円通正法寺', '太子山正法寺', '妙高山正法寺', '岩間山正法寺', '巌殿山正法寺', '徳迎山正法寺', '法寿山正法寺', '知見山正法寺', '石鈇山正法寺', '竹養山正法寺']
-- しんこう -> ['キノミヤ信仰']
+- いんすとぅるめんたる /DYINGROSES/OpenTheParade/ThemeofGenji/クロニック・ラヴ/バットマン/思い出さないで/約束の絆/記憶の図形/雨だれ/青空/
 - さんてぃあーご -> ['アジャリス', 'アルテイショ', 'ア・カペーラ', 'ア・ペローシャ', 'オ・サンティアーゴ・ド・デアン・オウ・カステーロ', 'カルボス', 'パドロン', ]
 - さい -> ['島ぜんぶでおーきな祭']
 - あいどんとらいくまんでいず /IDon'tLikeMondays./
@@ -81,5 +90,6 @@ TODO: KKC に utf-8 辞書をよむ能力あるか確認
 - どらむ /DAISUKE/DAVE/DUTTCH/GrantGerathy/HAYATO/HERA/HIRO/JxRxDx/KAZUO/KEIGO/KI-YAN/KOBA♥YOUNG/Kaz/Kentarou/MATSUMURA（Y.MATSUMURA）/MATTO/MI-CHAN/MasaoMiki/Masataka/
 - ぎたー /8P/AYA/Aki/CAT/EBBY/EDDIE/GAK/GENTA/Goro Shimizu/HIROSHI/Hirohito Hirohashi/JJ/K5/KAZU-O/KEIKO/Kick/LARRY/LINA/MURAMOTO/MoCky/NAOKI/O.K.Z./OKUNO/Pegeot（ペジョ）/RAITA/RED/RICO/ROKU/SENSHO1500/SIN/Shoji Yokoi/TAKI/Takahiro Kido/The K(堀口馨)/Wata/YASU/YOSHIO/Yasuhiro Amano/Yasunori Yokomizo/アベチャン/アンディ・コックス/オオハシヒロユキ/オノチン/カズト/クロセノブヒロ/ゴロー/セイエイヨシムラ/タッチャメン/ダテ/トレイ・アザトース/ナカソカズオ/ピューク・アンド・スピット/フジタレイ/マコト/モモ/モモリン/ヨコ/ライト/レイジ/一輝/上中丈弥/中川暁生/仲原克彦/俊介/力武啓一/加藤昭彦/加藤智之/古城マサミ/和嶋慎治/大倉健/天佑（中村天佑）/天願ハジメ/守谷京子/小井手仁徳/小島翔/尾島秀紀/山中芳典/山田武郎/岡田志郎/日高コウセイ/春やん/智平/本間"RAT"章浩/東冬木/松居徹/松田健美/横山達郎/橘あつや/比賀江隆男/洪栄龍/渡邉美佳/発地伸夫/白井智廣/石橋光太郎/神田研司/福井利男/筒井朋哉/藤原貴志/豊島“ペリー来航”渉/近藤正樹/鎌田ジョージ/高杉大地/高橋大地/
 - ただし /CSS等の保護技術を回避してのDVDのリッピングは私的複製の対象外となり違法行為となる/KS/MBSサタデーパーティー/ゲルググ/スネアを叩く時はハイハットを叩かない/ネコアルクにも当たる/ハイキッ
+- しんこう -> ['キノミヤ信仰']
 
 

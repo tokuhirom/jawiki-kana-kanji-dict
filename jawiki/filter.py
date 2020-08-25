@@ -6,16 +6,27 @@ import html
 
 # https://note.nkmk.me/python-re-regex-character-type/
 HIRAGANA_BLOCK = r'\u3041-\u309Fー'
-KATAKANA_BLOCK = r'\u30A1-\u30FFー'
+
+# https://www.ncbi.nlm.nih.gov/staff/beck/charents/unicode/30A0-30FF.html
+# 30FB  ・ は除外。
+KATAKANA_BLOCK = r'\u30A1-\u30FA\u30FC-\u30FFー'
+
 KANJI_BLOCK = r'\u2E80-\u2FDF\u3005-\u3007\u3400-\u4DBF\u4E00-\u9FFF\uF900-\uFAFF\u21000-\u213FF\U00020000-\U0002EBEF'
 
 HIRAGANA_PATTERN = re.compile(r'^[' + HIRAGANA_BLOCK + ']+$')
+KATAKANA_PATTERN = re.compile(r'^[' + KATAKANA_BLOCK + ']+$')
 KANJI_PATTERN = re.compile(r'^[' + KANJI_BLOCK + ']+$')
 
 NAMEISH_PATTERN = re.compile(r'([' + HIRAGANA_BLOCK + KANJI_BLOCK + KATAKANA_BLOCK + ']+)\s+([' + HIRAGANA_BLOCK + KANJI_BLOCK + KATAKANA_BLOCK + ']+)')
 
 def is_hiragana(s):
     if HIRAGANA_PATTERN.match(s):
+        return True
+    else:
+        return False
+
+def is_katakana(s):
+    if KATAKANA_PATTERN.match(s):
         return True
     else:
         return False
@@ -83,6 +94,7 @@ class WikipediaFilter:
                 if not self.validate_phase1(kanji, yomi):
                     continue
 
+                # kanji, yomi = self.hojin_filter(kanji, yomi)
                 kanji = self.basic_filter(kanji)
                 yomi = self.basic_filter(yomi)
                 yomi = jaconv.kata2hira(yomi)
@@ -178,6 +190,13 @@ class WikipediaFilter:
                 self.log_skip('Invalid kanji pattern', [kanji, yomi])
                 return False
 
+        m = re.match(r'^([' + KATAKANA_BLOCK + ']+)', kanji)
+        if m:
+            prefix = m[1]
+            prefix_hira = jaconv.kata2hira(prefix)
+            if not (yomi.startswith(prefix_hira) or yomi.startswith(prefix_hira.replace('ゐ', 'い'))):
+                self.log_skip("Kanji prefix and yomi prefix aren't same: " + prefix, [kanji, yomi])
+                return False
 
         return True
 
