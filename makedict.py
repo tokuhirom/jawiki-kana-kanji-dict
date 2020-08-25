@@ -1,10 +1,6 @@
 import re
 
-# filter.py 機械的にはとりのぞきにくいエントリを、このフェーズで除外。
-#
-# あふがにすたんふんそう /アフガニスタン紛争（2001年-現在）/1979年-1989年のアフガニスタン紛争/アフガニスタン紛争/
-# '''伊東彦兵衛尉藤原祐信（すけのぶ）伊東 祐信'''（いとう すけのぶ）は、[[室町時代]]の武士。
-#
+# filter.py で機械的にはとりのぞきにくいエントリを、このフェーズで除外。
 IGNORE_ENTRIES = set(
     [
         'あふがにすたんふんそう',
@@ -26,6 +22,12 @@ IGNORE_ENTRIES = set(
         'きーぼーど',
         'ぴあの',
         'べーす',
+        'ぼーかる',
+        'ぷろでゅーす',
+        'ひろいん',
+        'ばす',
+        'どらむす',
+        'てのーる',
         # または /イルーニャ/インターラーケン修道院/カットアップ/
         'または',
         # ぼーなすとらっく /AllYouMiss/AnswertoThisFlower/CircleofLife/DreamingStar/Ican'tfollowyou/KeepInThePockets[Remix]/
@@ -35,6 +37,8 @@ IGNORE_ENTRIES = set(
         'あむすてるだむ',
         # おりじなるからおけ /APlaceUndertheSun/BoomBoomMyHeart〈TVMIX〉/CHEERSFORYOU/Darlin'/GETLOVE/HERO/HERO（アカペラバージョン）/
         'おりじなるからおけ',
+        'からおけ',
+        'あんこーる',
     ])
 
 def parse_skkdict(path):
@@ -81,14 +85,8 @@ if __name__=='__main__':
             kanjis = [x for x in sorted(set(result[yomi])) if yomi not in skkdict or x not in skkdict[yomi]]
             if len(kanjis) != 0:
                 ofh.write("%s /%s/\n" % (yomi, '/'.join(kanjis)))
+            if len(kanjis) > 10:
+                print("%s -> %s" % (yomi, kanjis))
 
-#   for my $yomi (sort keys %dict) {
-#       # 特殊記号始まりの読みになっているものを除外する
-#       next if $yomi =~ /^[〜『「〈《]/;
-
-#       my @kanji = grep { ! $skkdict->{$yomi}{$_} } uniq @{$dict{$yomi}};
-#       next unless @kanji;
-#       printf {$ofh} "%s /%s/\n", $yomi, join('/', @kanji);
-#   }
     print("Scanned: " + str(time.time()-t0) + " seconds")
 
