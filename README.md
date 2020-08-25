@@ -32,7 +32,6 @@ TODO: KKC に utf-8 辞書をよむ能力あるか確認
 - +あすーすいーぱっどとらんすふぉーまーてぃーえふいちまるいち /ASUS Eee Pad Transformer TF101/
 - +あすーすいーぱっどとらんすふぉーまーぷらいむ /ASUS Eee Pad Transformer Prime TF201/
 - +あすーすぱっど /ASUS Pad TF700T/
-- あなた /tū, vōs/
 - あなたはぺとろ /"Tu es Petrus et super hanc petram aedificabo Ecclesiam"/
 - あめりか /IPTP LLC/NO TOY GETS LEFT BEHIND/ベンジャミン/レコード・ワールド/一般的受容方式/
 - あしたはすこしわらってみよう /ストーリーアルバム 『明日は少し笑ってみよう』/
