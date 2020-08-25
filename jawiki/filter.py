@@ -164,9 +164,10 @@ class WikipediaFilter:
 
         for yomi_prefix in [
             # '''[[マイクロソフト]]'''（ただし、[[Xbox 360]]はどちらの規格にも対応せず、[[Microsoft Windows Vista]]は両規格に対応していた）
-            'ただし、'
+            'ただし、',
             # この音は'''ハーフ・ストップ'''（あるいはエコー、ハーフ・ミュート）と呼ばれる。
-            'あるいは']:
+            'あるいは',
+            'おりんぴっくの',]:
             if yomi.startswith(yomi_prefix):
                 self.log_skip('yomi starts with %s' % yomi_prefix, [kanji, yomi])
                 return False
