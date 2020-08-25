@@ -36,10 +36,10 @@ class TestWikipediaFilter(unittest.TestCase):
     def test_validate_phase1(self):
         f = filter.WikipediaFilter()
 
-        self.assertEqual(f.validate_phase1('又八郎', 'またはちろう'), True)
-        self.assertEqual(f.validate_phase1('アクメスジト', 'またはあくめちぇっと'), False)
-        self.assertEqual(f.validate_phase1('マタハリ百貨店', 'またはりひゃっかてん'), True)
-        self.assertEqual(f.validate_phase1('イルーニャ', 'または'), False)
+        self.assertEqual(f.validate_phase1('a', '又八郎', 'またはちろう'), True)
+        self.assertEqual(f.validate_phase1('a', 'アクメスジト', 'またはあくめちぇっと'), False)
+        self.assertEqual(f.validate_phase1('a', 'マタハリ百貨店', 'またはりひゃっかてん'), True)
+        self.assertEqual(f.validate_phase1('a', 'イルーニャ', 'または'), False)
 
     def test_validate_phase2(self):
         f = filter.WikipediaFilter()

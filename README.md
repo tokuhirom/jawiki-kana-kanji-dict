@@ -18,6 +18,7 @@ TODO: KKC に utf-8 辞書をよむ能力あるか確認
 
 ### todo
 
+- あかね /AKANE/akane/明音/朱音/瀬野朱音/紅音/茜音/
 - さん /ぴろし3/天井/
 - さんこみっくす /学生たちの道/
 - さんばーすと /GibsonLesPaulStandard1959HistoricCollection/

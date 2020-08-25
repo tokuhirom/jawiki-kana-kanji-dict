@@ -91,7 +91,7 @@ class WikipediaFilter:
                     self.log_skip('kanji is page link', [kanji, yomi])
                     continue
 
-                if not self.validate_phase1(kanji, yomi):
+                if not self.validate_phase1(title, kanji, yomi):
                     continue
 
                 kanji = self.basic_filter(kanji)
@@ -109,7 +109,7 @@ class WikipediaFilter:
 
                 yield (kanji, yomi)
 
-    def validate_phase1(self, kanji, yomi):
+    def validate_phase1(self, title, kanji, yomi):
         for yomi_prefix in ['[[', 'いま、', 'あるいは']:
             if yomi.startswith(yomi_prefix):
                 self.log_skip('ignorable yomi prefix: %s' % (yomi_prefix), [kanji, yomi])
@@ -120,6 +120,11 @@ class WikipediaFilter:
             if len([1 for n in ['またはちろう', 'またはりひゃっかてん', 'またはり'] if yomi.startswith(n)])==0:
                 self.log_skip('ignorable yomi prefix: %s' % (yomi_prefix), [kanji, yomi])
                 return False
+
+        # カッコ内に元になったマイクロンが入っているので無視。
+        if title in ['トランスフォーマー ギャラクシーフォース']:
+            self.log_skip('Title is in the blacklist', [title, kanji, yomi])
+            return False
 
         return True
 
