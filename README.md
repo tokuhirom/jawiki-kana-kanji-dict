@@ -37,6 +37,7 @@ TODO: KKC に utf-8 辞書をよむ能力あるか確認
 - ごうめいりん /呉 メイリン（呉美鈴）/呉美鈴/
 - いろこい /UH-1/
 - けいようぎんこう /KEIYOGINKOGRANDCOUNTDOWNREAL/京葉銀行/
+- あーけーどすてぃっく /本来はジョイスティック/
 
 
 ### waiting confirm
