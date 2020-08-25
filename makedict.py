@@ -28,6 +28,10 @@ IGNORE_ENTRIES = set(
         'ばす',
         'どらむす',
         'てのーる',
+        'さっくす',
+        'あこーでぃおん',
+        # あこーすてぃっく /TheEnd/
+        'あこーすてぃっく',
         # または /イルーニャ/インターラーケン修道院/カットアップ/
         'または',
         # ぼーなすとらっく /AllYouMiss/AnswertoThisFlower/CircleofLife/DreamingStar/Ican'tfollowyou/KeepInThePockets[Remix]/

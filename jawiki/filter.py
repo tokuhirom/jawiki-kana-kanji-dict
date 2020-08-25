@@ -94,7 +94,6 @@ class WikipediaFilter:
                 if not self.validate_phase1(kanji, yomi):
                     continue
 
-                # kanji, yomi = self.hojin_filter(kanji, yomi)
                 kanji = self.basic_filter(kanji)
                 yomi = self.basic_filter(yomi)
                 yomi = jaconv.kata2hira(yomi)
