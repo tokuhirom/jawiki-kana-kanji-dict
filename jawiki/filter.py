@@ -166,7 +166,7 @@ class WikipediaFilter:
             self.log_skip('kanji is hiragana', [kanji, yomi])
             return False
 
-        for kanji_prefix in ['〜', '『', '「', '＜', '〈','《', '／']:
+        for kanji_prefix in ['〜', '『', '「', '＜', '〈','《', '／', '日本の']:
             if kanji.startswith(kanji_prefix):
                 self.log_skip('kanji starts with %s' % kanji_prefix, [kanji, yomi])
                 return False
