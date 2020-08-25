@@ -32,12 +32,12 @@ TODO: KKC に utf-8 辞書をよむ能力あるか確認
 - +あすーすいーぱっどとらんすふぉーまーぷらいむ /ASUS Eee Pad Transformer Prime TF201/
 - +あすーすぱっど /ASUS Pad TF700T/
 - あなたはぺとろ /"Tu es Petrus et super hanc petram aedificabo Ecclesiam"/
-- あめりか /IPTP LLC/NO TOY GETS LEFT BEHIND/ベンジャミン/レコード・ワールド/一般的受容方式/
 - あしたはすこしわらってみよう /ストーリーアルバム 『明日は少し笑ってみよう』/
 - ごうめいりん /呉 メイリン（呉美鈴）/呉美鈴/
 - いろこい /UH-1/
 - けいようぎんこう /KEIYOGINKOGRANDCOUNTDOWNREAL/京葉銀行/
 - あーけーどすてぃっく /本来はジョイスティック/
+- いずれもろっくふぃるだむ /太田第一ダム・太田第二ダム・太田第三ダム・太田第四ダム・太田第五ダム/
 
 
 ### waiting confirm
