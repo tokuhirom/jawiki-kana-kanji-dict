@@ -87,27 +87,33 @@ class WikipediaFilter:
 
                 (title, kanji, yomi) = splitted
 
-                if kanji.startswith('[['):
-                    self.log_skip('kanji is page link', [kanji, yomi])
-                    continue
+                m = self.filter_entry(title, kanji, yomi)
+                if m:
+                    kanji, yomi = m
+                    yield (kanji, yomi)
 
-                if not self.validate_phase1(title, kanji, yomi):
-                    continue
+    def filter_entry(self, title, kanji, yomi):
+        if kanji.startswith('[['):
+            self.log_skip('kanji is page link', [kanji, yomi])
+            return
 
-                kanji = self.basic_filter(kanji)
-                yomi = self.basic_filter(yomi)
-                yomi = jaconv.kata2hira(yomi)
-                kanji, yomi = self.hojin_filter(kanji, yomi)
+        if not self.validate_phase1(title, kanji, yomi):
+            return
 
-                # remove spaces in yomi
-                yomi = re.sub(r'\s', r'', yomi)
-                # 全角スペースを半角に
-                kanji = re.sub(r'\s', r' ', kanji)
+        kanji = self.basic_filter(kanji)
+        yomi = self.basic_filter(yomi)
+        yomi = jaconv.kata2hira(yomi)
+        kanji, yomi = self.hojin_filter(kanji, yomi)
 
-                if not self.validate_phase2(kanji, yomi):
-                    continue
+        # remove spaces in yomi
+        yomi = re.sub(r'\s', r'', yomi)
+        # 全角スペースを半角に
+        kanji = re.sub(r'\s', r' ', kanji)
 
-                yield (kanji, yomi)
+        if not self.validate_phase2(kanji, yomi):
+            return
+
+        return (kanji, yomi)
 
     def validate_phase1(self, title, kanji, yomi):
         for yomi_prefix in ['[[', 'いま、', 'あるいは', 'もしくは']:
@@ -162,6 +168,11 @@ class WikipediaFilter:
         for kanji_prefix in ['〜', '『', '「', '〈','《', '／']:
             if kanji.startswith(kanji_prefix):
                 self.log_skip('kanji starts with %s' % kanji_prefix, [kanji, yomi])
+                return False
+
+        for kanji_postfix in ['・']:
+            if kanji.endswith(kanji_postfix):
+                self.log_skip('kanji ends with %s' % kanji_postfix, [kanji, yomi])
                 return False
 
         for yomi_prefix in [
@@ -249,6 +260,10 @@ class WikipediaFilter:
         token = re.sub(r'（初代）', r'', token)
 
         token = re.sub(r'、.*', r'', token)
+
+        # 先頭/末尾の中黒はマークアップ失敗なので、カバーしてあげる
+        token = re.sub(r'^・', r'', token)
+        token = re.sub(r'・$', r'', token)
 
         token = re.sub(r'&amp;', r'&', token)
         token = re.sub(r'(&(?:[a-z_-]+|#[0-9]+|#x[0-9A-Fa-f]+);)', lambda x: html.unescape(x[1]), token)

@@ -34,6 +34,10 @@ class TestWikipediaFilter(unittest.TestCase):
         # 京浜急行電鉄株式会社:けいひんきゅうこうでんてつ -> 京浜急行電鉄:けいひんきゅうこうでんてつ
         self.assertEqual([f.hojin_filter('株式会社少年画報社', 'しょうねんがほうしゃ')], [('少年画報社', 'しょうねんがほうしゃ')])
 
+    def test_filter_entry(self):
+        f = filter.WikipediaFilter()
+        self.assertEqual([f.filter_entry('a', 'KEIYOGINKO POWER COUNTDOWN REAL', """けいようぎんこう パワー・カウントダウン・リアル。略称&quot;'''パワカン'''&quot;""")], [('KEIYOGINKO POWER COUNTDOWN REAL', 'けいようぎんこうぱわーかうんとだうんりある')])
+
     def test_validate_phase1(self):
         f = filter.WikipediaFilter()
 
