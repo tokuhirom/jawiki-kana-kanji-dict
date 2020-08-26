@@ -6,6 +6,9 @@ from jawiki.jachars import HIRAGANA_BLOCK, KANJI_BLOCK, KATAKANA_BLOCK, is_katak
 
 NAMEISH_PATTERN = re.compile(r'([' + HIRAGANA_BLOCK + KANJI_BLOCK + KATAKANA_BLOCK + ']+)[\u0020\u3000]+([' + HIRAGANA_BLOCK + KANJI_BLOCK + KATAKANA_BLOCK + ']+)')
 
+# きうちきょう /木内キヤウ/
+HIRAGANA_NORMALIZER = str.maketrans('ゐゑをっあいうえおふぁぃぅぇぉゃゅょやゆよ', 'ーーーつーーーーーうあいうえおよよよよよよ')
+
 INVALID_KANJI_PATTERNS = [
     re.compile(r'^\d+(月|世紀|年代)'),
     # TITLE<<Intel 4004>> KANJI<<4004>> YOMI<<よんまるまるよん>> 8
@@ -23,15 +26,15 @@ INVALID_KANJI_PATTERNS = [
 ]
 
 HOJIN_PATTERNS = [
-    ('株式会社', 'かぶしきがいしゃ'),
-    ('合同会社', 'ごうどうがいしゃ'),
-    ('有限会社', 'ゆうげんがいしゃ'),
-    ('一般社団法人', 'いっぱんしゃだんほうじん'),
-    ('一般財団法人', 'いっぱんざいだんほうじん'),
-    ('学校法人', 'がっこうほうじん'),
-    ('公益財団法人', 'こうえきざいだんほうじん'),
-    ('公益社団法人','こうえきしゃだんほうじん'),
-    ('特定非営利活動法人','とくていひえいりかつどうほうじん'),
+    ('株式会社', ['かぶしきがいしゃ', 'かぶしきかいしゃ']),
+    ('合同会社', ['ごうどうがいしゃ', 'ごうどうかいしゃ']),
+    ('有限会社', ['ゆうげんがいしゃ', 'ゆうげんかいしゃ']),
+    ('一般社団法人', ['いっぱんしゃだんほうじん']),
+    ('一般財団法人', ['いっぱんざいだんほうじん']),
+    ('学校法人', ['がっこうほうじん']),
+    ('公益財団法人', ['こうえきざいだんほうじん']),
+    ('公益社団法人',['こうえきしゃだんほうじん']),
+    ('特定非営利活動法人',['とくていひえいりかつどうほうじん']),
 ]
 
 def default_skip_logger(reason, line):
@@ -177,12 +180,24 @@ class WikipediaFilter:
                 self.log_skip('Invalid kanji pattern', [kanji, yomi])
                 return False
 
+        # katakana prefix
         m = re.match(r'^([' + KATAKANA_BLOCK + ']+)', kanji)
         if m:
             prefix = m[1]
-            prefix_hira = jaconv.kata2hira(prefix)
-            if not (yomi.startswith(prefix_hira) or yomi.startswith(prefix_hira.replace('ゐ', 'い'))):
-                self.log_skip("Kanji prefix and yomi prefix aren't same: " + prefix, [kanji, yomi])
+            prefix_hira = jaconv.kata2hira(prefix).translate(HIRAGANA_NORMALIZER)
+            normalized_yomi = yomi.translate(HIRAGANA_NORMALIZER)
+            if not normalized_yomi.startswith(prefix_hira):
+                self.log_skip("Kanji prefix and yomi prefix aren't same: normalized_yomi=%s prefix_hira=%s" % (normalized_yomi, prefix_hira), [kanji, yomi])
+                return False
+
+        # katakana postfix
+        m = re.match(r'.*?([' + KATAKANA_BLOCK + ']+)$', kanji)
+        if m:
+            postfix = m[1]
+            postfix_hira = jaconv.kata2hira(postfix).translate(HIRAGANA_NORMALIZER)
+            normalized_yomi = yomi.translate(HIRAGANA_NORMALIZER)
+            if not normalized_yomi.endswith(postfix_hira):
+                self.log_skip("Kanji postfix and yomi postfix aren't same: normalized_yomi=%s postfix_hira=%s" % (normalized_yomi, postfix_hira), [kanji, yomi])
                 return False
 
         return True
@@ -299,16 +314,21 @@ class WikipediaFilter:
     # 京浜急行電鉄株式会社:けいひんきゅうこうでんてつ -> 京浜急行電鉄:けいひんきゅうこうでんてつ
     def hojin_filter(self, kanji, yomi):
         for f in HOJIN_PATTERNS:
-            (k, y) = f
-            if kanji.startswith(k) and not yomi.startswith(y):
-                kanji = kanji.lstrip(k)
-            if kanji.startswith(k) and yomi.startswith(y):
-                kanji = kanji.lstrip(k)
-                yomi = yomi.lstrip(y)
-            if kanji.endswith(k) and not yomi.endswith(y):
-                kanji = kanji[:-len(k)]
-            if kanji.endswith(k) and yomi.endswith(y):
-                kanji = kanji[:-len(k)]
-                yomi = yomi[:-len(y)]
+            (k, ys) = f
+            for y in ys:
+                if kanji.startswith(k) and not yomi.startswith(y):
+                    kanji = kanji.lstrip(k)
+                if kanji.startswith(k) and yomi.startswith(y):
+                    kanji = kanji.lstrip(k)
+                    yomi = yomi.lstrip(y)
+                if not kanji.startswith(k) and yomi.startswith(y):
+                    yomi = yomi.lstrip(y)
+                if kanji.endswith(k) and not yomi.endswith(y):
+                    kanji = kanji[:-len(k)]
+                if kanji.endswith(k) and yomi.endswith(y):
+                    kanji = kanji[:-len(k)]
+                    yomi = yomi[:-len(y)]
+                if not kanji.endswith(k) and yomi.endswith(y):
+                    yomi = yomi[:-len(y)]
         return (kanji, yomi)
 
