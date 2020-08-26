@@ -1,7 +1,8 @@
 import re
+from jawiki import scanner
 
 TITLE_PATTERN = re.compile(r'''.*<title>(.+)</title>''')
-YOMI_PATTERN  = re.compile(r"""'''(.+?)'''（(.+?)）""")
+
 
 class WikipediaXmlScanner:
     def scan(self, filename):
@@ -20,10 +21,8 @@ class WikipediaXmlScanner:
                     continue
 
                 if not ignorable:
-                    p = re.findall(YOMI_PATTERN, line)
-                    if p:
-                        for n in p:
-                            yield (title, n[0], n[1])
+                    for m in scanner.scan_words(line):
+                        yield (title, m[0], m[1])
 
 
     def is_ignorable_title(self, title):
@@ -54,10 +53,10 @@ if __name__=='__main__':
         print("Scanning " + fname)
         t0 = time.time()
 
-        scanner = WikipediaXmlScanner()
+        wikipedia_scanner = WikipediaXmlScanner()
 
         with open('scanned.tsv', 'w', encoding='utf-8') as ofh:
-            for element in scanner.scan(fname):
+            for element in wikipedia_scanner.scan(fname):
                 ofh.write("%s\t%s\t%s\n" % (
                     element[0].replace("\t", " "),
                     element[1].replace("\t", " "),
