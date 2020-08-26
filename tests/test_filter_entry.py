@@ -13,6 +13,9 @@ testdata = []
 with open('tests/mapping.tsv', 'r') as fp:
     for line in fp:
         m = line.strip().split("\t")
+        if len(m)==3:
+            m.append(None)
+            m.append(None)
         if len(m)>1:
             testdata.append(m)
 

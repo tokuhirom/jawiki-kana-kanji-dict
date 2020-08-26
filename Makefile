@@ -4,10 +4,7 @@ clean:
 	rm -f jawiki-latest-pages-articles.xml.bz2 jawiki-latest-pages-articles.xml grepped.txt scanned.tsv filtered.tsv SKK-JISYO.jawiki skipped.tsv
 
 test:
-	python -m unittest tests/test_filter.py
-	pytest tests/test_hojin_filter.py
-	pytest tests/test_filter_entry.py
-	pytest tests/test_scan_words.py
+	pytest tests/test_*.py
 
 jawiki-latest-pages-articles.xml.bz2:
 	wget -nc https://dumps.wikimedia.org/jawiki/latest/jawiki-latest-pages-articles.xml.bz2
