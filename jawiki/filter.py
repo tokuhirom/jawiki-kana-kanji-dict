@@ -248,6 +248,7 @@ class WikipediaFilter:
         # yomi = re.sub(r"\[\[[" + KANJI_BLOCK + "]+\]\]\d+年.*", '', yomi)
         pyomi = yomi
         while True:
+            yomi = re.sub(r"^のちの('''|\[\[).*", '', yomi)
             yomi = re.sub(r'、声 - .*', '', yomi)
             yomi = re.sub(r'\[\[\d+年\]\].*', '', yomi)
             yomi = re.sub(r'\[\[\d+月\d+日\]\].*', '', yomi)
