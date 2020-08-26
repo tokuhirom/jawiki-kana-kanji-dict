@@ -115,7 +115,7 @@ if __name__=='__main__':
             kanjis = [x for x in sorted(set(result[yomi])) if yomi not in skkdict or x not in skkdict[yomi]]
             if len(kanjis) != 0:
                 ofh.write("%s /%s/\n" % (yomi, '/'.join(kanjis)))
-            if len(kanjis) > 10:
+            if len(kanjis) > 20:
                 print("%s -> %s" % (yomi, kanjis))
 
     print("Scanned: " + str(time.time()-t0) + " seconds")

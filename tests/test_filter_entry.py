@@ -12,7 +12,9 @@ f = filter.WikipediaFilter()
 testdata = []
 with open('tests/mapping.tsv', 'r') as fp:
     for line in fp:
-        testdata.append(line.strip().split("\t"))
+        m = line.strip().split("\t")
+        if len(m)>1:
+            testdata.append(m)
 
 @pytest.mark.parametrize("input_title,input_kana,input_yomi,expected_kanji,expected_yomi", testdata)
 def test_tsv(input_title, input_kana, input_yomi, expected_kanji, expected_yomi):
