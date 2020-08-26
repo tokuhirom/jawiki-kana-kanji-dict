@@ -292,6 +292,7 @@ class WikipediaFilter:
 
         # [[ページ名|リンクラベル]] 
         kanji = re.sub(r'\[\[(?:.*)\|(.*)\]\]', r'\1', kanji)
+        kanji = re.sub(r'\[\[(.*)\]\]', r'\1', kanji)
 
         # '山田 太朗' → 山田太朗
         while True:
@@ -320,13 +321,14 @@ class WikipediaFilter:
             yomi = re.sub(r'(生年不詳|生年月日非公表|生没年不詳).*', '', yomi)
             yomi = re.sub(r'現在の芸名.*', '', yomi)
             yomi = re.sub(r'\[\[[' + KANJI_BLOCK + ']+]].*', '', yomi)
-            yomi = re.sub(r'(?:通称|原題|ドイツ語|英語|英語表記|英文社名|オランダ語|満州語|旧|旧芸名|中国語簡体字|漢語名字|略称|本名|英称|英)[:：は].*', '', yomi)
+            yomi = re.sub(r'(?:現姓|旧姓|通称|英文名|原題|ドイツ語|英語|英語表記|英語名称|英文社名|オランダ語|満州語|旧|旧芸名|中国語簡体字|漢語名字|略称|本名|英称|英)[:：は・].*', '', yomi)
             yomi = re.sub(r'[（:：,]\s*$', '', yomi)
             yomi = re.sub(r'[,、][（:：,]\s*$', '', yomi)
             yomi = re.sub(r'[,、]\[\[.*$', '', yomi)
-            yomi = re.sub(r'''[、,][ A-Za-z.']+$''', '', yomi)
-            yomi = re.sub(r'''[、,][ A-Za-z.'-]+$''', '', yomi)
+            yomi = re.sub(r'''[、,][ A-Za-z.'&]+$''', '', yomi)
+            yomi = re.sub(r'''[、,][ A-Za-z.'-''' + KANJI_BLOCK + ''']+$''', '', yomi)
             yomi = re.sub(r'、[（:：\-]*[ A-Za-z]+$', '', yomi)
+            yomi = re.sub(r'、(詳しくは|本名同じ).*$', '', yomi)
             yomi = re.sub(r'[？?、－]+\s*$', '', yomi)
             yomi = re.sub(r'\s*$', '', yomi)
             yomi = re.sub(r'\[\[$', '', yomi)
