@@ -1,12 +1,13 @@
 all: SKK-JISYO.jawiki
 
 clean:
-	rm -f jawiki-latest-pages-articles.xml.bz2 jawiki-latest-pages-articles.xml scanned.tsv filtered.tsv SKK-JISYO.jawiki skipped.tsv
+	rm -f jawiki-latest-pages-articles.xml.bz2 jawiki-latest-pages-articles.xml grepped.txt scanned.tsv filtered.tsv SKK-JISYO.jawiki skipped.tsv
 
 test:
 	python -m unittest tests/test_filter.py
 	pytest tests/pytest_filter.py
 	pytest tests/test_filter_entry.py
+	pytest tests/test_scan_words.py
 
 jawiki-latest-pages-articles.xml.bz2:
 	wget -nc https://dumps.wikimedia.org/jawiki/latest/jawiki-latest-pages-articles.xml.bz2
@@ -14,8 +15,11 @@ jawiki-latest-pages-articles.xml.bz2:
 jawiki-latest-pages-articles.xml: jawiki-latest-pages-articles.xml.bz2
 	bunzip2 --keep jawiki-latest-pages-articles.xml.bz2
 
-scanned.tsv: jawiki-latest-pages-articles.xml scanner.py
-	python scanner.py jawiki-latest-pages-articles.xml
+grepped.txt: jawiki-latest-pages-articles.xml
+	grep -E "<title>.*</title>|'''[（(]" jawiki-latest-pages-articles.xml > grepped.txt
+
+scanned.tsv: grepped.txt scanner.py jawiki/scanner.py
+	python scanner.py grepped.txt
 
 filtered.tsv: scanned.tsv filter.py jawiki/filter.py
 	python filter.py scanned.tsv
