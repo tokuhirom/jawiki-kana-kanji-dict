@@ -19,3 +19,9 @@ def test_hojin_filter2():
     assert kanji == '愛知県地方木材'
     assert yomi == 'あいちけんちほうもくざい'
 
+
+def test_hojin_filter3():
+    assert [f.hojin_filter('株式会社少年画報社', 'しょうねんがほうしゃ')] == \
+            [('少年画報社', 'しょうねんがほうしゃ')]
+    assert [f.hojin_filter('京浜急行電鉄株式会社', 'けいひんきゅうこうでんてつ')] == \
+            [('京浜急行電鉄', 'けいひんきゅうこうでんてつ')]

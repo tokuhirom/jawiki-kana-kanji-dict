@@ -18,29 +18,22 @@ class TestWikipediaFilter(unittest.TestCase):
         self.assertEqual(filter.is_katakana('アイ・エム・アイ'), False)
         self.assertEqual(filter.is_katakana('KEIYOGINKO'), False)
 
+    def test_kanji_filter(self):
+        f = filter.WikipediaFilter()
+        self.assertEqual(f.kanji_filter('KEIYOGINKO POWER COUNTDOWN REAL'), 'KEIYOGINKO POWER COUNTDOWN REAL')
+        self.assertEqual(f.kanji_filter('阿坂城跡附 高城跡枳城跡'), '阿坂城跡附高城跡枳城跡')
+        self.assertEqual(f.kanji_filter('足利 右兵衛督 成氏'), '足利右兵衛督成氏')
+        self.assertEqual(f.kanji_filter('山田 太郎'), '山田太郎')
+
     def test_basic_filter(self):
         f = filter.WikipediaFilter()
-        self.assertEqual(f.basic_filter('KEIYOGINKO POWER COUNTDOWN REAL'), 'KEIYOGINKO POWER COUNTDOWN REAL')
         self.assertEqual(f.basic_filter('がちりん&lt;ref&gt;1883(明治)年宣下、明治天皇&lt;/ref&gt;'), 'がちりん')
-        # self.assertEqual(f.basic_filter('がちりん、がちがち'), 'がちりん')
         self.assertEqual(f.basic_filter('I&amp;O'), 'I&O')
         self.assertEqual(f.basic_filter('&amp;epsilon;-&amp;delta;論法'), 'ε-δ論法')
         self.assertEqual(f.basic_filter('I&amp;#9829;OGI'), 'I♥OGI')
         self.assertEqual(f.basic_filter('赤&#x2123D;眞弓'), '赤𡈽眞弓')
-        self.assertEqual(f.basic_filter('阿坂城跡附 高城跡枳城跡'), '阿坂城跡附高城跡枳城跡')
-        self.assertEqual(f.basic_filter('足利 右兵衛督 成氏'), '足利右兵衛督成氏')
         self.assertEqual(f.basic_filter('砂川奈美(旧姓:伊藤)'), '砂川奈美')
         self.assertEqual(f.basic_filter('篠宮慶子（本名：篠宮景子）'), '篠宮慶子')
-
-    def test_basic_filter(self):
-        f = filter.WikipediaFilter()
-        self.assertEqual(f.kanji_filter('山田 太郎'), '山田太郎')
-
-    def test_hojin_filter(self):
-        f = filter.WikipediaFilter()
-        # 株式会社少年画報社:しょうねんがほうしゃ -> 少年画報社:しょうねんがほうしゃ
-        # 京浜急行電鉄株式会社:けいひんきゅうこうでんてつ -> 京浜急行電鉄:けいひんきゅうこうでんてつ
-        self.assertEqual([f.hojin_filter('株式会社少年画報社', 'しょうねんがほうしゃ')], [('少年画報社', 'しょうねんがほうしゃ')])
 
     def test_filter_entry(self):
         f = filter.WikipediaFilter()
