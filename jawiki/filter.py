@@ -46,21 +46,6 @@ class WikipediaFilter:
         self.skip_logger(reason, line)
         # print("<<<%s>>> %s" % (reason, line))
 
-    def filter(self, srcfname):
-        with open(srcfname, 'r', encoding='utf-8') as fh:
-            for line in fh:
-                line = line.strip()
-                splitted = line.split("\t")
-                if len(splitted) != 3:
-                    continue
-
-                (title, kanji, yomi) = splitted
-
-                m = self.filter_entry(title, kanji, yomi)
-                if m:
-                    kanji, yomi = m
-                    yield (kanji, yomi)
-
     def filter_entry(self, title, kanji, yomi):
         if kanji.startswith('[['):
             self.log_skip('kanji is page link', [kanji, yomi])
