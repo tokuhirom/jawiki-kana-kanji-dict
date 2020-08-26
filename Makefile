@@ -5,7 +5,7 @@ clean:
 
 test:
 	python -m unittest tests/test_filter.py
-	pytest tests/pytest_filter.py
+	pytest tests/test_hojin_filter.py
 	pytest tests/test_filter_entry.py
 	pytest tests/test_scan_words.py
 
