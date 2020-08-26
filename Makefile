@@ -5,6 +5,7 @@ clean:
 
 test:
 	python -m unittest tests/test_filter.py
+	pytest tests/pytest_filter.py
 
 jawiki-latest-pages-articles.xml.bz2:
 	wget -nc https://dumps.wikimedia.org/jawiki/latest/jawiki-latest-pages-articles.xml.bz2
