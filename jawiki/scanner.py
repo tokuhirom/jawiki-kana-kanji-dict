@@ -4,6 +4,11 @@ YOMI_PATTERN  = re.compile(r"""'''(.+?)'''（(.+?)）""")
 
 def scan_words(s):
     while len(s) > 0:
+        s, kanji, yomi = scan_yomigana(s)
+        if kanji != None:
+            yield (kanji, yomi)
+            continue
+
         n = s.find(r"'''")
         if n==-1:
             break
@@ -32,4 +37,25 @@ def scan_words(s):
             s = ''
             yield (kanji, yomi)
 
+def scan_yomigana(s):
+    # {{読み仮名|'''プラカシー油'''|ぷらかしーゆ}}
+    p = s.find(r"{{読み仮名|'''")
+    if p==-1:
+        return s, None, None
+
+    q = s.find(r"'''|", p+len("{{読み仮名|'''"))
+    if q==-1:
+        return s, None, None
+
+    kanji = s[p+len("{{読み仮名|'''"):q]
+
+    r = s.find(r"}}", q+4)
+    if r==-1:
+        return s, None, None
+
+    yomi = s[q+4:r]
+
+    s = s[r+2:]
+
+    return s, kanji, yomi
 

@@ -1,4 +1,5 @@
 import re
+from jawiki import skkdict
 
 # filter.py で機械的にはとりのぞきにくいエントリを、このフェーズで除外。
 IGNORE_ENTRIES = set(
@@ -71,23 +72,6 @@ IGNORE_ENTRIES = set(
         'ただし',
     ])
 
-def parse_skkdict(path):
-    result = {}
-
-    with open(skkdictpath, 'r', encoding='euc-jp') as fp:
-        for line in fp:
-            if line.startswith(';;'):
-                continue
-
-            m = line.strip().split(' ', 1)
-            yomi, kanjis = m
-            kanjis = kanjis.lstrip('/').rstrip('/').split('/')
-            kanjis = [re.sub(';.*', '', k) for k in kanjis]
-
-            result[yomi] = set(kanjis)
-
-    return result
-
 if __name__=='__main__':
     import sys
     import time
@@ -98,7 +82,7 @@ if __name__=='__main__':
 
     skkdictpath = sys.argv[1]
 
-    skkdict = parse_skkdict(skkdictpath)
+    skkdict = skkdict.parse_skkdict(skkdictpath, encoding='euc-jp')
 
     with open('filtered.tsv', 'r', encoding='utf-8') as ifh, \
         open('SKK-JISYO.jawiki', 'w', encoding='utf-8') as ofh:
