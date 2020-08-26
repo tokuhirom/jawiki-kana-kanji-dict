@@ -16,7 +16,11 @@ with open('tests/mapping.tsv', 'r') as fp:
 
 @pytest.mark.parametrize("input_title,input_kana,input_yomi,expected_kanji,expected_yomi", testdata)
 def test_tsv(input_title, input_kana, input_yomi, expected_kanji, expected_yomi):
-    got_kanji, got_yomi = f.filter_entry(input_title, input_kana, input_yomi)
-    assert got_kanji == expected_kanji
-    assert got_yomi == expected_yomi
+    m = f.filter_entry(input_title, input_kana, input_yomi)
+    if m:
+        got_kanji, got_yomi = m
+        assert got_kanji == expected_kanji
+        assert got_yomi == expected_yomi
+    else:
+        assert expected_yomi == None and expected_kanji == None
 

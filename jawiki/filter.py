@@ -320,7 +320,7 @@ class WikipediaFilter:
             yomi = re.sub(r'(生年不詳|生年月日非公表|生没年不詳).*', '', yomi)
             yomi = re.sub(r'現在の芸名.*', '', yomi)
             yomi = re.sub(r'\[\[[' + KANJI_BLOCK + ']+]].*', '', yomi)
-            yomi = re.sub(r'(?:原題|ドイツ語|英語|英文社名|オランダ語|満州語|旧|旧芸名|中国語簡体字|漢語名字|略称|本名|英称|英)[:：].*', '', yomi)
+            yomi = re.sub(r'(?:通称|原題|ドイツ語|英語|英語表記|英文社名|オランダ語|満州語|旧|旧芸名|中国語簡体字|漢語名字|略称|本名|英称|英)[:：は].*', '', yomi)
             yomi = re.sub(r'[（:：,]\s*$', '', yomi)
             yomi = re.sub(r'[,、][（:：,]\s*$', '', yomi)
             yomi = re.sub(r'[,、]\[\[.*$', '', yomi)
