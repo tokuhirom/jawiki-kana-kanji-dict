@@ -84,27 +84,32 @@ IGNORE_ENTRIES = set(
         'ただし',
     ])
 
-if __name__=='__main__':
-    import sys
-    import time
-
-    t0 = time.time()
-
+def read_filtered(fname):
     result = {}
 
-    skkdictpath = sys.argv[1]
-
-    skkdicts = [parse_skkdict(path, encoding='euc-jp') for path in sys.argv[1:]]
-    skkdict = merge_skkdict(skkdicts)
-
-    with open('filtered.tsv', 'r', encoding='utf-8') as ifh, \
-        open('SKK-JISYO.jawiki', 'w', encoding='utf-8') as ofh:
+    with open(fname, 'r', encoding='utf-8') as ifh:
         for line in ifh:
             kanji, yomi = line.strip().split("\t")
             if yomi not in result:
                 result[yomi] = []
             result[yomi].append(kanji)
 
+    return result
+
+if __name__=='__main__':
+    import sys
+    import time
+
+    t0 = time.time()
+
+    skkdictpath = sys.argv[1]
+
+    skkdicts = [parse_skkdict(path, encoding='euc-jp') for path in sys.argv[1:]]
+    skkdict = merge_skkdict(skkdicts)
+
+    result = read_filtered('filtered.tsv')
+
+    with open('SKK-JISYO.jawiki', 'w', encoding='utf-8') as ofh:
         for yomi in sorted(result.keys()):
             if yomi in IGNORE_ENTRIES:
                 continue
