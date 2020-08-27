@@ -25,7 +25,7 @@ filtered.tsv: scanned.tsv filter.py jawiki/filter.py
 	python filter.py scanned.tsv
 
 SKK-JISYO.jawiki: filtered.tsv makedict.py /usr/share/skk/SKK-JISYO.L
-	python makedict.py /usr/share/skk/SKK-JISYO.L
+	python makedict.py /usr/share/skk/SKK-JISYO.L /usr/share/skk/SKK-JISYO.jinmei /usr/share/skk/SKK-JISYO.geo
 
 .PHONY: all test check
 

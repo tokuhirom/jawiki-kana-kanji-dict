@@ -17,3 +17,14 @@ def parse_skkdict(path, encoding='euc-jp'):
 
     return result
 
+def merge_skkdict(dicts):
+    result = {}
+
+    for dic in dicts:
+        for k, v in dic.items():
+            if k not in result:
+                result[k] = []
+            result[k].extend(v)
+
+    return result
+

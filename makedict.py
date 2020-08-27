@@ -1,5 +1,5 @@
 import re
-from jawiki import skkdict
+from jawiki.skkdict import merge_skkdict, parse_skkdict
 
 # filter.py で機械的にはとりのぞきにくいエントリを、このフェーズで除外。
 IGNORE_ENTRIES = set(
@@ -94,7 +94,8 @@ if __name__=='__main__':
 
     skkdictpath = sys.argv[1]
 
-    skkdict = skkdict.parse_skkdict(skkdictpath, encoding='euc-jp')
+    skkdicts = [parse_skkdict(path, encoding='euc-jp') for path in sys.argv[1:]]
+    skkdict = merge_skkdict(skkdicts)
 
     with open('filtered.tsv', 'r', encoding='utf-8') as ifh, \
         open('SKK-JISYO.jawiki', 'w', encoding='utf-8') as ofh:
