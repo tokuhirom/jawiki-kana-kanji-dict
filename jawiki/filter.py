@@ -312,7 +312,7 @@ class WikipediaFilter:
                 break
             results.append(s)
 
-        if len(results) > 2:
+        if len(results) > 3:
             print("TOOMUCHRESULTS:: " + str(results))
 
         return '、'.join(results)
