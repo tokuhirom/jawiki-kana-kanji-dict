@@ -284,18 +284,36 @@ class WikipediaFilter:
             else:
                 pyomi = yomi
 
-        # アイエスオー、イソ、アイソ to アイエスオー
-        if all([is_katakana_or_hiragana_or_nakaguro_or_space(s) for s in yomi.split('、')]):
-            yomi = yomi.split('、')[0]
-
         # 'やまだ たろう' → 'やまだたろう'
         while True:
             yomi, number_of_subs_made = re.subn(NAMEISH_PATTERN, r'\1\2', yomi)
             if number_of_subs_made==0:
                 break
 
+        yomi = self.filter_yomi_entities(kanji, yomi)
+
+        # アイエスオー、イソ、アイソ to アイエスオー
+        if all([is_katakana_or_hiragana_or_nakaguro_or_space(s) for s in yomi.split('、')]):
+            yomi = yomi.split('、')[0]
+
         if '、' in yomi:
             yomi = "、".join([s for s in yomi.split('、') if kanji != kanji_normalize(s)])
 
         return yomi
+
+    def filter_yomi_entities(self, kanji, yomi):
+        entities = yomi.split('、')
+
+        results = []
+        for s in entities:
+            # `今鷹 真（今鷹 眞、いまたか まこと 1934年2月28日- ）` のように、旧字体の場合は無視する。
+            if kanji_normalize(s) == kanji:
+                continue
+            if not is_katakana_or_hiragana_or_nakaguro_or_space(s):
+                break
+            results.append(s)
+
+        if len(results) > 2:
+            print("TOOMUCHRESULTS:: " + str(results))
+        return '、'.join(results)
 
