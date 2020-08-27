@@ -99,9 +99,27 @@ def read_filtered(fname):
 def preproc(dic, skkdict):
     # remove entries in skk dict.
     for yomi in sorted(dic.keys()):
-        dic[yomi] = [x for x in sorted(set(dic[yomi])) if yomi not in skkdict or x not in skkdict[yomi]]
+        dic[yomi] = [kanji for kanji in sorted(set(dic[yomi])) if not should_skip(kanji, yomi, skkdict)]
 
     return dic
+
+
+def should_skip(kanji, yomi, skkdict):
+    if yomi not in skkdict:
+        return False
+
+    if kanji in skkdict[yomi]:
+        return True
+
+    # おめが /冥王計画ゼオライマーΩ/闘神都市Ω/
+    # のようなケースを除外する
+    for skk_kanji in skkdict[yomi]:
+        if skk_kanji in kanji and skk_kanji != kanji:
+            if yomi.startswith('あいおい'):
+                print("skipped: yomi=%s skk_kanji=%s kanji=%s" % (yomi, skk_kanji, kanji))
+            return True
+
+    return False
 
 if __name__=='__main__':
     import sys
