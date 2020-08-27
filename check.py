@@ -11,7 +11,7 @@ assert 'いせきしこく' in d
 assert 'きうちきょう' in d
 assert 'おおとにー' in d
 
-assert 'あに。' not in d.get('あにまる')
+assert 'あに。' in d.get('あにまる')
 
 assert 'いずれもろっくふぃるだむ' not in d
 assert 'のちの' not in d
