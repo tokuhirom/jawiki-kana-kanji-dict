@@ -50,11 +50,8 @@ class WikipediaFilter:
         kanji = self.kanji_filter(kanji)
         yomi = self.basic_filter(yomi)
         yomi = self.yomi_filter(yomi, kanji)
-        yomi = jaconv.kata2hira(yomi)
         kanji, yomi = hojin_filter(kanji, yomi)
 
-        # remove spaces in yomi
-        yomi = re.sub(r'\s', r'', yomi)
         # 全角スペースを半角に
         kanji = re.sub(r'\s', r' ', kanji)
 
@@ -239,6 +236,8 @@ class WikipediaFilter:
         kanji = re.sub(r'\[\[(?:.*)\|(.*)\]\]', r'\1', kanji)
         kanji = re.sub(r'\[\[(.*)\]\]', r'\1', kanji)
 
+        kanji = re.sub(r'\s+', r' ', kanji)
+
         # '山田 太朗' → 山田太朗
         while True:
             kanji, number_of_subs_made = re.subn(NAMEISH_PATTERN, r'\1\2', kanji)
@@ -284,11 +283,8 @@ class WikipediaFilter:
             else:
                 pyomi = yomi
 
-        # 'やまだ たろう' → 'やまだたろう'
-        while True:
-            yomi, number_of_subs_made = re.subn(NAMEISH_PATTERN, r'\1\2', yomi)
-            if number_of_subs_made==0:
-                break
+        # remove spaces in yomi
+        yomi = re.sub(r'\s+', r'', yomi)
 
         yomi = self.filter_yomi_entities(kanji, yomi)
 
@@ -298,6 +294,9 @@ class WikipediaFilter:
 
         if '、' in yomi:
             yomi = "、".join([s for s in yomi.split('、') if kanji != kanji_normalize(s)])
+
+        yomi = jaconv.kata2hira(yomi)
+
 
         return yomi
 
@@ -315,5 +314,6 @@ class WikipediaFilter:
 
         if len(results) > 2:
             print("TOOMUCHRESULTS:: " + str(results))
+
         return '、'.join(results)
 
