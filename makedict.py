@@ -96,6 +96,13 @@ def read_filtered(fname):
 
     return result
 
+def preproc(dic, skkdict):
+    # remove entries in skk dict.
+    for yomi in sorted(dic.keys()):
+        dic[yomi] = [x for x in sorted(set(dic[yomi])) if yomi not in skkdict or x not in skkdict[yomi]]
+
+    return dic
+
 if __name__=='__main__':
     import sys
     import time
@@ -108,13 +115,14 @@ if __name__=='__main__':
     skkdict = merge_skkdict(skkdicts)
 
     result = read_filtered('filtered.tsv')
+    result = preproc(result, skkdict)
 
     with open('SKK-JISYO.jawiki', 'w', encoding='utf-8') as ofh:
         for yomi in sorted(result.keys()):
             if yomi in IGNORE_ENTRIES:
                 continue
 
-            kanjis = [x for x in sorted(set(result[yomi])) if yomi not in skkdict or x not in skkdict[yomi]]
+            kanjis = result[yomi]
             if len(kanjis) != 0:
                 ofh.write("%s /%s/\n" % (yomi, '/'.join(kanjis)))
             if len(kanjis) > 20:
