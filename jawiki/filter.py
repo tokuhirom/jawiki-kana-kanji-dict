@@ -3,6 +3,7 @@ import jaconv
 import html
 
 from jawiki.jachars import HIRAGANA_BLOCK, KANJI_BLOCK, KATAKANA_BLOCK, is_katakana_or_hiragana_or_nakaguro_or_space, is_katakana, is_kanji, is_hiragana, kanji_normalize
+from jawiki.hojin import hojin_filter
 
 NAMEISH_PATTERN = re.compile(r'([' + HIRAGANA_BLOCK + KANJI_BLOCK + KATAKANA_BLOCK + ']+)[\u0020\u3000]+([' + HIRAGANA_BLOCK + KANJI_BLOCK + KATAKANA_BLOCK + ']+)')
 
@@ -23,18 +24,6 @@ INVALID_KANJI_PATTERNS = [
     re.compile(r'.*の登場(?:人物|キャラクター|仮面ライダー|怪獣|メカ|兵器|組織|馬|人物一覧|レスラー|人物の索引)$'),
     # '第43話 - 第45話', 'ものくろ'
     re.compile(r'第\d+話'),
-]
-
-HOJIN_PATTERNS = [
-    ('株式会社', ['かぶしきがいしゃ', 'かぶしきかいしゃ']),
-    ('合同会社', ['ごうどうがいしゃ', 'ごうどうかいしゃ']),
-    ('有限会社', ['ゆうげんがいしゃ', 'ゆうげんかいしゃ']),
-    ('一般社団法人', ['いっぱんしゃだんほうじん']),
-    ('一般財団法人', ['いっぱんざいだんほうじん']),
-    ('学校法人', ['がっこうほうじん']),
-    ('公益財団法人', ['こうえきざいだんほうじん']),
-    ('公益社団法人',['こうえきしゃだんほうじん']),
-    ('特定非営利活動法人',['とくていひえいりかつどうほうじん']),
 ]
 
 def default_skip_logger(reason, line):
@@ -62,7 +51,7 @@ class WikipediaFilter:
         yomi = self.basic_filter(yomi)
         yomi = self.yomi_filter(yomi, kanji)
         yomi = jaconv.kata2hira(yomi)
-        kanji, yomi = self.hojin_filter(kanji, yomi)
+        kanji, yomi = hojin_filter(kanji, yomi)
 
         # remove spaces in yomi
         yomi = re.sub(r'\s', r'', yomi)
@@ -309,26 +298,4 @@ class WikipediaFilter:
             yomi = "、".join([s for s in yomi.split('、') if kanji != kanji_normalize(s)])
 
         return yomi
-
-    # 株式会社少年画報社:しょうねんがほうしゃ -> 少年画報社:しょうねんがほうしゃ
-    # 京浜急行電鉄株式会社:けいひんきゅうこうでんてつ -> 京浜急行電鉄:けいひんきゅうこうでんてつ
-    def hojin_filter(self, kanji, yomi):
-        for f in HOJIN_PATTERNS:
-            (k, ys) = f
-            for y in ys:
-                if kanji.startswith(k) and not yomi.startswith(y):
-                    kanji = kanji.lstrip(k)
-                if kanji.startswith(k) and yomi.startswith(y):
-                    kanji = kanji.lstrip(k)
-                    yomi = yomi.lstrip(y)
-                if not kanji.startswith(k) and yomi.startswith(y):
-                    yomi = yomi.lstrip(y)
-                if kanji.endswith(k) and not yomi.endswith(y):
-                    kanji = kanji[:-len(k)]
-                if kanji.endswith(k) and yomi.endswith(y):
-                    kanji = kanji[:-len(k)]
-                    yomi = yomi[:-len(y)]
-                if not kanji.endswith(k) and yomi.endswith(y):
-                    yomi = yomi[:-len(y)]
-        return (kanji, yomi)
 
