@@ -8,6 +8,8 @@ on:
     branches: [ master ]
   pull_request:
     branches: [ master ]
+  schedule:
+    - cron:  '13 13 */20 * *'
 
 jobs:
   build:
@@ -34,6 +36,17 @@ jobs:
     - name: Test with pytest
       run: |
         pytest
-    - name: git satus
+    - name: make
       run: |
-        git status
+        make
+    - name: Commit
+      run: |
+        git config --global user.email "tokuhriom@gmail.com"
+        git config --global user.name "tokuhirom by github actions"
+        git commit -a -m 'Update dictionary'
+    - name: push
+      run: git push origin master
+    - name: Check result
+      run: |
+        make check
+
