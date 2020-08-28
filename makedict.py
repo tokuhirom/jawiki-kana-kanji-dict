@@ -5,8 +5,12 @@ import logging
 # filter.py で機械的にはとりのぞきにくいエントリを、このフェーズで除外。
 IGNORE_YOMIS = set(
     [
+        'てれび',
         'あふがにすたんふんそう',
         'いとうすけのぶ',
+        'あなたがいるから',
+        'かつ',
+        'べーすめんともんすたー',
         # ありがとう /ARIGATO!/有賀桃/謝謝你，在世界的角落找到我/謝謝你，在世界角落中找到我/
         'ありがとう',
         # らいぶ /Five Colours in Her Hair/LIVE/LiVE/L×I×V×E/Obviously/Room on 3rd Floor/That Girl/The Ballad of Paul K/Ultraviolet/耒部/雷舞/
@@ -150,7 +154,7 @@ def should_skip(kanji, yomi, skkdict):
     # のようなケースを除外する
     for skk_kanji in skkdict[yomi]:
         if skk_kanji in kanji and skk_kanji != kanji:
-            logging.info("skipped entry: yomi=%s skk_kanji=%s kanji=%s" % (yomi, skk_kanji, kanji))
+            logging.debug("skipped entry: yomi=%s skk_kanji=%s kanji=%s" % (yomi, skk_kanji, kanji))
             return True
 
     return False
@@ -180,7 +184,7 @@ if __name__ == '__main__':
             kanjis = result[yomi]
             if len(kanjis) != 0:
                 ofh.write("%s /%s/\n" % (yomi, '/'.join(kanjis)))
-            if len(kanjis) > 5:
+            if len(kanjis) > 20:
                 logging.info("This entry contains too many kanjis: %s -> %s" % (yomi, kanjis))
 
     logging.info("Scanned: {0} seconds".format(time.time()-t0))
