@@ -70,6 +70,12 @@ def test_pair(kanji, yomi):
     ('Five Colours in Her Hair', 'らいぶ'),
     ('LOVE Seiko Matsuda 20th Anniversary Best Selection', 'らゔ'),
     ('You♡I -Sweet Tuned by 5pb.-', 'ゆい'),
+    ('尾道市土生幼稚園', 'めりー'),
+    ('激突3&IMPACT.9', 'べーすめんともんすたー'),
+    ('Guitar：Shin', 'しん'),
+    ('Thank you, ROCK BANDS! 〜UNISON SQUARE GARDEN 15th Anniversary Tribute Album〜', 'さんきゅー'),
+    ('日本初', 'かつ'),
+    ('あなたがいるから、矢口真里', 'あなたがいるから'),
 ])
 def test_no_pair(kanji, yomi):
     assert yomi not in d or kanji not in d.get(yomi)
@@ -84,20 +90,8 @@ def test_no_pair(kanji, yomi):
     ('ぼーこーどあるいはぼどーこーど'),
     ('さんばーすと'),
     ('いいか'),
+    ('てれび'),
 ])
 def test_not_in(yomi):
     assert yomi not in d
-
-# INFO:root:めりー -> ['MELLIE', 'Mery', '個人所有', '尾道市土生幼稚園', '源清田小学校', '石岡市愛友幼稚園', '神戸市千鳥幼稚園', '秋田市土崎幼稚園', '郡山婦人会幼児保育所']                    
-# INFO:root:べーすめんともんすたー -> ['BASEMENT MONSTAR', 'IMPACT.11×DFC', 'IMPACT.12×DFC', 'IMPACT.3', 'IMPACT.4', '激突3&IMPACT.9']                                                          
-# INFO:root:てれび -> ['CVY自主放送', 'テレビ東京20年史', 'テレビ東京25年史', 'テレビ東京30年史', 'テレビ西日本', '見て']                                                                       
-# INFO:root:しん -> ['Guitar：Shin', 'SHIN', 'SIN', 'SINN', 'Shin', 'Shing', 'Sin']                                                                                                             
-# INFO:root:さんきゅー -> ['THANK YOU', 'Thank You', 'Thank You!', 'Thank you', 'Thank you, ROCK BANDS! 〜UNISON SQUARE GARDEN 15th Anniversary Tribute Album〜', 'thank you.']                 
-# INFO:root:かつ -> ['KAT', 'KATSU', 'KATSU!', 'KATZ', 'Katsu', '日本初']                                                                                                                       
-
-
-
-
-
-
 
