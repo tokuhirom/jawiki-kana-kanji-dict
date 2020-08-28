@@ -61,6 +61,7 @@ def test_pair(kanji, yomi):
     ('86校', 'うち'),
     ('INDIES', 'いんでぃーず'),
     ('ZAZZY', 'いんでぃーず'),
+    ('長谷川榮', 'ゑい'),
 ])
 def test_no_pair(kanji, yomi):
     assert yomi not in d or kanji not in d.get(yomi)
