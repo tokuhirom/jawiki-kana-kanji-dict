@@ -6,9 +6,9 @@ HOJIN_PATTERNS = [
     ('一般財団法人', ['いっぱんざいだんほうじん']),
     ('学校法人', ['がっこうほうじん']),
     ('公益財団法人', ['こうえきざいだんほうじん']),
-    ('公益社団法人',['こうえきしゃだんほうじん']),
-    ('特定非営利活動法人',['とくていひえいりかつどうほうじん']),
-    ('国立研究開発法人',['こくりつけんきゅうかいはつほうじん']),
+    ('公益社団法人', ['こうえきしゃだんほうじん']),
+    ('特定非営利活動法人', ['とくていひえいりかつどうほうじん']),
+    ('国立研究開発法人', ['こくりつけんきゅうかいはつほうじん']),
     ('社団法人', ['しゃだんほうじん']),
     ('NPO法人', ['えぬぴーおーほうじん']),
     ('独立行政法人', ['どくりつぎょうせいほうじん']),
@@ -35,12 +35,14 @@ HOJIN_PATTERNS = [
 
 # 株式会社少年画報社:しょうねんがほうしゃ -> 少年画報社:しょうねんがほうしゃ
 # 京浜急行電鉄株式会社:けいひんきゅうこうでんてつ -> 京浜急行電鉄:けいひんきゅうこうでんてつ
+
+
 def hojin_filter(kanji, yomi):
     for f in HOJIN_PATTERNS:
         (k, ys) = f
 
         for y in ys:
-            if k==kanji and y==yomi:
+            if k == kanji and y == yomi:
                 break
 
             if kanji.startswith(k) and not yomi.startswith(y):
@@ -58,4 +60,3 @@ def hojin_filter(kanji, yomi):
             if not kanji.endswith(k) and yomi.endswith(y):
                 yomi = yomi[:-len(y)]
     return (kanji, yomi)
-

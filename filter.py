@@ -2,7 +2,7 @@ from jawiki import filter
 import multiprocessing as mp
 import logging
 
-if __name__=='__main__':
+if __name__ == '__main__':
     import sys
     import time
 
@@ -13,9 +13,8 @@ if __name__=='__main__':
 
     t0 = time.time()
 
-
     with open('filtered.tsv', 'w', encoding='utf-8') as ofh, \
-         open('skipped.tsv', 'w', encoding='utf-8') as skipfh:
+            open('skipped.tsv', 'w', encoding='utf-8') as skipfh:
 
         def skip_logger(reason, line):
             skipfh.write("%s\t%s\n" % (reason.replace("\t", ' '), str(line).replace("\t", ' ')))
@@ -48,13 +47,12 @@ if __name__=='__main__':
                     result = pool.apply_async(worker, args=(buf,))
                     results_pool.append(result)
                     buf = []
-            if len(buf)>0:
+            if len(buf) > 0:
                 result = pool.apply_async(worker, args=(buf,))
                 results_pool.append(result)
 
-
             while True:
-                num = [ r.ready() for r in results_pool].count(True)
+                num = [r.ready() for r in results_pool].count(True)
                 for r in results_pool:
                     if r.ready():
                         results = r.get()
@@ -69,4 +67,3 @@ if __name__=='__main__':
                     break
 
         print("Filtered in " + str(time.time()-t0) + " seconds")
-

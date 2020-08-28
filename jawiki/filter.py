@@ -2,7 +2,7 @@ import re
 import jaconv
 import html
 
-from statistics import mean 
+from statistics import mean
 
 import Levenshtein
 
@@ -30,12 +30,14 @@ INVALID_KANJI_PATTERNS = [
     re.compile(r'第\d+話'),
 ]
 
+
 def default_skip_logger(reason, line):
     print("<<<%s>>> %s" % (reason, line))
 
+
 class WikipediaFilter:
 
-    def __init__(self, skip_logger = default_skip_logger):
+    def __init__(self, skip_logger=default_skip_logger):
         self.skip_logger = skip_logger
 
     def log_skip(self, reason, line):
@@ -77,7 +79,7 @@ class WikipediaFilter:
 
         # 「または」で始まるものは基本的に除外したほうがいいが、いくつかだけキャッチアップしよう。
         if yomi.startswith('または'):
-            if len([1 for n in ['またはちろう', 'またはりひゃっかてん', 'またはり'] if yomi.startswith(n)])==0:
+            if len([1 for n in ['またはちろう', 'またはりひゃっかてん', 'またはり'] if yomi.startswith(n)]) == 0:
                 self.log_skip('ignorable yomi prefix: %s' % (yomi_prefix), [kanji, yomi])
                 return False
 
@@ -119,7 +121,7 @@ class WikipediaFilter:
             self.log_skip('kanji is hiragana', [kanji, yomi])
             return False
 
-        for kanji_prefix in ['〜', '『', '「', '＜', '〈','《', '／', '日本の']:
+        for kanji_prefix in ['〜', '『', '「', '＜', '〈', '《', '／', '日本の']:
             if kanji.startswith(kanji_prefix):
                 self.log_skip('kanji starts with %s' % kanji_prefix, [kanji, yomi])
                 return False
@@ -134,34 +136,34 @@ class WikipediaFilter:
             'ただし、',
             # この音は'''ハーフ・ストップ'''（あるいはエコー、ハーフ・ミュート）と呼ばれる。
             'あるいは',
-            'おりんぴっくの',]:
+                'おりんぴっくの', ]:
             if yomi.startswith(yomi_prefix):
                 self.log_skip('yomi starts with %s' % yomi_prefix, [kanji, yomi])
                 return False
 
         # yomi infx
         for yomi_infix in [
-                # ''w3m'''（ダブリューサンエム または ダブリュースリーエム）
-                ' または ',
-                'における',
-                'あるいは',
-                "'''",
-                '[',
-            ]:
+            # ''w3m'''（ダブリューサンエム または ダブリュースリーエム）
+            ' または ',
+            'における',
+            'あるいは',
+            "'''",
+            '[',
+        ]:
             if yomi_infix in yomi:
                 self.log_skip('yomi contains %s' % yomi_infix, [kanji, yomi])
                 return False
 
         # kanji infx
         for kanji_infix in [
-                # '''Keyboard / kAoru ikArAshi / 五十嵐 馨'''（いからし かおる）
-                '/',
-                "''",
-                '{{',
-                '[[',
-                '(',
-                '（',
-            ]:
+            # '''Keyboard / kAoru ikArAshi / 五十嵐 馨'''（いからし かおる）
+            '/',
+            "''",
+            '{{',
+            '[[',
+            '(',
+            '（',
+        ]:
             if kanji_infix in kanji:
                 self.log_skip('kanji contains %s' % kanji_infix, [kanji, yomi])
                 return False
@@ -245,7 +247,7 @@ class WikipediaFilter:
         # '''{{linktext|六根}}'''（ろっこん）
         kanji = re.sub(r'\{\{(?:En|IPA-en|要出典範囲|linktext|unicode|Anchor|Vanchor|[A-Z0-9]+フォント)\|(.+)\}\}', r'\1', kanji)
 
-        # [[ページ名|リンクラベル]] 
+        # [[ページ名|リンクラベル]]
         kanji = re.sub(r'\[\[(?:.*)\|(.*)\]\]', r'\1', kanji)
         kanji = re.sub(r'\[\[(.*)\]\]', r'\1', kanji)
 
@@ -254,7 +256,7 @@ class WikipediaFilter:
         # '山田 太朗' → 山田太朗
         while True:
             kanji, number_of_subs_made = re.subn(NAMEISH_PATTERN, r'\1\2', kanji)
-            if number_of_subs_made==0:
+            if number_of_subs_made == 0:
                 break
 
         return kanji
@@ -336,4 +338,3 @@ class WikipediaFilter:
                     return ''
 
         return '、'.join(results)
-

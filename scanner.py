@@ -30,7 +30,6 @@ class WikipediaXmlScanner:
                             print(title, m[0], m[1])
                         yield (title, m[0], m[1])
 
-
     def is_ignorable_title(self, title):
         if title == '常用漢字':
             return True
@@ -51,7 +50,7 @@ class WikipediaXmlScanner:
 
 
 # around 3 minutes on my SSD.
-if __name__=='__main__':
+if __name__ == '__main__':
     import sys
     import time
 
@@ -70,4 +69,3 @@ if __name__=='__main__':
                 ))
 
         print("Scanned: " + fname + " in " + str(time.time()-t0) + " seconds")
-

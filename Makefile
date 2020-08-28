@@ -7,7 +7,7 @@ check: SKK-JISYO.jawiki
 	pytest check.py
 
 test:
-	pytest tests/test_*.py
+	pytest
 	pyflakes *.py */*.py
 
 jawiki-latest-pages-articles.xml.bz2:

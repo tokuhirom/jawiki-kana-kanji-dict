@@ -1,5 +1,6 @@
 import re
 
+
 def parse_skkdict(path, encoding='euc-jp'):
     result = {}
 
@@ -17,6 +18,7 @@ def parse_skkdict(path, encoding='euc-jp'):
 
     return result
 
+
 def merge_skkdict(dicts):
     result = {}
 
@@ -27,4 +29,3 @@ def merge_skkdict(dicts):
             result[k].extend(v)
 
     return result
-

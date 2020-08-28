@@ -3,6 +3,7 @@ from jawiki import skkdict
 
 d = skkdict.parse_skkdict('SKK-JISYO.jawiki', encoding='utf-8')
 
+
 @pytest.mark.parametrize("yomi", [
     ('きんぐぬー'),
     ('れいわ'),
@@ -18,15 +19,16 @@ d = skkdict.parse_skkdict('SKK-JISYO.jawiki', encoding='utf-8')
 def test_yomo(yomi):
     assert yomi in d
 
+
 @pytest.mark.parametrize("kanji,yomi", [
     ('安蘇山', 'あそさん'),
-    ('あに。' ,'あにまる'),
-    ('南夕子' ,'みなみゆうこ'),
-    ('青井惟董' ,'あおいこれただ'),
-    ('赤プル' ,'あかぷる'),
-    ('安藤孝子' ,'あんどうたかこ'),
-    ('EX大衆' ,'いーえっくすたいしゅう'),
-    ('古崤関' ,'ここうかん'),
+    ('あに。', 'あにまる'),
+    ('南夕子', 'みなみゆうこ'),
+    ('青井惟董', 'あおいこれただ'),
+    ('赤プル', 'あかぷる'),
+    ('安藤孝子', 'あんどうたかこ'),
+    ('EX大衆', 'いーえっくすたいしゅう'),
+    ('古崤関', 'ここうかん'),
     ('鬼滅の刃', 'きめつのやいば'),
     ('鬱多羅僧', 'うったらそう'),
     ('三衣一鉢', 'さんねいっぱつ'),
@@ -38,6 +40,7 @@ def test_yomo(yomi):
 def test_pair(kanji, yomi):
     print([kanji, yomi, d.get(yomi)])
     assert kanji in d.get(yomi)
+
 
 @pytest.mark.parametrize("kanji,yomi", [
     # '''（初代）京山 華千代'''（きょうやま はなちよ、[[1904年]]（[[明治]]37年）[[8月11日]] - [[1983年]]（[[昭和]]58年）[[1月7日]]）
@@ -69,6 +72,8 @@ def test_no_pair(kanji, yomi):
     assert yomi not in d or kanji not in d.get(yomi)
 
 # はいっていてはいけないもの
+
+
 @pytest.mark.parametrize("yomi", [
     ('いずれもろっくふぃるだむ'),
     ('のちの'),
@@ -81,4 +86,3 @@ def test_no_pair(kanji, yomi):
 ])
 def test_not_in(yomi):
     assert yomi not in d
-

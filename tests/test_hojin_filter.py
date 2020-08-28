@@ -1,10 +1,7 @@
 import pytest
-import sys
-import os
-
-sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..'))
 
 from jawiki.hojin import hojin_filter
+
 
 @pytest.mark.parametrize("kanji,kana,expected_kanji,expected_kana", [
     ('愛知県地方木材株式会社', 'あいちけんちほうもくざいかぶしきがいしゃ', '愛知県地方木材', 'あいちけんちほうもくざい'),
@@ -19,4 +16,3 @@ def test_hojin_filter(kanji, kana, expected_kanji, expected_kana):
     kanji, yomi = hojin_filter(kanji, kana)
     assert kanji == expected_kanji
     assert yomi == expected_kana
-

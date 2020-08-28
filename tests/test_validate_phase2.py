@@ -1,9 +1,5 @@
-import sys
-import os
-
-sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..'))
-
 from jawiki import filter
+
 
 def test_validate_phase2():
     f = filter.WikipediaFilter()
@@ -24,8 +20,8 @@ def test_validate_phase2():
     assert f.validate_phase2('アイコナール近似', 'あいこなーるきんじ') == True
     assert f.validate_phase2('アイム・キンキ理容美容専門学校', 'あいむきんきりようびようせんもんがっこう') == True
 
+
 def test_validate_phase2_postfix():
     f = filter.WikipediaFilter()
     assert f.validate_phase2('本来はジョイスティック', 'あーけーどすてぃっく') == False
     assert f.validate_phase2('谷本ヨーコ', 'たにもとようこ') == True
-
