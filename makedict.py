@@ -1,4 +1,3 @@
-import re
 from jawiki.skkdict import merge_skkdict, parse_skkdict
 
 # filter.py で機械的にはとりのぞきにくいエントリを、このフェーズで除外。
@@ -6,6 +5,8 @@ IGNORE_ENTRIES = set(
     [
         'あふがにすたんふんそう',
         'いとうすけのぶ',
+        # ありがとう /ARIGATO!/有賀桃/謝謝你，在世界的角落找到我/謝謝你，在世界角落中找到我/
+        'ありがとう',
         # いる /109万本/炒る/
         'いる',
         # あめりか /IPTP LLC/NO TOY GETS LEFT BEHIND/ベンジャミン/レコード・ワールド/一般的受容方式/
