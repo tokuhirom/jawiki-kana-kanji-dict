@@ -36,6 +36,8 @@ def test_yomo(yomi):
     ('姶良サティ', 'あいらさてぃ'),
     ('青木十良', 'あおきじゅうろう'),
     ('穴門みかん', 'あなとみかん'),
+    ('Eye-Fi', 'あいふぁい'),
+    ('ABBA', 'あば'),
 ])
 def test_pair(kanji, yomi):
     print([kanji, yomi, d.get(yomi)])
@@ -76,6 +78,7 @@ def test_pair(kanji, yomi):
     ('Thank you, ROCK BANDS! 〜UNISON SQUARE GARDEN 15th Anniversary Tribute Album〜', 'さんきゅー'),
     ('日本初', 'かつ'),
     ('あなたがいるから、矢口真里', 'あなたがいるから'),
+    ('島津安樹朗', 'あきお'),
 ])
 def test_no_pair(kanji, yomi):
     assert yomi not in d or kanji not in d.get(yomi)
@@ -95,3 +98,10 @@ def test_no_pair(kanji, yomi):
 def test_not_in(yomi):
     assert yomi not in d
 
+# あがる /△△通○○上ル/
+# いえす /YES/YES!!!/YES, NO./Yes/
+# いみ /忌み、斎み/
+# いろは /iroha/優勝内国産馬連合競走/
+# いわたみつおのちょうらじ /Voice of A&G Digital 岩田光央の超ラジ!/
+# うちゅうけいじたましい /宇宙刑事魂 THE SPACE SHERIFF SPIRITS/
+# うづ /精衛海を填

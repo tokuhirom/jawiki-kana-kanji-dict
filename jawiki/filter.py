@@ -1,6 +1,7 @@
 import re
 import jaconv
 import html
+import romkan
 
 from statistics import mean
 
@@ -113,7 +114,7 @@ class WikipediaFilter:
             self.log_skip('yomi is too short!', [kanji, yomi])
             return False
 
-        if len(yomi) * 2 < len(kanji):
+        if len(romkan.to_roma(yomi))*1.5 < len(kanji):
             self.log_skip('yomi is too short...', [kanji, yomi])
             return False
 
