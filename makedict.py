@@ -1,13 +1,18 @@
 from jawiki.skkdict import merge_skkdict, parse_skkdict
 import logging
 
+
 # filter.py で機械的にはとりのぞきにくいエントリを、このフェーズで除外。
-IGNORE_ENTRIES = set(
+IGNORE_YOMIS = set(
     [
         'あふがにすたんふんそう',
         'いとうすけのぶ',
         # ありがとう /ARIGATO!/有賀桃/謝謝你，在世界的角落找到我/謝謝你，在世界角落中找到我/
         'ありがとう',
+        # らいぶ /Five Colours in Her Hair/LIVE/LiVE/L×I×V×E/Obviously/Room on 3rd Floor/That Girl/The Ballad of Paul K/Ultraviolet/耒部/雷舞/
+        'らいぶ',
+        # らゔ /LOVE/LOVE Seiko Matsuda 20th Anniversary Best Selection/LUV/Love/LØVE/♥♥♥LOVE♥♥♥/
+        'らゔ',
         # いる /109万本/炒る/
         'いる',
         # あめりか /IPTP LLC/NO TOY GETS LEFT BEHIND/ベンジャミン/レコード・ワールド/一般的受容方式/
@@ -169,7 +174,7 @@ if __name__ == '__main__':
 
     with open('SKK-JISYO.jawiki', 'w', encoding='utf-8') as ofh:
         for yomi in sorted(result.keys()):
-            if yomi in IGNORE_ENTRIES:
+            if yomi in IGNORE_YOMIS:
                 continue
 
             kanjis = result[yomi]
