@@ -110,7 +110,11 @@ class WikipediaFilter:
             return False
 
         if len(yomi) < 2:
-            self.log_skip('yomi is too short', [kanji, yomi])
+            self.log_skip('yomi is too short!', [kanji, yomi])
+            return False
+
+        if len(yomi) * 5 < len(kanji):
+            self.log_skip('yomi is too short...', [kanji, yomi])
             return False
 
         if not is_hiragana(yomi):
