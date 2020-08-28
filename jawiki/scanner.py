@@ -1,9 +1,8 @@
 import re
 
-YOMI_PATTERN  = re.compile(r"""'''(.+?)'''（(.+?)）""")
 
-def scan_until_closing_paren(s):
-    level = 1
+def scan_until_closing_paren(s, start_level=1):
+    level = start_level
     yomi = ''
     for i in range(len(s)):
         if s[i] == '（' or s[i] == '(':
@@ -18,84 +17,43 @@ def scan_until_closing_paren(s):
     # 最後まで対応するコッカが見つからない場合でも、返す。
     return s, yomi
 
+# {{読み仮名|'''漢字'''|かな}} のパターンを除去する
+# （='''糞掃'''）
 # '''漢字'''（ふりがな）
 # 『'''漢字'''』（ふりがな）
-START_PATTERN = re.compile(r"(『?''')")
-def scan_pattern1(s):
-    m = START_PATTERN.search(s)
-    if m is None:
-        return s, None, None
-
-    end_token = r"'''（" if m[0] == "'''" else "'''』（"
-
-    end_start = s.find(end_token, len(m[0]))
-    if end_start!=-1:
-        kanji = s[m.end():end_start]
-        s = s[end_start+len(end_token):]
-        s, yomi = scan_until_closing_paren(s)
-        return s, kanji, yomi
-
-    return s, None, None
-
-def scan_pattern(start_token, end_token):
-    def scan_pattern2(s, start_token="'''", end_token="'''（"):
-        m = s.find(start_token)
-        if m==-1:
-            return s, None, None
-
-        end_start = s.find(end_token, m)
-        if end_start!=-1:
-            kanji = s[m+len(start_token):end_start]
-            s = s[end_start+len(end_token):]
-            s, yomi = scan_until_closing_paren(s)
-            return s, kanji, yomi
-
-        return s, None, None
-    return lambda s: scan_pattern2(s, start_token, end_token)
-
-
-# {{読み仮名|'''プラカシー油'''|ぷらかしーゆ}}
-def scan_yomigana(s):
-    p = s.find(r"{{読み仮名|'''")
-    if p==-1:
-        return s, None, None
-
-    q = s.find(r"'''|", p+len("{{読み仮名|'''"))
-    if q==-1:
-        return s, None, None
-
-    kanji = s[p+len("{{読み仮名|'''"):q]
-
-    r = s.find(r"}}", q+4)
-    if r==-1:
-        return s, None, None
-
-    yomi = s[q+4:r]
-    if yomi[-1] == '|':
-        yomi = yomi[:-1]
-
-    s = s[r+2:]
-
-    return s, kanji, yomi
+# 『'''EX大衆'''（イーエックスたいしゅう）』
+YOMI_PATTERN  = re.compile(r"""\{\{読み仮名\|'''(.+?)'''\|([^|]+?)\|?\}\}|'''([^']+)'''[^（』]|'''(.+?)'''（(.+?)(?:[）\)]|$)|『'''(.+?)'''』?（(.+?)(?:[）\)]|$)""")
 
 def scan_words(s):
-    for scanner in [scan_yomigana]:
-        t = s
-        while True:
-            t, kanji, yomi = scanner(t)
-            if kanji != None:
-                yield kanji, yomi
-            else:
-                break
+    while True:
+        m = YOMI_PATTERN.search(s)
+        if m:
+            # {{読み仮名|'''漢字'''|かな}}
+            if m[1] and m[2]:
+                yield m[1], m[2]
+                s = s[m.end():]
+                continue
 
-    # {{読み仮名|'''漢字'''|かな}} のパターンを除去する
-    s = re.sub(r"""\{\{読み仮名\|'''.*?'''\|.*?\|?\}\}""", '', s)
-    for scanner in [scan_pattern("'''", "'''（"), scan_pattern("『'''", "'''』（")]:
-        t = s
-        while True:
-            t, kanji, yomi = scanner(t)
-            if kanji != None:
-                yield kanji, yomi
-            else:
-                break
+            # （='''糞掃'''）
+            if m[3]:
+                s = s[m.end():]
+                continue
+
+            # '''漢字'''（ふりがな）
+            for i, j in [(4,5), (6,7)]:
+                if m[i] and m[j]:
+                    kanji = m[i]
+                    yomi = m[j]
+                    if '（' in yomi:
+                        s = s[m.end():]
+                        s, ext_yomi = scan_until_closing_paren(s, start_level=yomi.count('（')+0)
+                        yomi += '）' + ext_yomi
+                    else:
+                        s = s[m.end():]
+                    yield kanji, yomi
+                    break
+
+            continue
+
+        break
 
