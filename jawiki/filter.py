@@ -6,13 +6,12 @@ from statistics import mean
 
 import Levenshtein
 
-from jawiki.jachars import HIRAGANA_BLOCK, KANJI_BLOCK, KATAKANA_BLOCK, is_katakana_or_hiragana_or_nakaguro_or_space, is_katakana, is_kanji, is_hiragana, kanji_normalize
+from jawiki.jachars import HIRAGANA_BLOCK, KANJI_BLOCK, KATAKANA_BLOCK, is_katakana_or_hiragana_or_nakaguro_or_space, is_katakana, is_kanji, is_hiragana, kanji_normalize, HIRAGANA_NORMALIZER, normalize_hiragana
+
 from jawiki.hojin import hojin_filter
 
 NAMEISH_PATTERN = re.compile(r'([' + HIRAGANA_BLOCK + KANJI_BLOCK + KATAKANA_BLOCK + ']+)[\u0020\u3000]+([' + HIRAGANA_BLOCK + KANJI_BLOCK + KATAKANA_BLOCK + ']+)')
 
-# きうちきょう /木内キヤウ/
-HIRAGANA_NORMALIZER = str.maketrans('ゐゑをっあいうえおふぁぃぅぇぉゃゅょやゆよ', 'ーーーつーーーーーうあいうえおよよよよよよ')
 
 INVALID_KANJI_PATTERNS = [
     # 9代式守伊之助
@@ -173,13 +172,21 @@ class WikipediaFilter:
                 return False
 
         # katakana prefix
+        normalized_yomi = normalize_hiragana(yomi)
         m = re.match(r'^([' + KATAKANA_BLOCK + ']+)', kanji)
         if m:
             prefix = m[1]
-            prefix_hira = jaconv.kata2hira(prefix).translate(HIRAGANA_NORMALIZER)
-            normalized_yomi = yomi.translate(HIRAGANA_NORMALIZER)
+            prefix_hira = normalize_hiragana(jaconv.kata2hira(prefix))
             if not normalized_yomi.startswith(prefix_hira):
                 self.log_skip("Kanji prefix and yomi prefix aren't same: normalized_yomi=%s prefix_hira=%s" % (normalized_yomi, prefix_hira), [kanji, yomi])
+                return False
+
+        # '''大切な者との記憶'''（キューブ） のようなものを除外。
+        for k in re.findall(r'([' + HIRAGANA_BLOCK + ']+)', kanji):
+            k = normalize_hiragana(k)
+            if k not in normalized_yomi:
+                if yomi.startswith('あぁ'):
+                    print("AAAAAAA kanji={0} yomi={1} chars={2} normalized_yomi={3}".format(kanji, yomi, k, normalized_yomi))
                 return False
 
         # katakana postfix

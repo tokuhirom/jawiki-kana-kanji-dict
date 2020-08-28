@@ -21,3 +21,12 @@ def test_is_katakana():
     assert jachars.is_katakana('アイ・エム・アイ') == False
     assert jachars.is_katakana('KEIYOGINKO') == False
 
+@pytest.mark.parametrize("s,p", [
+    ('ひ', 'い'),
+    ('あゝ', 'ああ'),
+    ('いすゞ', 'いすず'),
+    ('へる', 'える'),
+])
+def test_normalize_hiragana(s, p):
+    assert jachars.normalize_hiragana(s) == jachars.normalize_hiragana(p)
+

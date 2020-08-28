@@ -21,7 +21,7 @@ grepped.txt: jawiki-latest-pages-articles.xml
 scanned.tsv: grepped.txt scanner.py jawiki/scanner.py
 	python scanner.py grepped.txt
 
-filtered.tsv: scanned.tsv filter.py jawiki/filter.py jawiki/hojin.py
+filtered.tsv: scanned.tsv filter.py jawiki/filter.py jawiki/hojin.py jawiki/jachars.py
 	python filter.py scanned.tsv
 
 SKK-JISYO.jawiki: filtered.tsv makedict.py /usr/share/skk/SKK-JISYO.L

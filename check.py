@@ -55,6 +55,7 @@ def test_pair(kanji, yomi):
     ('江迎警察署 - 北部', 'および'),
     ('相補誤差関数', 'および'),
     ('二人で旅に出る理由は？', 'あいりす'),
+    ('大切な者との記憶', 'きゅーぶ'),
 ])
 def test_no_pair(kanji, yomi):
     assert yomi not in d or kanji not in d.get(yomi)
