@@ -15,9 +15,8 @@ NAMEISH_PATTERN = re.compile(r'([' + HIRAGANA_BLOCK + KANJI_BLOCK + KATAKANA_BLO
 HIRAGANA_NORMALIZER = str.maketrans('ゐゑをっあいうえおふぁぃぅぇぉゃゅょやゆよ', 'ーーーつーーーーーうあいうえおよよよよよよ')
 
 INVALID_KANJI_PATTERNS = [
-    re.compile(r'^\d+(月|世紀|年代)'),
     # 9代式守伊之助
-    re.compile(r'^\d+代'),
+    re.compile(r'^\d+(月|世紀|年代|代|年)'),
     # TITLE<<Intel 4004>> KANJI<<4004>> YOMI<<よんまるまるよん>> 8
     re.compile(r'^[0-9]+$'),
     # '''10.『七変化狸御殿』'''（しちへんげ たぬきごてん）
