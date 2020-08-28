@@ -20,6 +20,10 @@ class WikipediaXmlScanner:
                     # skip comment line.
                     continue
 
+                # :: '''二人で旅に出る理由は？'''（アイリス（[[悠木碧]]・[[茅野愛衣]]）） - 作曲 / 編曲：山本真央樹・北川勝利
+                if '作曲 / 編曲' in line:
+                    continue
+
                 if not ignorable:
                     for m in scanner.scan_words(line):
                         if title == '令和':
