@@ -1,0 +1,2 @@
+jaconv==0.2.4
+python-Levenshtein==0.12.0

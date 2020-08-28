@@ -10,6 +10,7 @@ test:
 	pytest
 	pyflakes *.py */*.py
 	autopep8 --max-line-length 180 -i *.py */*.py
+	flake8 . --count --exit-zero --max-complexity=10 --max-line-length=500 --statistics
 
 jawiki-latest-pages-articles.xml.bz2:
 	wget -nc https://dumps.wikimedia.org/jawiki/latest/jawiki-latest-pages-articles.xml.bz2
