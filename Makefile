@@ -9,6 +9,7 @@ check: SKK-JISYO.jawiki
 test:
 	pytest
 	pyflakes *.py */*.py
+	autopep8 --max-line-length 180 -i *.py */*.py
 
 jawiki-latest-pages-articles.xml.bz2:
 	wget -nc https://dumps.wikimedia.org/jawiki/latest/jawiki-latest-pages-articles.xml.bz2
