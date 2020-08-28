@@ -13,19 +13,10 @@ TODO: KKC に utf-8 辞書をよむ能力あるか確認
 
  * python 3.4+
     * jaconv
+    * pytests
+    * Levenshtein
+ * bunzip2
+ * gnu make
+ * gnu grep
 
-## knownn issues
-
-### todo
-
-- あきはさんしゅうようじ /秋葉山秋葉寺/
-    - 復活させる
-
-- かまいたち /ひびきすぎ夫/伝令係・谷/森ガールの集い/
-- かまいたち /ひびきすぎ夫/伝令係・谷/森ガールの集い/発見！わんこ集会/
-
-### waiting confirm
-
-- さいとうのぶとし /斎藤 信利'/
-  - wikipedia 側を修正した
 
