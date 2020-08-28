@@ -8,6 +8,7 @@ check: SKK-JISYO.jawiki
 
 test:
 	pytest tests/test_*.py
+	pyflakes *.py */*.py
 
 jawiki-latest-pages-articles.xml.bz2:
 	wget -nc https://dumps.wikimedia.org/jawiki/latest/jawiki-latest-pages-articles.xml.bz2

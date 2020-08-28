@@ -6,7 +6,7 @@ from statistics import mean
 
 import Levenshtein
 
-from jawiki.jachars import HIRAGANA_BLOCK, KANJI_BLOCK, KATAKANA_BLOCK, is_katakana_or_hiragana_or_nakaguro_or_space, is_katakana, is_kanji, is_hiragana, kanji_normalize, HIRAGANA_NORMALIZER, normalize_hiragana
+from jawiki.jachars import HIRAGANA_BLOCK, KANJI_BLOCK, KATAKANA_BLOCK, is_katakana_or_hiragana_or_nakaguro_or_space, is_hiragana, kanji_normalize, HIRAGANA_NORMALIZER, normalize_hiragana
 
 from jawiki.hojin import hojin_filter
 
