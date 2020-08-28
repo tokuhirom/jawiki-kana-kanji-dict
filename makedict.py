@@ -1,4 +1,5 @@
 from jawiki.skkdict import merge_skkdict, parse_skkdict
+import logging
 
 # filter.py で機械的にはとりのぞきにくいエントリを、このフェーズで除外。
 IGNORE_ENTRIES = set(
@@ -144,8 +145,7 @@ def should_skip(kanji, yomi, skkdict):
     # のようなケースを除外する
     for skk_kanji in skkdict[yomi]:
         if skk_kanji in kanji and skk_kanji != kanji:
-            if yomi.startswith('あいおい'):
-                print("skipped: yomi=%s skk_kanji=%s kanji=%s" % (yomi, skk_kanji, kanji))
+            logging.info("skipped entry: yomi=%s skk_kanji=%s kanji=%s" % (yomi, skk_kanji, kanji))
             return True
 
     return False
@@ -154,6 +154,8 @@ def should_skip(kanji, yomi, skkdict):
 if __name__ == '__main__':
     import sys
     import time
+
+    logging.basicConfig(level=logging.INFO)
 
     t0 = time.time()
 
@@ -173,7 +175,8 @@ if __name__ == '__main__':
             kanjis = result[yomi]
             if len(kanjis) != 0:
                 ofh.write("%s /%s/\n" % (yomi, '/'.join(kanjis)))
-            if len(kanjis) > 20:
-                print("%s -> %s" % (yomi, kanjis))
+            if len(kanjis) > 5:
+                logging.info("This entry contains too many kanjis: %s -> %s" % (yomi, kanjis))
 
-    print("Scanned: " + str(time.time()-t0) + " seconds")
+    logging.info("Scanned: {0} seconds".format(time.time()-t0))
+
