@@ -51,6 +51,9 @@ def test_pair(kanji, yomi):
     ('1703年の北アメリカ北東岸の襲撃', 'きたあめりかほくとうがんのしゅうげき'),
     ('島ぜんぶでおーきな祭', 'さい'),
     ('アジャリス', 'さんてぃあーご'),
+    ('UTF-32', 'および'),
+    ('江迎警察署 - 北部', 'および'),
+    ('相補誤差関数', 'および'),
 ])
 def test_no_pair(kanji, yomi):
     assert yomi not in d or kanji not in d.get(yomi)
