@@ -49,6 +49,8 @@ def test_pair(kanji, yomi):
     ('監督', 'あばんたいとる'),
     ('10代式守与太夫', 'しきもりよだゆう'),
     ('1703年の北アメリカ北東岸の襲撃', 'きたあめりかほくとうがんのしゅうげき'),
+    ('島ぜんぶでおーきな祭', 'さい'),
+    ('アジャリス', 'さんてぃあーご'),
 ])
 def test_no_pair(kanji, yomi):
     assert yomi not in d or kanji not in d.get(yomi)
