@@ -4,7 +4,7 @@ clean:
 	rm -f jawiki-latest-pages-articles.xml.bz2 jawiki-latest-pages-articles.xml grepped.txt scanned.tsv filtered.tsv SKK-JISYO.jawiki skipped.tsv
 
 check: SKK-JISYO.jawiki
-	python check.py
+	pytest check.py
 
 test:
 	pytest tests/test_*.py
@@ -16,7 +16,7 @@ jawiki-latest-pages-articles.xml: jawiki-latest-pages-articles.xml.bz2
 	bunzip2 --keep jawiki-latest-pages-articles.xml.bz2
 
 grepped.txt: jawiki-latest-pages-articles.xml
-	grep -E "<title>.*</title>|'''[|（(]" jawiki-latest-pages-articles.xml > grepped.txt
+	grep -E "<title>.*</title>|'''[』|（(]" jawiki-latest-pages-articles.xml > grepped.txt
 
 scanned.tsv: grepped.txt scanner.py jawiki/scanner.py
 	python scanner.py grepped.txt
