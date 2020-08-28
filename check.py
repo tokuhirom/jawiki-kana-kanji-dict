@@ -44,6 +44,9 @@ def test_pair(kanji, yomi):
     # ('京山華千代' ,'きょうやまはなちよ'),
     ('お姉さま', 'ぼく'),
     ('109万本', 'いる'),
+    ('擬餌状体', 'えすか'),
+    ('銀河刑務所の囚人を全員脱獄させる。', 'えすか'),
+    ('監督', 'あばんたいとる'),
 ])
 def test_no_pair(kanji, yomi):
     assert yomi not in d or kanji not in d.get(yomi)
