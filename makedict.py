@@ -11,6 +11,7 @@ IGNORE_YOMIS = set(
         'あなたがいるから',
         'かつ',
         'べーすめんともんすたー',
+        'あきお',
         # ありがとう /ARIGATO!/有賀桃/謝謝你，在世界的角落找到我/謝謝你，在世界角落中找到我/
         'ありがとう',
         # らいぶ /Five Colours in Her Hair/LIVE/LiVE/L×I×V×E/Obviously/Room on 3rd Floor/That Girl/The Ballad of Paul K/Ultraviolet/耒部/雷舞/
