@@ -59,6 +59,7 @@ def test_no_pair(kanji, yomi):
     ('あーけーどすてぃっく'),
     ('ぐらびああいどる'),
     ('いわゆる'),
+    ('ぼーこーどあるいはぼどーこーど'),
 ])
 def test_not_in(yomi):
     assert yomi not in d

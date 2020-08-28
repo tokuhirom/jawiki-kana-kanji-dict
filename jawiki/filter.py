@@ -142,19 +142,20 @@ class WikipediaFilter:
                 return False
 
         # yomi infx
-        for infix in [
+        for yomi_infix in [
                 # ''w3m'''（ダブリューサンエム または ダブリュースリーエム）
                 ' または ',
                 'における',
+                'あるいは',
                 "'''",
                 '[',
             ]:
-            if infix in yomi:
-                self.log_skip('yomi contains %s' % infix, [kanji, yomi])
+            if yomi_infix in yomi:
+                self.log_skip('yomi contains %s' % yomi_infix, [kanji, yomi])
                 return False
 
         # kanji infx
-        for infix in [
+        for kanji_infix in [
                 # '''Keyboard / kAoru ikArAshi / 五十嵐 馨'''（いからし かおる）
                 '/',
                 "''",
@@ -163,8 +164,8 @@ class WikipediaFilter:
                 '(',
                 '（',
             ]:
-            if infix in kanji:
-                self.log_skip('kanji contains %s' % infix, [kanji, yomi])
+            if kanji_infix in kanji:
+                self.log_skip('kanji contains %s' % kanji_infix, [kanji, yomi])
                 return False
 
         for pattern in INVALID_KANJI_PATTERNS:
