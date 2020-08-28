@@ -56,6 +56,9 @@ def test_pair(kanji, yomi):
     ('相補誤差関数', 'および'),
     ('二人で旅に出る理由は？', 'あいりす'),
     ('大切な者との記憶', 'きゅーぶ'),
+    ('死者・行方不明者約2万2000人', 'うち'),
+    ('死者273人', 'うち'),
+    ('86校', 'うち'),
 ])
 def test_no_pair(kanji, yomi):
     assert yomi not in d or kanji not in d.get(yomi)
