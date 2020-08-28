@@ -69,6 +69,8 @@ IGNORE_ENTRIES = set(
         'そぷらの',
         'ゔぃおら',
         'いんでぃーず',
+        # さんばーすと /Gibson Les Paul Standard 1959 Historic Collection/
+        'さんばーすと',
         # ゑい /優勝内国産馬連合競走/長谷川榮/
         'ゑい',
         # うち /86校/死者273人/死者・行方不明者約2万2000人/
