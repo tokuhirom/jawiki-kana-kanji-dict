@@ -2,6 +2,10 @@ import re
 import jaconv
 import html
 
+from statistics import mean 
+
+import Levenshtein
+
 from jawiki.jachars import HIRAGANA_BLOCK, KANJI_BLOCK, KATAKANA_BLOCK, is_katakana_or_hiragana_or_nakaguro_or_space, is_katakana, is_kanji, is_hiragana, kanji_normalize
 from jawiki.hojin import hojin_filter
 
@@ -286,6 +290,8 @@ class WikipediaFilter:
         # remove spaces in yomi
         yomi = re.sub(r'\s+', r'', yomi)
 
+        yomi = jaconv.kata2hira(yomi)
+
         yomi = self.filter_yomi_entities(kanji, yomi)
 
         # アイエスオー、イソ、アイソ to アイエスオー
@@ -294,9 +300,6 @@ class WikipediaFilter:
 
         if '、' in yomi:
             yomi = "、".join([s for s in yomi.split('、') if kanji != kanji_normalize(s)])
-
-        yomi = jaconv.kata2hira(yomi)
-
 
         return yomi
 
@@ -312,8 +315,16 @@ class WikipediaFilter:
                 break
             results.append(s)
 
+        # 森ガールの集い（かまいたち、オレンジサンセット、ヒカリゴケ、しゃもじ） みたいなやつはまとめて消す
+        # ただし、「しなぬのくにのみやつこ /科野国造/」のような、日本古来の固有名詞に関しては、読み方の揺れが大きいので除外する。
+        # '''袁 牧之'''（えん ぼくし、ユエン・ムーチー、ユアン・ムーチー、イエン・ムーツー） みたいなケースも救う
         if len(results) > 3:
-            print("TOOMUCHRESULTS:: " + str(results))
+            base = results[0]
+            if not base.endswith('みやつこ') and not base.startswith('えん'):
+                score = mean([Levenshtein.distance(results[0], r) for r in results[1:]])
+                if score > 5:
+                    print("TOOMUCHRESULTS:: " + str(results) + ' ' + str(score))
+                    return ''
 
         return '、'.join(results)
 
