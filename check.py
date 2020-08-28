@@ -62,6 +62,8 @@ def test_pair(kanji, yomi):
     ('INDIES', 'いんでぃーず'),
     ('ZAZZY', 'いんでぃーず'),
     ('長谷川榮', 'ゑい'),
+    ('謝謝你，在世界的角落找到我', 'ありがとう'),
+    ('謝謝你，在世界角落中找到我', 'ありがとう'),
 ])
 def test_no_pair(kanji, yomi):
     assert yomi not in d or kanji not in d.get(yomi)
@@ -75,6 +77,7 @@ def test_no_pair(kanji, yomi):
     ('いわゆる'),
     ('ぼーこーどあるいはぼどーこーど'),
     ('さんばーすと'),
+    ('いいか'),
 ])
 def test_not_in(yomi):
     assert yomi not in d

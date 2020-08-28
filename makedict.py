@@ -73,6 +73,8 @@ IGNORE_ENTRIES = set(
         'さんばーすと',
         # かまいたち /ひびきすぎ夫/伝令係・谷/森ガールの集い/
         'かまいたち',
+        # いいか /Then, for the thousands in attendance, and the millions watching at home./
+        'いいか',
         # ゑい /優勝内国産馬連合競走/長谷川榮/
         'ゑい',
         # うち /86校/死者273人/死者・行方不明者約2万2000人/
