@@ -41,5 +41,5 @@ class FileProcessor:
                         writer(result)
                     finished_cnt += 1
                     results_pool.remove(r)
+                    self.logger.info(f"{finished_cnt}/{pool_size}")
             time.sleep(0.1)
-            self.logger.info(f"{finished_cnt}/{pool_size}")
