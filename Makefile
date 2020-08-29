@@ -1,7 +1,7 @@
 all: SKK-JISYO.jawiki
 
 clean:
-	rm -f jawiki-latest-pages-articles.xml.bz2 jawiki-latest-pages-articles.xml grepped.txt scanned.tsv filtered.tsv SKK-JISYO.jawiki skipped.tsv
+	rm -f jawiki-latest-pages-articles.xml.bz2 jawiki-latest-pages-articles.xml grepped.txt scanned.tsv filtered.tsv SKK-JISYO.jawiki skipped.tsv pre_validated.tsv
 
 check: SKK-JISYO.jawiki
 	pytest check.py
@@ -24,8 +24,11 @@ grepped.txt: jawiki-latest-pages-articles.xml
 scanned.tsv: grepped.txt scanner.py jawiki/scanner.py
 	python scanner.py grepped.txt
 
-filtered.tsv: scanned.tsv filter.py jawiki/filter.py jawiki/hojin.py jawiki/jachars.py
-	python filter.py scanned.tsv
+pre_validated.tsv: scanned.tsv pre_validator.py jawiki/pre_validate.py
+	python pre_validator.py
+
+filtered.tsv: pre_validated.tsv filter.py jawiki/filter.py jawiki/hojin.py jawiki/jachars.py
+	python filter.py pre_validated.tsv
 
 SKK-JISYO.jawiki: filtered.tsv makedict.py /usr/share/skk/SKK-JISYO.L
 	python makedict.py /usr/share/skk/SKK-JISYO.L /usr/share/skk/SKK-JISYO.jinmei /usr/share/skk/SKK-JISYO.geo

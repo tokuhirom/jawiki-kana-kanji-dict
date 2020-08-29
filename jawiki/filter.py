@@ -49,9 +49,6 @@ class WikipediaFilter:
         self.skip_logger("SKIP:: " + str(reason), line)
 
     def filter_entry(self, title, kanji, yomi):
-        if not self.validate_phase1(title, kanji, yomi):
-            return
-
         kanji = self.basic_filter(kanji)
         kanji = self.kanji_filter(kanji)
         yomi = self.basic_filter(yomi)
@@ -68,36 +65,6 @@ class WikipediaFilter:
             return
 
         return (kanji, yomi)
-
-    def validate_phase1(self, title, kanji, yomi):
-        for yomi_prefix in ['[[', 'いま、', 'あるいは', 'もしくは', '▢']:
-            if yomi.startswith(yomi_prefix):
-                self.log_skip('ignorable yomi prefix: %s' % (yomi_prefix), [kanji, yomi])
-                return False
-
-        for kanji_prefix in ['』', '[[']:
-            if kanji.startswith(kanji_prefix):
-                self.log_skip('ignorable kanji prefix: %s' % (kanji_prefix), [kanji, yomi])
-                return False
-
-        # 「または」で始まるものは基本的に除外したほうがいいが、いくつかだけキャッチアップしよう。
-        if yomi.startswith('または'):
-            if len([1 for n in ['またはちろう', 'またはりひゃっかてん', 'またはり'] if yomi.startswith(n)]) == 0:
-                self.log_skip('ignorable yomi prefix: %s' % (yomi_prefix), [kanji, yomi])
-                return False
-
-        if title in [
-            # カッコ内に元になったマイクロンが入っているので無視。
-            'トランスフォーマー ギャラクシーフォース',
-            # 読み仮名が中途半端に入っている。古いアプリの情報なので一次情報をたどるのが難しくwikipedia川を修正するのが困難なので無視。
-            'アイドル・ジェネレーション 第2次・萌えっ子大戦争!!',
-            # ライトノベル独自用語
-            'Dクラッカーズ',
-        ]:
-            self.log_skip('Title is in the blacklist', [title, kanji, yomi])
-            return False
-
-        return True
 
     def validate_phase2(self, kanji, yomi):
         if len(kanji) == 0:
@@ -143,7 +110,7 @@ class WikipediaFilter:
             'ただし、',
             # この音は'''ハーフ・ストップ'''（あるいはエコー、ハーフ・ミュート）と呼ばれる。
             'あるいは',
-            'おりんぴっくの', ]:
+                'おりんぴっくの', ]:
             if yomi.startswith(yomi_prefix):
                 self.log_skip('yomi starts with %s' % yomi_prefix, [kanji, yomi])
                 return False
@@ -188,7 +155,7 @@ class WikipediaFilter:
             prefix_hira = normalize_hiragana(jaconv.kata2hira(prefix))
             if not normalized_yomi.startswith(prefix_hira):
                 self.log_skip("Kanji prefix and yomi prefix aren't same: normalized_yomi=%s prefix_hira=%s" % (
-                normalized_yomi, prefix_hira), [kanji, yomi])
+                    normalized_yomi, prefix_hira), [kanji, yomi])
                 return False
 
         # '''大切な者との記憶'''（キューブ） のようなものを除外。
@@ -209,7 +176,7 @@ class WikipediaFilter:
             if not normalized_yomi.endswith(postfix_hira):
                 self.log_skip(
                     "Kanji postfix and yomi postfix aren't same: normalized_yomi=%s postfix_hira=%s" % (
-                    normalized_yomi, postfix_hira), [kanji, yomi])
+                        normalized_yomi, postfix_hira), [kanji, yomi])
                 return False
 
         return True
@@ -236,7 +203,7 @@ class WikipediaFilter:
             # 愛植男=あいうえお が janome だと あいうえおとこ になるのの救済をしている。
             if extra > 3:
                 self.log_skip("kanji may contain extra chars(janome): kanji=%s yomi=%s janome_yomi=%s" % (
-                kanji, yomi, janome_yomi), [kanji, yomi])
+                    kanji, yomi, janome_yomi), [kanji, yomi])
                 return False
             else:
                 return True
