@@ -13,7 +13,6 @@ KANJI_BLOCK = r'\u2E80-\u2FDF\u3005-\u3007\u3400-\u4DBF\u4E00-\u9FFF\uF900-\uFAF
 
 HIRAGANA_PATTERN = re.compile(r'^[' + HIRAGANA_BLOCK + ']+$')
 KATAKANA_PATTERN = re.compile(r'^[' + KATAKANA_BLOCK + ']+$')
-KATAKANA_OR_HIRAGANA_OR_NAKAGURO_OR_SPACE_PATTERN = re.compile(r'^[ 　' + KATAKANA_BLOCK + HIRAGANA_BLOCK + '・]+$')
 KANJI_PATTERN = re.compile(r'^[' + KANJI_BLOCK + ']+$')
 
 KANJI_NORMALIZER = str.maketrans(
@@ -25,13 +24,6 @@ KANJI_NORMALIZER = str.maketrans(
 
 def kanji_normalize(s):
     return s.translate(KANJI_NORMALIZER)
-
-
-def is_katakana_or_hiragana_or_nakaguro_or_space(s):
-    if KATAKANA_OR_HIRAGANA_OR_NAKAGURO_OR_SPACE_PATTERN.match(s):
-        return True
-    else:
-        return False
 
 
 def is_hiragana(s):
@@ -56,17 +48,16 @@ def is_kanji(s):
 
 
 # きうちきょう /木内キヤウ/
-HIRAGANA_NORMALIZER = str.maketrans('ゐゑをっあいうえおふぁぃぅぇぉゃゅょやゆよほづひへ', 'ーーーつーーーーーうあいうえおよよよよよよおずーえ')
-HIRAGANA_DAKUON_TRANS = str.maketrans(
-    'ゔがぎぐげござじずぜぞだぢづでどばびぶべぼぱぴぷぺぽ',
-    'うかきくけこさしすせそたちつてとはひふへほはひふへほ'
+HIRAGANA_NORMALIZER = str.maketrans(
+    'ゐゑをっあいうえおふぁぃぅぇぉゃゅょやゆよほひへゔがぎぐげござじずぜぞだぢづでどばびぶべぼぱぴぷぺぽ',
+    'ーーーつーーーーーうあいうえおよよよよよよおーえうかきくけこさしすせそたちすてとはひふへほはひふへほ'
 )
+# TODO: ラウ゛とラブ を調整した方がいいかもしれない
 
 
 def normalize_hiragana(s):
     s = jaconv.normalize(s, 'NFKC')
     s = re.sub(r'(.)[ゝゞ]', r'\1\1', s)  # HIRAGANA_DAKUON_TRANS で処理されるので、ゞも同じ処理で良い。
-    s = s.translate(HIRAGANA_DAKUON_TRANS)
     s = s.translate(HIRAGANA_NORMALIZER)
     s = s.translate(HIRAGANA_NORMALIZER)
     return s

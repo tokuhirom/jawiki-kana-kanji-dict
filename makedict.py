@@ -174,7 +174,7 @@ if __name__ == '__main__':
     skkdicts = [parse_skkdict(path, encoding='euc-jp') for path in sys.argv[1:]]
     skkdict = merge_skkdict(skkdicts)
 
-    result = read_filtered('filtered.tsv')
+    result = read_filtered('post_validated.tsv')
     result = preproc(result, skkdict)
 
     with open('SKK-JISYO.jawiki', 'w', encoding='utf-8') as ofh:
