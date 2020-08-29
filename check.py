@@ -17,6 +17,9 @@ d = skkdict.parse_skkdict('SKK-JISYO.jawiki', encoding='utf-8')
     ('こちらかつしかくかめありこうえんまえはしゅつじょ'),
 ])
 def test_yomo(yomi):
+    """
+    読みリストに含まれている必要がある案件
+    """
     assert yomi in d
 
 
@@ -49,15 +52,17 @@ def test_yomo(yomi):
     ('鷲谷いづみ', 'わしたにいずみ'),
     ('初井しづ枝', 'はついしずえ'),
     ('倉知玲鳳', 'くらちれお'),
+    ('京山華千代' ,'きょうやまはなちよ'),
 ])
 def test_pair(kanji, yomi):
+    """
+    SKK-JISYO.jawiki に入っていることが、必須のエントリー
+    """
     print([kanji, yomi, d.get(yomi)])
     assert kanji in d.get(yomi)
 
 
 @pytest.mark.parametrize("kanji,yomi", [
-    # '''（初代）京山 華千代'''（きょうやま はなちよ、[[1904年]]（[[明治]]37年）[[8月11日]] - [[1983年]]（[[昭和]]58年）[[1月7日]]）
-    # ('京山華千代' ,'きょうやまはなちよ'),
     ('お姉さま', 'ぼく'),
     ('109万本', 'いる'),
     ('擬餌状体', 'えすか'),
@@ -108,7 +113,11 @@ def test_pair(kanji, yomi):
     ('福岡市立愛宕小学校', 'あたごしょうがっこう'),
 ])
 def test_no_pair(kanji, yomi):
+    """
+    SKK-JISYO.jawiki に入っていないことが、必須のエントリー
+    """
     assert yomi not in d or kanji not in d.get(yomi)
+
 
 # はいっていてはいけないもの
 
@@ -125,6 +134,9 @@ def test_no_pair(kanji, yomi):
     ('てれび'),
 ])
 def test_not_in(yomi):
+    """
+    SKK-JISYO.jawiki に入っていないことが、必須のエントリー
+    """
     assert yomi not in d
 
 # あがる /△△通○○上ル/
