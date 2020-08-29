@@ -105,6 +105,7 @@ def test_pair(kanji, yomi):
     ('緒方三社川越し祭り', 'かわごしまつり'),
     ('無限責任広部銀行', 'ひろべぎんこう'),
     ('弁辺駅', 'べんべ'),
+    ('福岡市立愛宕小学校', 'あたごしょうがっこう'),
 ])
 def test_no_pair(kanji, yomi):
     assert yomi not in d or kanji not in d.get(yomi)

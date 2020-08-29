@@ -56,6 +56,7 @@ def test_validate_phase2(kanji, yomi, expected):
     ('吉本玲緒', 'よしもとれお', True),
     ('湊川四良兵衞', 'みなとがわしろべえ', True),
     ('初井しづ枝', 'はついしづえ', True),
+    ('福岡市立愛宕小学校', 'あたごしょうがっこう', False),
 ])
 def test_validate_phase3(kanji, yomi, expected):
     msg = f.post_validate(kanji, yomi)

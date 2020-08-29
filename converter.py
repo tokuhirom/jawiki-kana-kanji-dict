@@ -3,6 +3,18 @@ import multiprocessing as mp
 
 from jawiki import converter
 
+def worker(chunk):
+    results = []
+    for line in chunk:
+        splitted = line.strip().split("\t")
+        if len(splitted) != 3:
+            continue
+        title, kanji, yomi = splitted
+        kanji, yomi = jawiki_converter.convert(kanji, yomi)
+        if len(yomi) > 0:
+            results.append([kanji, yomi])
+    return results
+
 if __name__ == '__main__':
     import time
 
@@ -12,47 +24,34 @@ if __name__ == '__main__':
     t0 = time.time()
     jawiki_converter = converter.Converter()
 
-    def worker(chunk):
-        results = []
-        for line in chunk:
-            splitted = line.strip().split("\t")
-            if len(splitted) != 3:
-                continue
-            title, kanji, yomi = splitted
-            kanji, yomi = jawiki_converter.convert(kanji, yomi)
-            if len(yomi) > 0:
-                results.append([kanji, yomi])
-        return results
-
-    with open('dat/converted.tsv', 'w', encoding='utf-8') as ofh:
-
-        numprocs = mp.cpu_count()
-        pool = mp.Pool(processes=numprocs)
-        with open('dat/pre_validated.tsv', 'r', encoding='utf-8') as fp:
-            results_pool = []
-            buf = []
-            for line in fp:
-                buf.append(line)
-                if len(buf) > 20000:
-                    result = pool.apply_async(worker, args=(buf,))
-                    results_pool.append(result)
-                    buf = []
-            if len(buf) > 0:
+    numprocs = mp.cpu_count()
+    pool = mp.Pool(processes=numprocs)
+    results_pool = []
+    with open('dat/pre_validated.tsv', 'r', encoding='utf-8') as fp:
+        buf = []
+        for line in fp:
+            buf.append(line)
+            if len(buf) > 20000:
                 result = pool.apply_async(worker, args=(buf,))
                 results_pool.append(result)
+                buf = []
+        if len(buf) > 0:
+            result = pool.apply_async(worker, args=(buf,))
+            results_pool.append(result)
 
-            finished_cnt = 0
-            pool_size = len(results_pool)
-            while len(results_pool) > 0:
-                for r in results_pool:
-                    if r.ready():
-                        results = r.get()
-                        for result in results:
-                            kanji, yomi = result
-                            ofh.write(f"{kanji}\t{yomi}\n")
-                        finished_cnt += 1
-                        results_pool.remove(r)
-                time.sleep(0.1)
-                print(f"{finished_cnt}/{pool_size}")
+    with open('dat/converted.tsv', 'w', encoding='utf-8') as ofh:
+        finished_cnt = 0
+        pool_size = len(results_pool)
+        while len(results_pool) > 0:
+            for r in results_pool:
+                if r.ready():
+                    results = r.get()
+                    for result in results:
+                        kanji, yomi = result
+                        ofh.write(f"{kanji}\t{yomi}\n")
+                    finished_cnt += 1
+                    results_pool.remove(r)
+            time.sleep(0.1)
+            print(f"{finished_cnt}/{pool_size}")
 
     print(f"Converted in {str(time.time() - t0)} seconds")
