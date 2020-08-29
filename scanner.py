@@ -1,4 +1,5 @@
 import re
+
 from jawiki import scanner
 
 TITLE_PATTERN = re.compile(r'''.*<title>(.+)</title>''')
@@ -51,21 +52,20 @@ class WikipediaXmlScanner:
 
 # around 3 minutes on my SSD.
 if __name__ == '__main__':
-    import sys
     import time
 
-    for fname in sys.argv[1:]:
-        print("Scanning " + fname)
-        t0 = time.time()
+    fname = 'dat/grepped.txt'
+    print(f"Scanning {fname}")
+    t0 = time.time()
 
-        wikipedia_scanner = WikipediaXmlScanner()
+    wikipedia_scanner = WikipediaXmlScanner()
 
-        with open('scanned.tsv', 'w', encoding='utf-8') as ofh:
-            for element in wikipedia_scanner.scan(fname):
-                ofh.write("%s\t%s\t%s\n" % (
-                    element[0].replace("\t", " "),
-                    element[1].replace("\t", " "),
-                    element[2].replace("\t", " ")
-                ))
+    with open('dat/scanned.tsv', 'w', encoding='utf-8') as ofh:
+        for element in wikipedia_scanner.scan(fname):
+            ofh.write("%s\t%s\t%s\n" % (
+                element[0].replace("\t", " "),
+                element[1].replace("\t", " "),
+                element[2].replace("\t", " ")
+            ))
 
-        print("Scanned: " + fname + " in " + str(time.time()-t0) + " seconds")
+    print(f"Scanned: {fname} in {str(time.time() - t0)} seconds")

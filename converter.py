@@ -10,25 +10,25 @@ if __name__ == '__main__':
     logger.setLevel(logging.INFO)
 
     t0 = time.time()
+    jawiki_converter = converter.Converter()
 
-    with open('converted.tsv', 'w', encoding='utf-8') as ofh:
-        jawiki_converter = converter.Converter()
+    def worker(chunk):
+        results = []
+        for line in chunk:
+            splitted = line.strip().split("\t")
+            if len(splitted) != 3:
+                continue
+            title, kanji, yomi = splitted
+            kanji, yomi = jawiki_converter.convert(kanji, yomi)
+            if len(yomi) > 0:
+                results.append([kanji, yomi])
+        return results
 
-        def worker(chunk):
-            results = []
-            for line in chunk:
-                splitted = line.strip().split("\t")
-                if len(splitted) != 3:
-                    continue
-                title, kanji, yomi = splitted
-                kanji, yomi = jawiki_converter.convert(kanji, yomi)
-                if len(yomi) > 0:
-                    results.append([kanji, yomi])
-            return results
+    with open('dat/converted.tsv', 'w', encoding='utf-8') as ofh:
 
         numprocs = mp.cpu_count()
         pool = mp.Pool(processes=numprocs)
-        with open('pre_validated.tsv', 'r', encoding='utf-8') as fp:
+        with open('dat/pre_validated.tsv', 'r', encoding='utf-8') as fp:
             results_pool = []
             buf = []
             for line in fp:

@@ -29,7 +29,7 @@ if __name__ == '__main__':
     numprocs = mp.cpu_count()
     pool = mp.Pool(processes=numprocs)
     results_pool = []
-    with open('converted.tsv', 'r', encoding='utf-8') as rfp:
+    with open('dat/converted.tsv', 'r', encoding='utf-8') as rfp:
         buf = []
         for line in rfp:
             buf.append(line)
@@ -42,7 +42,7 @@ if __name__ == '__main__':
             results_pool.append(result)
 
     with open('logs/skipped.log', 'w', encoding='utf-8') as skipfp, \
-            open('post_validated.tsv', 'w', encoding='utf-8') as wfp:
+            open('dat/post_validated.tsv', 'w', encoding='utf-8') as wfp:
         finished_cnt = 0
         total_pool_cnt = len(results_pool)
         while len(results_pool):

@@ -19,4 +19,7 @@ TODO: KKC に utf-8 辞書をよむ能力あるか確認
  * gnu make
  * gnu grep
 
+## How to contribute
 
+ * 余計な単語が登録されている場合
+  * check.py に除外条件を追加する(これにより、)
