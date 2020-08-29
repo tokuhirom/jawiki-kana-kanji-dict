@@ -120,6 +120,7 @@ def test_no_pair(kanji, yomi):
     ('さんばーすと'),
     ('いいか'),
     ('てれび'),
+    ('ーおーつう'),
 ])
 def test_not_in(yomi):
     """
