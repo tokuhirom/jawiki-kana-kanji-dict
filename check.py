@@ -84,6 +84,8 @@ def test_no_pair(kanji, yomi):
     assert yomi not in d or kanji not in d.get(yomi)
 
 # はいっていてはいけないもの
+
+
 @pytest.mark.parametrize("yomi", [
     ('いずれもろっくふぃるだむ'),
     ('のちの'),

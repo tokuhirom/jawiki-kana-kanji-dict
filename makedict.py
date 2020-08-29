@@ -189,4 +189,3 @@ if __name__ == '__main__':
                 logging.info("This entry contains too many kanjis: %s -> %s" % (yomi, kanjis))
 
     logging.info("Scanned: {0} seconds".format(time.time()-t0))
-
