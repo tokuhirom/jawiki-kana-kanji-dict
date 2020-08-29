@@ -46,10 +46,6 @@ class WikipediaFilter:
         self.skip_logger("SKIP:: " + str(reason), line)
 
     def filter_entry(self, title, kanji, yomi):
-        if kanji.startswith('[['):
-            self.log_skip('kanji is page link', [kanji, yomi])
-            return
-
         if not self.validate_phase1(title, kanji, yomi):
             return
 
@@ -76,7 +72,7 @@ class WikipediaFilter:
                 self.log_skip('ignorable yomi prefix: %s' % (yomi_prefix), [kanji, yomi])
                 return False
 
-        for kanji_prefix in ['』']:
+        for kanji_prefix in ['』', '[[']:
             if kanji.startswith(kanji_prefix):
                 self.log_skip('ignorable kanji prefix: %s' % (kanji_prefix), [kanji, yomi])
                 return False
@@ -222,15 +218,19 @@ class WikipediaFilter:
             return True
 
         janome_yomi = jaconv.kata2hira(''.join([n.reading if str(n.reading) != '*' else n.base_form for n in self.tokenizer.tokenize(kanji)]))
+        normalized_janome_yomi = normalize_hiragana(janome_yomi)
+        normalized_yomi = normalize_hiragana(yomi)
 
-        if yomi in janome_yomi:
-            extra = len(re.sub(yomi, '', janome_yomi, 1))
+        if normalized_yomi in normalized_janome_yomi:
+            extra = len(re.sub(normalized_yomi, '', normalized_janome_yomi, 1))
 
             # 3 に意味はない。
             # 愛植男=あいうえお が janome だと あいうえおとこ になるのの救済をしている。
             if extra > 3:
                 self.log_skip("kanji may contain extra chars(janome): kanji=%s yomi=%s janome_yomi=%s" % (kanji, yomi, janome_yomi), [kanji, yomi])
                 return False
+            else:
+                return True
 
         return True
 

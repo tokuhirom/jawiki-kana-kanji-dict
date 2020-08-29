@@ -1,8 +1,9 @@
 
-from jawiki import filter
+from jawiki import container
 import pytest
 
-f = filter.WikipediaFilter()
+c = container.Container()
+f = c.get_filter()
 
 
 @pytest.mark.parametrize("title,kanji,yomi,expected", [
@@ -44,6 +45,14 @@ def test_validate_phase2(kanji, yomi, expected):
     ('愛植男', 'あいうえお', True),
     ('小林太志', 'こばやしふとし', True),
     ('旭丘中学校、旭ヶ丘中学校、旭が丘中学校', 'あさひがおかちゅうがっこう', False),
+    ('御座船安宅丸', 'あたけまる', False),
+    ('福岡市立内浜小学校', 'うちはましょうがっこう', False),
+    ('東風汽車有限公司', 'とうふうきしゃ', False),
+    ('山添村立奈良県立山辺高等学校山添分校', 'やまべこうとうがっこうやまぞえぶんこう', False),
+    ('鷲谷いづみ', 'わしたにいずみ', True),
 ])
 def test_validate_phase3(kanji, yomi, expected):
-    assert f.validate_phase3(kanji, yomi) == expected
+    import sys
+    got = f.validate_phase3(kanji, yomi)
+    sys.stderr.write(str([kanji, yomi, got, expected]) + "\n")
+    assert got == expected

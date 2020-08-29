@@ -1,4 +1,4 @@
-from jawiki import filter
+from jawiki import container
 import multiprocessing as mp
 import logging
 
@@ -13,13 +13,9 @@ if __name__ == '__main__':
 
     t0 = time.time()
 
-    with open('filtered.tsv', 'w', encoding='utf-8') as ofh, \
-            open('skipped.tsv', 'w', encoding='utf-8') as skipfh:
-
-        def skip_logger(reason, line):
-            skipfh.write("%s\t%s\n" % (reason.replace("\t", ' '), str(line).replace("\t", ' ')))
-
-        wikipedia_filter = filter.WikipediaFilter(skip_logger)
+    with open('filtered.tsv', 'w', encoding='utf-8') as ofh:
+        c = container.Container()
+        wikipedia_filter = c.get_filter()
 
         queue = mp.JoinableQueue()
 
