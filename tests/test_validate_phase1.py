@@ -41,9 +41,9 @@ def test_validate_phase2(kanji, yomi, expected):
     ('山添村立奈良県立山辺高等学校山添分校', 'やまべこうとうがっこうやまぞえぶんこう', False),
     ('鷲谷いづみ', 'わしたにいずみ', True),
     ('飯山愛宕中継局', 'いいやまあたご', False),
+    ('倉知玲鳳', 'くらちれお', True),
 ])
 def test_validate_phase3(kanji, yomi, expected):
-    import sys
     got = f.validate_phase3(kanji, yomi)
-    sys.stderr.write(str([kanji, yomi, got, expected]) + "\n")
+    print(str([kanji, yomi, got, expected]) + "\n")
     assert got == expected
