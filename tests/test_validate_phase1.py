@@ -40,6 +40,7 @@ def test_validate_phase2(kanji, yomi, expected):
     ('東風汽車有限公司', 'とうふうきしゃ', False),
     ('山添村立奈良県立山辺高等学校山添分校', 'やまべこうとうがっこうやまぞえぶんこう', False),
     ('鷲谷いづみ', 'わしたにいずみ', True),
+    ('飯山愛宕中継局', 'いいやまあたご', False),
 ])
 def test_validate_phase3(kanji, yomi, expected):
     import sys
