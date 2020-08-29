@@ -1,6 +1,9 @@
 from jawiki import filter
+import pytest
+import logging
 
 
+# TODO parameterize
 def test_validate_phase2():
     f = filter.WikipediaFilter()
 
@@ -26,3 +29,20 @@ def test_validate_phase2_postfix():
     assert f.validate_phase2('本来はジョイスティック', 'あーけーどすてぃっく') == False
     assert f.validate_phase2('谷本ヨーコ', 'たにもとようこ') == True
     assert f.validate_phase2('You♡ I -Sweet Tuned by 5pb.-', 'ゆい') == False
+
+
+logging.basicConfig(level=logging.DEBUG)
+
+f = filter.WikipediaFilter(logger=logging.getLogger())
+
+
+@pytest.mark.parametrize("kanji,yomi,expected", [
+    ('山田啓二', 'やまだけいじ', True),
+    ('宇宙刑事魂 THE SPACE SHERIFF SPIRITS', 'うちゅうけいじたましい', False),
+    ('愛植男', 'あいうえお', True),
+    ('小林太志', 'こばやしふとし', True),
+    ('旭丘中学校、旭ヶ丘中学校、旭が丘中学校', 'あさひがおかちゅうがっこう', False),
+])
+def test_validate_phase3(kanji, yomi, expected):
+    assert f.validate_phase3(kanji, yomi) == expected
+
