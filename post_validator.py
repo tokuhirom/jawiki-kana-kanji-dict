@@ -41,7 +41,7 @@ if __name__ == '__main__':
             result = pool.apply_async(worker, args=(buf,))
             results_pool.append(result)
 
-    with open('skipped.tsv', 'w', encoding='utf-8') as skipfp, \
+    with open('logs/skipped.log', 'w', encoding='utf-8') as skipfp, \
             open('post_validated.tsv', 'w', encoding='utf-8') as wfp:
         finished_cnt = 0
         total_pool_cnt = len(results_pool)

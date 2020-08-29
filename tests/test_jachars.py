@@ -36,6 +36,8 @@ def test_is_katakana(s, expected):
     ('いすゞ', 'いすず'),
     ('へる', 'える'),
     ('いずみ', 'いづみ'),
+    ('おおづち', 'おおつち'),
+    ('らう゛', 'らぶ'),
 ])
 def test_normalize_hiragana(s, p):
     assert jachars.normalize_hiragana(s) == jachars.normalize_hiragana(p)

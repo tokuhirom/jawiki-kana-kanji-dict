@@ -30,7 +30,7 @@ pre_validated.tsv: scanned.tsv pre_validator.py jawiki/pre_validate.py
 converted.tsv: pre_validated.tsv converter.py jawiki/converter.py jawiki/hojin.py jawiki/jachars.py
 	python converter.py
 
-post_validated.tsv: converted.tsv post_validator.py jawiki/post_validate.py
+post_validated.tsv: converted.tsv post_validator.py jawiki/post_validate.py user_simpledic.csv
 	python post_validator.py
 
 SKK-JISYO.jawiki: post_validated.tsv makedict.py /usr/share/skk/SKK-JISYO.L
