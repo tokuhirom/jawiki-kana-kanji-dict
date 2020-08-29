@@ -47,8 +47,8 @@ def test_yomo(yomi):
     ('吉本玲緒', 'よしもとれお'),
     ('若林令緒', 'わかばやしれお'),
     ('鷲谷いづみ', 'わしたにいずみ'),
+    ('初井しづ枝', 'はついしずえ'),
     ('倉知玲鳳', 'くらちれお'),
-    ('湊川四良兵衞', 'みなとがわしろべえ'),
 ])
 def test_pair(kanji, yomi):
     print([kanji, yomi, d.get(yomi)])
@@ -103,8 +103,8 @@ def test_pair(kanji, yomi):
     ('石包丁・石庖丁', 'いしぼうちょう'),
     ('覚醒具・打出の大槌', 'うちでのおおづち'),
     ('緒方三社川越し祭り', 'かわごしまつり'),
-    ('初井しづ枝', 'はついしずえ'),
     ('無限責任広部銀行', 'ひろべぎんこう'),
+    ('弁辺駅', 'べんべ'),
 ])
 def test_no_pair(kanji, yomi):
     assert yomi not in d or kanji not in d.get(yomi)

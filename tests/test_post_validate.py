@@ -1,7 +1,7 @@
+import pytest
+from janome.tokenizer import Tokenizer
 
 from jawiki.post_validate import PostValidator
-from janome.tokenizer import Tokenizer
-import pytest
 
 tokenizer = Tokenizer("user_simpledic.csv", udic_type="simpledic", udic_enc="utf8")
 f = PostValidator(tokenizer)
@@ -45,8 +45,20 @@ def test_validate_phase2(kanji, yomi, expected):
     ('鷲谷いづみ', 'わしたにいずみ', True),
     ('飯山愛宕中継局', 'いいやまあたご', False),
     ('倉知玲鳳', 'くらちれお', True),
+    ('無限責任広部銀行', 'ひろべぎんこう', False),
+    ('石包丁・石庖丁', 'いしぼうちょう', False),
+    ('覚醒具・打出の大槌', 'うちでのおおづち', False),
+    ('緒方三社川越し祭り', 'かわごしまつり', False),
+    ('初井しづ枝', 'はついしずえ', True),
+    ('おっぱいパブ', 'おっぱぶ', False),
+    ('島野功緒', 'しまのいさお', True),
+    ('前田怜緒', 'まえだれお', True),
+    ('吉本玲緒', 'よしもとれお', True),
+    ('湊川四良兵衞', 'みなとがわしろべえ', True),
+    ('初井しづ枝', 'はついしづえ', True),
 ])
 def test_validate_phase3(kanji, yomi, expected):
     msg = f.post_validate(kanji, yomi)
-    print(str([kanji, yomi, msg, expected]) + "\n")
-    assert (msg is None) == expected
+    got = msg is None
+    print(str([kanji, yomi, msg, got, expected]) + "\n")
+    assert got == expected

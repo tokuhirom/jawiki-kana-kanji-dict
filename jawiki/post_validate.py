@@ -1,3 +1,4 @@
+import logging
 import re
 from typing import Optional
 
@@ -28,8 +29,9 @@ INVALID_KANJI_PATTERNS = [
 
 class PostValidator:
 
-    def __init__(self, tokenizer):
+    def __init__(self, tokenizer, logger=logging.getLogger(__name__)):
         self.tokenizer = tokenizer
+        self.logger = logger
 
     def post_validate(self, kanji, yomi) -> Optional[str]:
         msg = self.__validate_basic(kanji, yomi)
@@ -94,7 +96,7 @@ class PostValidator:
             if yomi_infix in yomi:
                 return f'yomi contains {yomi_infix}'
 
-        # kanji infx
+        # kanji infix
         for kanji_infix in [
             # '''Keyboard / kAoru ikArAshi / 五十嵐 馨'''（いからし かおる）
             '/',
@@ -134,9 +136,14 @@ class PostValidator:
             postfix_hira = jaconv.kata2hira(postfix).translate(HIRAGANA_NORMALIZER)
             normalized_yomi = yomi.translate(HIRAGANA_NORMALIZER)
             if not normalized_yomi.endswith(postfix_hira):
-                return(
+                return (
                     f"Kanji postfix and yomi postfix aren't same: normalized_yomi={normalized_yomi} "
                     f"postfix_hira={postfix_hira}")
+
+        m = re.match(r'^([' + HIRAGANA_BLOCK + KATAKANA_BLOCK + ']+)$', kanji)
+        if m:
+            if normalize_hiragana(jaconv.kata2hira(yomi)) != normalize_hiragana(jaconv.kata2hira(kanji)):
+                return "Kanji != Kana"
 
         return None
 
@@ -146,8 +153,7 @@ class PostValidator:
         # しくらちよまる /志倉千代丸/ が、「こころざしくらちよまる」になるケースを特別に除外する
         # きしなみかお /岸波香桜/ -> *きしなみかお*りさくら
         # くらちれお /倉知玲鳳/ -> *くらちれお*おとり
-        # 緒 -> いとぐち
-        for c in ['志', '香', '鳳', '緒']:
+        for c in ['志', '香', '鳳']:
             if c in kanji:
                 return None
 
@@ -156,12 +162,12 @@ class PostValidator:
         normalized_janome_yomi = normalize_hiragana(janome_yomi)
         normalized_yomi = normalize_hiragana(yomi)
 
-        # print(f"normalized_yomi={normalized_yomi}, janome_yomi={janome_yomi},"
-        #       f" normalized_janome_yomi={normalized_janome_yomi}")
+        self.logger.debug(f"yomi={yomi} normalized_yomi={normalized_yomi}, janome_yomi={janome_yomi},"
+                          f" normalized_janome_yomi={normalized_janome_yomi}")
         if normalized_yomi in normalized_janome_yomi:
             extra = len(re.sub(normalized_yomi, '', normalized_janome_yomi, 1))
 
-            # 3 に意味はない。
+            # 2 に意味はない。
             # 愛植男=あいうえお が janome だと あいうえおとこ になるのの救済をしている。
             if extra > 3:
                 return f"kanji may contain extra chars(janome): janome_yomi={janome_yomi}"
