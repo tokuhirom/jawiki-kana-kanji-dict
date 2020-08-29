@@ -51,12 +51,12 @@ def hojin_filter(kanji, yomi):
                 break
 
             if kanji.startswith(k) and not yomi.startswith(y):
-                kanji = kanji.lstrip(k)
+                kanji = kanji[len(k):]
             if kanji.startswith(k) and yomi.startswith(y):
-                kanji = kanji.lstrip(k)
-                yomi = yomi.lstrip(y)
+                kanji = kanji[len(k):]
+                yomi = yomi[len(y):]
             if not kanji.startswith(k) and yomi.startswith(y):
-                yomi = yomi.lstrip(y)
+                yomi = yomi[len(y):]
             if kanji.endswith(k) and not yomi.endswith(y):
                 kanji = kanji[:-len(k)]
             if kanji.endswith(k) and yomi.endswith(y):
@@ -64,4 +64,4 @@ def hojin_filter(kanji, yomi):
                 yomi = yomi[:-len(y)]
             if not kanji.endswith(k) and yomi.endswith(y):
                 yomi = yomi[:-len(y)]
-    return (kanji, yomi)
+    return kanji, yomi
