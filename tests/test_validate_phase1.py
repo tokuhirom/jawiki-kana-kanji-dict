@@ -1,11 +1,15 @@
 
 from jawiki import filter
+import pytest
+
+f = filter.WikipediaFilter()
 
 
-def test_validate_phase1():
-    f = filter.WikipediaFilter()
-
-    assert f.validate_phase1('a', '又八郎', 'またはちろう') == True
-    assert f.validate_phase1('a', 'アクメスジト', 'またはあくめちぇっと') == False
-    assert f.validate_phase1('a', 'マタハリ百貨店', 'またはりひゃっかてん') == True
-    assert f.validate_phase1('a', 'イルーニャ', 'または') == False
+@pytest.mark.parametrize("title,kanji,yomi,expected", [
+    ('a', '又八郎', 'またはちろう', True),
+    ('a', 'アクメスジト', 'またはあくめちぇっと', False),
+    ('a', 'マタハリ百貨店', 'またはりひゃっかてん', True),
+    ('a', 'イルーニャ', 'または', False),
+])
+def test_validate_phase1(title, kanji, yomi, expected):
+    assert f.validate_phase1(title, kanji, yomi) == expected
