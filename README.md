@@ -20,7 +20,9 @@ github actions で wikipedia から定期的にデータを取得して https://
 
 ## How to contribute
 
- * check.py に条件を追加する(これにより、デグレしづらくなります)
+ * check.py に条件を追加します(これにより、デグレしづらくなります)
+ * 手元で `make check` を実行して、実行失敗することを確認します。
+ * `grep 対象ワード dat/*` として、対象のワードの状態をみます。
  * `user_simpledic.csv` か `jawiki/*.py` のルールを変更します
 
 ## どう動いているのか
