@@ -26,5 +26,5 @@ if __name__ == '__main__':
         file_processor = FileProcessor()
         file_processor.run(
             'dat/pre_validated.tsv', converter_worker,
-            'dat/converted.tsv', converter_writer
+            converter_writer
         )
