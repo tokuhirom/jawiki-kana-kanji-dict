@@ -17,8 +17,6 @@ if __name__ == '__main__':
         c = container.Container()
         wikipedia_filter = c.get_filter()
 
-        queue = mp.JoinableQueue()
-
         def worker(chunk):
             results = []
             for line in chunk:
