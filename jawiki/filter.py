@@ -2,6 +2,8 @@ import re
 import jaconv
 import html
 import romkan
+from janome.tokenizer import Tokenizer
+import logging
 
 from statistics import mean
 
@@ -12,7 +14,6 @@ from jawiki.jachars import HIRAGANA_BLOCK, KANJI_BLOCK, KATAKANA_BLOCK, is_katak
 from jawiki.hojin import hojin_filter
 
 NAMEISH_PATTERN = re.compile(r'([' + HIRAGANA_BLOCK + KANJI_BLOCK + KATAKANA_BLOCK + ']+)[\u0020\u3000]+([' + HIRAGANA_BLOCK + KANJI_BLOCK + KATAKANA_BLOCK + ']+)')
-
 
 INVALID_KANJI_PATTERNS = [
     # 9代式守伊之助
@@ -38,8 +39,11 @@ def default_skip_logger(reason, line):
 
 class WikipediaFilter:
 
-    def __init__(self, skip_logger=default_skip_logger):
+    def __init__(self, skip_logger=default_skip_logger, logger=logging.getLogger(__name__)):
         self.skip_logger = skip_logger
+        # TODO move to jawiki/validator.py
+        self.tokenizer = Tokenizer()
+        self.logger = logger
 
     def log_skip(self, reason, line):
         self.skip_logger(reason, line)
@@ -63,6 +67,9 @@ class WikipediaFilter:
         kanji = re.sub(r'\s', r' ', kanji)
 
         if not self.validate_phase2(kanji, yomi):
+            return
+
+        if not self.validate_phase3(kanji, yomi):
             return
 
         return (kanji, yomi)
@@ -204,6 +211,31 @@ class WikipediaFilter:
             normalized_yomi = yomi.translate(HIRAGANA_NORMALIZER)
             if not normalized_yomi.endswith(postfix_hira):
                 self.log_skip("Kanji postfix and yomi postfix aren't same: normalized_yomi=%s postfix_hira=%s" % (normalized_yomi, postfix_hira), [kanji, yomi])
+                return False
+
+        return True
+
+    # うちゅうけいじたましい /宇宙刑事魂 THE SPACE SHERIFF SPIRITS/
+    # のようなケースを除外したい。
+    def validate_phase3(self, kanji, yomi):
+        # しくらちよまる /志倉千代丸/ が、「こころざしくらちよまる」になるケースを特別に除外する
+        if '志' in kanji:
+            return True
+        # きしなみかお /岸波香桜/ -> *きしなみかお*りさくら
+        if '香' in kanji:
+            return True
+
+        janome_yomi = jaconv.kata2hira(''.join([n.reading if str(n.reading) != '*' else n.base_form for n in self.tokenizer.tokenize(kanji)]))
+
+        self.logger.debug("validate phase 3: yomi=%s janome_yomi=%s" % (yomi, janome_yomi))
+
+        if yomi in janome_yomi:
+            extra = len(re.sub(yomi, '', janome_yomi, 1))
+
+            # 3 に意味はない。
+            # 愛植男=あいうえお が janome だと あいうえおとこ になるのの救済をしている。
+            if extra > 3:
+                self.log_skip("kanji may contain extra chars(janome): kanji=%s yomi=%s janome_yomi=%s" % (kanji, yomi, janome_yomi), [kanji, yomi])
                 return False
 
         return True
