@@ -3,22 +3,31 @@ import pytest
 from jawiki import jachars
 
 
-def test_is_kanji():
-    assert jachars.is_kanji('KEIYOGINKO') == False
-    assert jachars.is_kanji('粟飯原首胤度') == True
+@pytest.mark.parametrize("s,expected", [
+    ('KEIYOGINKO', False),
+    ('粟飯原首胤度', True),
+])
+def test_is_kanji(s, expected):
+    assert jachars.is_kanji(s) == expected
 
 
-def test_is_hiragana():
-    assert jachars.is_hiragana('めもり') == True
-    assert jachars.is_hiragana('メモリ') == False
-    assert jachars.is_hiragana('あいのめもりー') == True
-    assert jachars.is_hiragana('KEIYOGINKO') == False
+@pytest.mark.parametrize("s,expected", [
+    ('めもり', True),
+    ('メモリ', False),
+    ('あいのめもりー', True),
+    ('KEIYOGINKO', False),
+])
+def test_is_hiragana(s, expected):
+    assert jachars.is_hiragana(s) == expected
 
 
-def test_is_katakana():
-    assert jachars.is_katakana('メモリ') == True
-    assert jachars.is_katakana('アイ・エム・アイ') == False
-    assert jachars.is_katakana('KEIYOGINKO') == False
+@pytest.mark.parametrize("s,expected", [
+    ('メモリ', True),
+    ('アイ・エム・アイ', False),
+    ('KEIYOGINKO', False),
+])
+def test_is_katakana(s, expected):
+    assert jachars.is_katakana(s) == expected
 
 
 @pytest.mark.parametrize("s,p", [
