@@ -10,5 +10,5 @@ f = pre_validate.PreValidator()
     ('a', 'マタハリ百貨店', 'またはりひゃっかてん', True),
     ('a', 'イルーニャ', 'または', False),
 ])
-def test_validate_phase1(title, kanji, yomi, expected):
+def test_validate(title, kanji, yomi, expected):
     assert f.validate(title, kanji, yomi) == expected

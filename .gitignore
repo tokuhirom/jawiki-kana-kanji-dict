@@ -9,3 +9,5 @@
 /grepped.txt
 __pycache__
 /pre_validated.tsv
+/converted.tsv
+/post_validated.tsv

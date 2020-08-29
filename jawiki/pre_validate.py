@@ -5,7 +5,12 @@ class PreValidator:
     def __init__(self, logger=logging.getLogger(__name__)):
         self.logger = logger
 
-    def validate(self, title, kanji, yomi):
+    def validate(self, title, kanji, yomi) -> bool:
+        if len(kanji) == 1:
+            self.logger.info('Kanji is too short. ' +
+                             f'title={title}, kanji={kanji}, yomi={yomi}')
+            return False
+
         for yomi_prefix in ['[[', 'いま、', 'あるいは', 'もしくは', '▢']:
             if yomi.startswith(yomi_prefix):
                 self.logger.info(f'ignorable yomi prefix: {yomi_prefix}. ' +

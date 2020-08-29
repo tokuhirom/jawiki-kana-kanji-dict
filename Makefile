@@ -27,10 +27,13 @@ scanned.tsv: grepped.txt scanner.py jawiki/scanner.py
 pre_validated.tsv: scanned.tsv pre_validator.py jawiki/pre_validate.py
 	python pre_validator.py
 
-filtered.tsv: pre_validated.tsv filter.py jawiki/filter.py jawiki/hojin.py jawiki/jachars.py
-	python filter.py pre_validated.tsv
+converted.tsv: pre_validated.tsv converter.py jawiki/converter.py jawiki/hojin.py jawiki/jachars.py
+	python converter.py
 
-SKK-JISYO.jawiki: filtered.tsv makedict.py /usr/share/skk/SKK-JISYO.L
+post_validated.tsv: converted.tsv post_validator.py jawiki/post_validate.py
+	python post_validator.py
+
+SKK-JISYO.jawiki: post_validated.tsv makedict.py /usr/share/skk/SKK-JISYO.L
 	python makedict.py /usr/share/skk/SKK-JISYO.L /usr/share/skk/SKK-JISYO.jinmei /usr/share/skk/SKK-JISYO.geo
 
 .PHONY: all test check
