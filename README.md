@@ -36,6 +36,8 @@ github actions で wikipedia から定期的にデータを取得して https://
 
 ## LICENSE
 
+Python scripts are:
+
     The MIT License (MIT)
 
     Copyright © 2020 Tokuhiro Matsuno, http://64p.org/ <tokuhirom@gmail.com>
@@ -58,3 +60,4 @@ github actions で wikipedia から定期的にデータを取得して https://
     OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
     THE SOFTWARE.
 
+Wikipedia license is: https://ja.wikipedia.org/wiki/Wikipedia:%E3%82%A6%E3%82%A3%E3%82%AD%E3%83%9A%E3%83%87%E3%82%A3%E3%82%A2%E3%82%92%E4%BA%8C%E6%AC%A1%E5%88%A9%E7%94%A8%E3%81%99%E3%82%8B
