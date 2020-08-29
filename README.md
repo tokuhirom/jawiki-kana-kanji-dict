@@ -1,13 +1,10 @@
-# 処理の流れ
+# skk-jisyo-jawiki
 
-* wget
-* 基本的な抜き出し処理
-* 除外フィルタ
-* ソート
-* SKK-JISYO.L にあるものを除外
-* euc-jp 版辞書の書き出し
+## これは何？
 
-TODO: KKC に utf-8 辞書をよむ能力あるか確認
+wikipedia 日本語版のデータを元に、SKK の辞書をつくるスクリプトです。
+
+github actions で wikipedia から定期的にデータを取得して https://github.com/tokuhirom/skk-jisyo-jawiki/blob/master/SKK-JISYO.jawiki を、定期的に更新するようにしています。
 
 ## Requirements
 
@@ -21,9 +18,8 @@ TODO: KKC に utf-8 辞書をよむ能力あるか確認
 
 ## How to contribute
 
- * 余計な単語が登録されている場合
-   * check.py に除外条件を追加する(これにより、デグレしづらくなります)
-   * jawiki/*.py のルールを変更します
+ * check.py に条件を追加する(これにより、デグレしづらくなります)
+ * `user_simpledic.csv` か `jawiki/*.py` のルールを変更します
 
 ## どう動いているのか
 
@@ -37,3 +33,28 @@ TODO: KKC に utf-8 辞書をよむ能力あるか確認
  * `make` を実行すれば、一通りファイルが実行されます。
  * `make check` を実行すると、辞書ファイルを生成し、辞書ファイルの正当性を確認します。
  * `make test` を実行すると、テストスイートを実行します。
+
+## LICENSE
+
+    The MIT License (MIT)
+
+    Copyright © 2020 Tokuhiro Matsuno, http://64p.org/ <tokuhirom@gmail.com>
+
+    Permission is hereby granted, free of charge, to any person obtaining a copy
+    of this software and associated documentation files (the “Software”), to deal
+    in the Software without restriction, including without limitation the rights
+    to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+    copies of the Software, and to permit persons to whom the Software is
+    furnished to do so, subject to the following conditions:
+
+    The above copyright notice and this permission notice shall be included in
+    all copies or substantial portions of the Software.
+
+    THE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+    IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+    FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+    AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+    LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+    OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+    THE SOFTWARE.
+
