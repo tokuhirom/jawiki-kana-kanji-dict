@@ -57,36 +57,16 @@ def is_kanji(s):
 
 # きうちきょう /木内キヤウ/
 HIRAGANA_NORMALIZER = str.maketrans('ゐゑをっあいうえおふぁぃぅぇぉゃゅょやゆよほづひへ', 'ーーーつーーーーーうあいうえおよよよよよよおずーえ')
-
-HIRAGANA_DAKUON_MAP = {
-    'う': 'ゔ',
-    'か': 'が',
-    'き': 'ぎ',
-    'く': 'ぐ',
-    'け': 'げ',
-    'こ': 'ご',
-    'さ': 'ざ',
-    'し': 'じ',
-    'す': 'ず',
-    'せ': 'ぜ',
-    'そ': 'ぞ',
-    'た': 'だ',
-    'ち': 'ぢ',
-    'つ': 'づ',
-    'て': 'で',
-    'と': 'ど',
-    'は': 'ば',
-    'ひ': 'び',
-    'ふ': 'ぶ',
-    'へ': 'べ',
-    'ほ': 'ぼ',
-}
+HIRAGANA_DAKUON_TRANS = str.maketrans(
+    'ゔがぎぐげござじずぜぞだぢづでどばびぶべぼぱぴぷぺぽ',
+    'うかきくけこさしすせそたちつてとはひふへほはひふへほ'
+)
 
 
 def normalize_hiragana(s):
     s = jaconv.normalize(s, 'NFKC')
-    s = re.sub(r'(.)ゝ', r'\1\1', s)
-    s = re.sub(r'(.)ゞ', lambda m: m[1]+HIRAGANA_DAKUON_MAP[m[1]], s)
+    s = re.sub(r'(.)[ゝゞ]', r'\1\1', s)  # HIRAGANA_DAKUON_TRANS で処理されるので、ゞも同じ処理で良い。
+    s = s.translate(HIRAGANA_DAKUON_TRANS)
     s = s.translate(HIRAGANA_NORMALIZER)
     s = s.translate(HIRAGANA_NORMALIZER)
     return s

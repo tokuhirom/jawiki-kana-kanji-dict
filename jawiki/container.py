@@ -10,7 +10,7 @@ class Container:
 
     def get_tokenizer(self):
         if not self.tokenizer:
-            self.tokenizer = Tokenizer()
+            self.tokenizer = Tokenizer("user_simpledic.csv", udic_type="simpledic", udic_enc="utf8")
         return self.tokenizer
 
     def get_filter(self):
