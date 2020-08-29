@@ -3,7 +3,6 @@ import jaconv
 import html
 import romkan
 from janome.tokenizer import Tokenizer
-import logging
 
 from statistics import mean
 
@@ -39,10 +38,9 @@ def default_skip_logger(reason, line):
 
 class WikipediaFilter:
 
-    def __init__(self, skip_logger=default_skip_logger, logger=logging.getLogger(__name__)):
+    def __init__(self, skip_logger=default_skip_logger, tokenizer=Tokenizer()):
         self.skip_logger = skip_logger
-        self.tokenizer = Tokenizer()
-        self.logger = logger
+        self.tokenizer = tokenizer
 
     def log_skip(self, reason, line):
         self.skip_logger("SKIP:: " + str(reason), line)
@@ -224,8 +222,6 @@ class WikipediaFilter:
             return True
 
         janome_yomi = jaconv.kata2hira(''.join([n.reading if str(n.reading) != '*' else n.base_form for n in self.tokenizer.tokenize(kanji)]))
-
-        self.logger.debug("validate phase 3: yomi=%s janome_yomi=%s" % (yomi, janome_yomi))
 
         if yomi in janome_yomi:
             extra = len(re.sub(yomi, '', janome_yomi, 1))
