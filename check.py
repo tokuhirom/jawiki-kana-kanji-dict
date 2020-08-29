@@ -44,6 +44,7 @@ d = skkdict.parse_skkdict('SKK-JISYO.jawiki', encoding='utf-8')
     ('初井しづ枝', 'はついしずえ'),
     ('倉知玲鳳', 'くらちれお'),
     ('京山華千代', 'きょうやまはなちよ'),
+    ('計算可能性理論', 'けいさんかのうせいりろん'),
 ])
 def test_pair(kanji, yomi):
     """
