@@ -6,16 +6,6 @@ c = container.Container()
 f = c.get_filter()
 
 
-@pytest.mark.parametrize("title,kanji,yomi,expected", [
-    ('a', '又八郎', 'またはちろう', True),
-    ('a', 'アクメスジト', 'またはあくめちぇっと', False),
-    ('a', 'マタハリ百貨店', 'またはりひゃっかてん', True),
-    ('a', 'イルーニャ', 'または', False),
-])
-def test_validate_phase1(title, kanji, yomi, expected):
-    assert f.validate_phase1(title, kanji, yomi) == expected
-
-
 @pytest.mark.parametrize("kanji,yomi,expected", [
     ('山田タロウ', 'やまだたろう', True),
     ('w3m', 'ダブリューサンエム または ダブリュースリーエム', False),
