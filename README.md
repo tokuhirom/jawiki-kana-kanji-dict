@@ -12,6 +12,8 @@ github actions で wikipedia から定期的にデータを取得して https://
     * jaconv
     * pytests
     * Levenshtein
+    * janome
+    * romkan
  * bunzip2
  * gnu make
  * gnu grep
