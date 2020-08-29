@@ -22,4 +22,4 @@ def test_tsv(input_title, input_kana, input_yomi, expected_kanji, expected_yomi)
         got_kanji, got_yomi = m
         assert got_kanji == expected_kanji and got_yomi == expected_yomi
     else:
-        assert expected_yomi == None and expected_kanji == None
+        assert not expected_yomi and not expected_kanji

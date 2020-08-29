@@ -41,13 +41,11 @@ class WikipediaFilter:
 
     def __init__(self, skip_logger=default_skip_logger, logger=logging.getLogger(__name__)):
         self.skip_logger = skip_logger
-        # TODO move to jawiki/validator.py
         self.tokenizer = Tokenizer()
         self.logger = logger
 
     def log_skip(self, reason, line):
-        self.skip_logger(reason, line)
-        # print("<<<%s>>> %s" % (reason, line))
+        self.skip_logger("SKIP:: " + str(reason), line)
 
     def filter_entry(self, title, kanji, yomi):
         if kanji.startswith('[['):
