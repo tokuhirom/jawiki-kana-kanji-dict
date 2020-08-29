@@ -8,11 +8,14 @@ from statistics import mean
 
 import Levenshtein
 
-from jawiki.jachars import HIRAGANA_BLOCK, KANJI_BLOCK, KATAKANA_BLOCK, is_katakana_or_hiragana_or_nakaguro_or_space, is_hiragana, kanji_normalize, HIRAGANA_NORMALIZER, normalize_hiragana
+from jawiki.jachars import HIRAGANA_BLOCK, KANJI_BLOCK, KATAKANA_BLOCK, \
+    is_katakana_or_hiragana_or_nakaguro_or_space, is_hiragana, kanji_normalize, HIRAGANA_NORMALIZER, \
+    normalize_hiragana
 
 from jawiki.hojin import hojin_filter
 
-NAMEISH_PATTERN = re.compile(r'([' + HIRAGANA_BLOCK + KANJI_BLOCK + KATAKANA_BLOCK + ']+)[\u0020\u3000]+([' + HIRAGANA_BLOCK + KANJI_BLOCK + KATAKANA_BLOCK + ']+)')
+NAMEISH_PATTERN = re.compile(
+    r'([' + HIRAGANA_BLOCK + KANJI_BLOCK + KATAKANA_BLOCK + ']+)[\u0020\u3000]+([' + HIRAGANA_BLOCK + KANJI_BLOCK + KATAKANA_BLOCK + ']+)')
 
 INVALID_KANJI_PATTERNS = [
     # 9代式守伊之助
@@ -113,7 +116,7 @@ class WikipediaFilter:
             self.log_skip('yomi is too short!', [kanji, yomi])
             return False
 
-        if len(romkan.to_roma(yomi))*1.5 < len(kanji):
+        if len(romkan.to_roma(yomi)) * 1.5 < len(kanji):
             self.log_skip('yomi is too short...', [kanji, yomi])
             return False
 
@@ -140,7 +143,7 @@ class WikipediaFilter:
             'ただし、',
             # この音は'''ハーフ・ストップ'''（あるいはエコー、ハーフ・ミュート）と呼ばれる。
             'あるいは',
-                'おりんぴっくの', ]:
+            'おりんぴっくの', ]:
             if yomi.startswith(yomi_prefix):
                 self.log_skip('yomi starts with %s' % yomi_prefix, [kanji, yomi])
                 return False
@@ -184,7 +187,8 @@ class WikipediaFilter:
             prefix = m[1]
             prefix_hira = normalize_hiragana(jaconv.kata2hira(prefix))
             if not normalized_yomi.startswith(prefix_hira):
-                self.log_skip("Kanji prefix and yomi prefix aren't same: normalized_yomi=%s prefix_hira=%s" % (normalized_yomi, prefix_hira), [kanji, yomi])
+                self.log_skip("Kanji prefix and yomi prefix aren't same: normalized_yomi=%s prefix_hira=%s" % (
+                normalized_yomi, prefix_hira), [kanji, yomi])
                 return False
 
         # '''大切な者との記憶'''（キューブ） のようなものを除外。
@@ -192,7 +196,8 @@ class WikipediaFilter:
             k = normalize_hiragana(k)
             if k not in normalized_yomi:
                 if yomi.startswith('あぁ'):
-                    print("AAAAAAA kanji={0} yomi={1} chars={2} normalized_yomi={3}".format(kanji, yomi, k, normalized_yomi))
+                    print("AAAAAAA kanji={0} yomi={1} chars={2} normalized_yomi={3}".format(kanji, yomi, k,
+                                                                                            normalized_yomi))
                 return False
 
         # katakana postfix
@@ -202,7 +207,9 @@ class WikipediaFilter:
             postfix_hira = jaconv.kata2hira(postfix).translate(HIRAGANA_NORMALIZER)
             normalized_yomi = yomi.translate(HIRAGANA_NORMALIZER)
             if not normalized_yomi.endswith(postfix_hira):
-                self.log_skip("Kanji postfix and yomi postfix aren't same: normalized_yomi=%s postfix_hira=%s" % (normalized_yomi, postfix_hira), [kanji, yomi])
+                self.log_skip(
+                    "Kanji postfix and yomi postfix aren't same: normalized_yomi=%s postfix_hira=%s" % (
+                    normalized_yomi, postfix_hira), [kanji, yomi])
                 return False
 
         return True
@@ -217,7 +224,8 @@ class WikipediaFilter:
         if '香' in kanji:
             return True
 
-        janome_yomi = jaconv.kata2hira(''.join([n.reading if str(n.reading) != '*' else n.base_form for n in self.tokenizer.tokenize(kanji)]))
+        janome_yomi = jaconv.kata2hira(''.join(
+            [n.reading if str(n.reading) != '*' else n.base_form for n in self.tokenizer.tokenize(kanji)]))
         normalized_janome_yomi = normalize_hiragana(janome_yomi)
         normalized_yomi = normalize_hiragana(yomi)
 
@@ -227,7 +235,8 @@ class WikipediaFilter:
             # 3 に意味はない。
             # 愛植男=あいうえお が janome だと あいうえおとこ になるのの救済をしている。
             if extra > 3:
-                self.log_skip("kanji may contain extra chars(janome): kanji=%s yomi=%s janome_yomi=%s" % (kanji, yomi, janome_yomi), [kanji, yomi])
+                self.log_skip("kanji may contain extra chars(janome): kanji=%s yomi=%s janome_yomi=%s" % (
+                kanji, yomi, janome_yomi), [kanji, yomi])
                 return False
             else:
                 return True
@@ -276,7 +285,8 @@ class WikipediaFilter:
         # うじょう /{{Vanchor|羽状}}/
         # まっちでーじぇいりーぐ /マッチデー{{unicode|♥}}Jリーグ/
         # '''{{linktext|六根}}'''（ろっこん）
-        kanji = re.sub(r'\{\{(?:En|IPA-en|要出典範囲|linktext|unicode|Anchor|Vanchor|[A-Z0-9]+フォント)\|(.+)\}\}', r'\1', kanji)
+        kanji = re.sub(r'\{\{(?:En|IPA-en|要出典範囲|linktext|unicode|Anchor|Vanchor|[A-Z0-9]+フォント)\|(.+)\}\}',
+                       r'\1', kanji)
 
         # [[ページ名|リンクラベル]]
         kanji = re.sub(r'\[\[(?:.*)\|(.*)\]\]', r'\1', kanji)
@@ -312,7 +322,9 @@ class WikipediaFilter:
             yomi = re.sub(r'(生年不詳|生年月日非公表|生没年不詳).*', '', yomi)
             yomi = re.sub(r'現在の芸名.*', '', yomi)
             yomi = re.sub(r'\[\[[' + KANJI_BLOCK + ']+]].*', '', yomi)
-            yomi = re.sub(r'(?:英文(名称|表記)|旧名|現姓|旧姓|通称|英文名|原題|ドイツ語|英語|英語表記|英語名称|英文社名|オランダ語|満州語|旧|旧芸名|中国語簡体字|漢語名字|略称|本名|英称|英)[:：；;は・].*', '', yomi)
+            yomi = re.sub(
+                r'(?:英文(名称|表記)|旧名|現姓|旧姓|通称|英文名|原題|ドイツ語|英語|英語表記|英語名称|英文社名|オランダ語|満州語|旧|旧芸名|中国語簡体字|漢語名字|略称|本名|英称|英)[:：；;は・].*',
+                '', yomi)
             yomi = re.sub(r'[（:：,]\s*$', '', yomi)
             yomi = re.sub(r'[,、][（:：,]\s*$', '', yomi)
             yomi = re.sub(r'[,、]\[\[.*$', '', yomi)
