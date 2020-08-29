@@ -22,7 +22,6 @@ if __name__ == '__main__':
             kanji, yomi = result
             ofh.write(f"{kanji}\t{yomi}\n")
 
-
         file_processor = FileProcessor()
         file_processor.run(
             'dat/pre_validated.tsv', converter_worker,

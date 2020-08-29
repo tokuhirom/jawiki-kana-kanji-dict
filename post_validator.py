@@ -30,7 +30,6 @@ if __name__ == '__main__':
             else:
                 wfp.write(f"{kanji}\t{yomi}\n")
 
-
         file_processor = FileProcessor()
         file_processor.run(
             'dat/converted.tsv', worker,
