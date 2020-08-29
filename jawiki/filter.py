@@ -190,12 +190,17 @@ class WikipediaFilter:
         # きしなみかお /岸波香桜/ -> *きしなみかお*りさくら
         if '香' in kanji:
             return True
+        # くらちれお /倉知玲鳳/ -> *くらちれお*おとり
+        if '鳳' in kanji:
+            return True
 
         janome_yomi = jaconv.kata2hira(''.join(
             [n.reading if str(n.reading) != '*' else n.base_form for n in self.tokenizer.tokenize(kanji)]))
         normalized_janome_yomi = normalize_hiragana(janome_yomi)
         normalized_yomi = normalize_hiragana(yomi)
 
+        # print(f"normalized_yomi={normalized_yomi}, janome_yomi={janome_yomi},"
+        #       f" normalized_janome_yomi={normalized_janome_yomi}")
         if normalized_yomi in normalized_janome_yomi:
             extra = len(re.sub(normalized_yomi, '', normalized_janome_yomi, 1))
 
