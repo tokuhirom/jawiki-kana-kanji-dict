@@ -165,6 +165,14 @@ def should_skip(kanji, yomi, skkdict):
     return False
 
 
+def write_mecabdic(dictname, dictionary, score=4569):
+    with open(dictname, 'w', encoding='utf-8') as ofp:
+        # 東京スカイツリー,1288,1288,4569,名詞,固有名詞,一般,*,*,*,東京スカイツリー,トウキョウスカイツリー,トウキョウスカイツリー
+        for yomi in sorted(dictionary.keys()):
+            for kanji in dictionary[yomi]:
+                ofp.write(f"{kanji},1288,1288,{score},名詞,固有名詞,一般,*,*,*,{kanji},{yomi},{yomi}\n")
+
+
 if __name__ == '__main__':
     import sys
     import time
@@ -179,5 +187,6 @@ if __name__ == '__main__':
     result = read_filtered('dat/post_validated.tsv')
     result = preproc(result, skkdict)
     write_skkdict('SKK-JISYO.jawiki', result)
+    write_mecabdic('mecab-userdic.csv', result)
 
     logging.info("Scanned: {0} seconds".format(time.time()-t0))
