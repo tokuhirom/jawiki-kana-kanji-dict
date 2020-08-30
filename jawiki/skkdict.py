@@ -29,3 +29,14 @@ def merge_skkdict(dicts):
             result[k].extend(v)
 
     return result
+
+
+def write_skkdict(outfname, dictionary):
+    with open(outfname, 'w', encoding='utf-8') as ofh:
+        for yomi in sorted(dictionary.keys()):
+
+            kanjis = dictionary[yomi]
+            if len(kanjis) != 0:
+                ofh.write("%s /%s/\n" % (yomi, '/'.join(kanjis)))
+#            if len(kanjis) > 20:
+#                logging.info("This entry contains too many kanjis: %s -> %s" % (yomi, kanjis))
