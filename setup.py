@@ -24,7 +24,7 @@ setup(
     author_email='tokuhriom@gmail.com',
     license='MIT',
     classifiers=classifiers,
-    url='https://github.tokuhirom/skk-jisyo-jawiki/',
+    url='https://github.tokuhirom/jawiki-kana-kanji-dict/',
     packages=[],
     package_data={},
     scripts=['bin/makedict.py'],

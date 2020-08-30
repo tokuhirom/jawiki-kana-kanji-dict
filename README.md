@@ -5,6 +5,7 @@
 wikipedia 日本語版のデータを元に、SKK/MeCab の辞書をつくるスクリプトです。
 
 github actions で wikipedia から定期的にデータを取得して https://github.com/tokuhirom/skk-jisyo-jawiki/blob/master/SKK-JISYO.jawiki を、定期的に更新するようにしています。
+(github )
 
 ## Requirements
 
