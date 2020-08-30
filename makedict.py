@@ -1,4 +1,4 @@
-from jawiki.skkdict import merge_skkdict, parse_skkdict
+from jawiki.skkdict import merge_skkdict, parse_skkdict, write_skkdict
 import logging
 
 
@@ -137,6 +137,9 @@ def read_filtered(fname):
 
 
 def preproc(dic, skkdict):
+    for y in IGNORE_YOMIS:
+        dic.pop(y, None)
+
     # remove entries in skk dict.
     for yomi in sorted(dic.keys()):
         dic[yomi] = [kanji for kanji in sorted(set(dic[yomi])) if not should_skip(kanji, yomi, skkdict)]
@@ -176,16 +179,6 @@ if __name__ == '__main__':
 
     result = read_filtered('dat/post_validated.tsv')
     result = preproc(result, skkdict)
-
-    with open('SKK-JISYO.jawiki', 'w', encoding='utf-8') as ofh:
-        for yomi in sorted(result.keys()):
-            if yomi in IGNORE_YOMIS:
-                continue
-
-            kanjis = result[yomi]
-            if len(kanjis) != 0:
-                ofh.write("%s /%s/\n" % (yomi, '/'.join(kanjis)))
-            if len(kanjis) > 20:
-                logging.info("This entry contains too many kanjis: %s -> %s" % (yomi, kanjis))
+    write_skkdict('SKK-JISYO.jawiki', result)
 
     logging.info("Scanned: {0} seconds".format(time.time()-t0))
