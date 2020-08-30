@@ -173,8 +173,6 @@ if __name__ == '__main__':
 
     t0 = time.time()
 
-    skkdictpath = sys.argv[1]
-
     skkdicts = [parse_skkdict(path, encoding='euc-jp') for path in sys.argv[1:]]
     skkdict = merge_skkdict(skkdicts)
 
