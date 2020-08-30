@@ -12,3 +12,4 @@ __pycache__
 /converted.tsv
 /post_validated.tsv
 /logs/*.log
+/build/

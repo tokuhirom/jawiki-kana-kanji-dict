@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 from jawiki.skkdict import merge_skkdict, parse_skkdict, write_skkdict
 import logging
 
