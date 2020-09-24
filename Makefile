@@ -33,7 +33,7 @@ dat/converted.tsv: dat/pre_validated.tsv bin/converter.py jawiki/converter.py ja
 dat/post_validated.tsv: dat/converted.tsv bin/post_validator.py jawiki/post_validate.py user_simpledic.csv
 	python bin/post_validator.py
 
-SKK-JISYO.jawiki: dat/post_validated.tsv bin/makedict.py
+SKK-JISYO.jawiki: dat/post_validated.tsv bin/makedict.py jawiki/skkdict.py
 	python bin/makedict.py /usr/share/skk/SKK-JISYO.L /usr/share/skk/SKK-JISYO.jinmei /usr/share/skk/SKK-JISYO.geo
 
 .PHONY: all test check
