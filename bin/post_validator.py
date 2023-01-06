@@ -1,4 +1,5 @@
 from janome.tokenizer import Tokenizer
+from datetime import datetime
 
 from jawiki.file_processor import FileProcessor
 from jawiki.post_validate import PostValidator
@@ -21,7 +22,7 @@ def worker(chunk):
 
 
 if __name__ == '__main__':
-    with open('logs/skipped.log', 'w', encoding='utf-8') as skipfp, \
+    with open(f"logs/skipped-{datetime.now().strftime('%Y%m%d%H%M%S')}.log", 'w', encoding='utf-8') as skipfp, \
             open('dat/post_validated.tsv', 'w', encoding='utf-8') as wfp:
         def writer(result):
             kanji, yomi, skip_reason = result
