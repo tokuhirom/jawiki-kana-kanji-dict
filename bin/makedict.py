@@ -123,6 +123,8 @@ IGNORE_YOMIS = set(
         'あんこーる',
         # ''CSS等の保護技術を回避してのDVDのリッピングは私的複製の対象外となり違法行為となる'''（ただし、CSS等の保護技術が使われていないDVDのリッピングについては、改正後も従来と変わりはない）
         'ただし',
+        # だぶるぜーたばーじょん Chai Maxx -ZZ ver.-,DNA狂詩曲 -ZZ ver.-,GOUNN -ZZ ver.-,MOON PRIDE -ZZ ver.-,Moon Revenge -ZZ ver.-,My Dear Fellow -ZZ ver.-,ZZ ver.,全力少女 -ZZ ver.-,月虹 -ZZ ver.-,白い風 -ZZ ver.-
+        'だぶるぜーたばーじょん',
     ])
 
 
