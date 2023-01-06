@@ -3,7 +3,7 @@ from jawiki.skkdict import merge_skkdict, parse_skkdict, write_skkdict
 import logging
 
 
-# filter.py で機械的にはとりのぞきにくいエントリを、このフェーズで除外。
+# post_validator.py で機械的にはとりのぞきにくいエントリを、このフェーズで除外。
 IGNORE_YOMIS = set(
     [
         'てれび',
