@@ -173,7 +173,14 @@ def write_mecabdic(dictname, dictionary, score=4569):
     with open(dictname, 'w', encoding='utf-8') as ofp:
         # 東京スカイツリー,1288,1288,4569,名詞,固有名詞,一般,*,*,*,東京スカイツリー,トウキョウスカイツリー,トウキョウスカイツリー
         for yomi in sorted(dictionary.keys()):
+            # ',' が入っているものがあると、CSV として壊れるので無視する
+            if ',' in yomi:
+                continue
+
             for kanji in dictionary[yomi]:
+                # ',' が入っているものがあると、CSV として壊れるので無視する
+                if ',' in kanji:
+                    continue
                 ofp.write(f"{kanji},1288,1288,{score},名詞,固有名詞,一般,*,*,*,{kanji},{yomi},{yomi}\n")
 
 
