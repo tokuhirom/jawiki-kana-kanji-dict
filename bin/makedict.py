@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 from jawiki.skkdict import merge_skkdict, parse_skkdict, write_skkdict
 import logging
+import jaconv
 
 
 # post_validator.py で機械的にはとりのぞきにくいエントリを、このフェーズで除外。
@@ -183,6 +184,21 @@ def write_mecabdic(dictname, dictionary, score=4569):
                     continue
                 ofp.write(f"{kanji},1288,1288,{score},名詞,固有名詞,一般,*,*,*,{kanji},{yomi},{yomi}\n")
 
+def write_linderadic(dictname, dictionary):
+    # https://github.com/lindera-morphology/lindera
+    with open(dictname, 'w', encoding='utf-8') as ofp:
+        # 東京スカイツリー,カスタム名詞,トウキョウスカイツリー
+        for yomi in sorted(dictionary.keys()):
+            # ',' が入っているものがあると、CSV として壊れるので無視する
+            if ',' in yomi:
+                continue
+
+            for kanji in dictionary[yomi]:
+                # ',' が入っているものがあると、CSV として壊れるので無視する
+                if ',' in kanji:
+                    continue
+                ofp.write(f"{kanji},カスタム名詞,{jaconv.hira2kata(yomi)}\n")
+
 
 if __name__ == '__main__':
     import sys
@@ -199,5 +215,6 @@ if __name__ == '__main__':
     result = preproc(result, skkdict)
     write_skkdict('SKK-JISYO.jawiki', result)
     write_mecabdic('mecab-userdic.csv', result)
+    write_linderadic('lindera-userdic.csv', result)
 
     logging.info("Scanned: {0} seconds".format(time.time()-t0))
