@@ -18,6 +18,16 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
+    - uses: actions/cache@v2
+      with:
+        path: |
+          ~/.cargo/registry
+          ~/.cargo/git
+        key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
+    - uses: actions-rs/cargo@v1
+      with:
+        command: install
+        args: lindera-cli --features ipadic
     - name: Set up Python 3.8
       uses: actions/setup-python@v2
       with:
@@ -40,6 +50,9 @@ jobs:
     - name: make
       run: |
         make
+    - name: Build lindera binary user dict
+      run: |
+        lindera build --build-user-dic --dic-type ipadic lindera-userdic.csv ./
     - name: Commit
       run: |
         git config --global user.email "tokuhriom@gmail.com"
