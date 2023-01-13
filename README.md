@@ -66,3 +66,11 @@ Python scripts are:
     THE SOFTWARE.
 
 Wikipedia license is: https://ja.wikipedia.org/wiki/Wikipedia:%E3%82%A6%E3%82%A3%E3%82%AD%E3%83%9A%E3%83%87%E3%82%A3%E3%82%A2%E3%82%92%E4%BA%8C%E6%AC%A1%E5%88%A9%E7%94%A8%E3%81%99%E3%82%8B
+
+自動生成されたファイルは Wikipedia のコンテンツに対する軽微利用であると私は考えます。
+よって、生成ファイルは Python script と同様の MIT License で配布します。
+
+## 謝辞
+
+Wikipedia 日本語版がなければ、（もちろん）このプロジェクトはありえませんでしたし、今後も継続的に利用可能な新語辞書を作れるのは、wikipedia あってこそです。
+Wikipedia 日本語版の貢献者各位に感謝いたします。
