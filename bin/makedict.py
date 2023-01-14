@@ -3,8 +3,12 @@ from jawiki.skkdict import merge_skkdict, parse_skkdict, write_skkdict
 import logging
 import jaconv
 
-
 # post_validator.py で機械的にはとりのぞきにくいエントリを、このフェーズで除外。
+
+IGNORE_KANJIS = set([
+    '雌鳥王', # ヘン https://ja.wikipedia.org/wiki/%E3%83%8F%E3%83%BC%E3%83%A9%E3%83%AB3%E4%B8%96_(%E3%83%87%E3%83%B3%E3%83%9E%E3%83%BC%E3%82%AF%E7%8E%8B)
+])
+
 IGNORE_YOMIS = set(
     [
         'てれび',
@@ -158,6 +162,9 @@ def should_skip(kanji, yomi, skkdict):
         return False
 
     if kanji in skkdict[yomi]:
+        return True
+
+    if kanji in IGNORE_KANJIS:
         return True
 
     # おめが /冥王計画ゼオライマーΩ/闘神都市Ω/
