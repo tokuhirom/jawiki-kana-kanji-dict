@@ -130,6 +130,10 @@ IGNORE_YOMIS = set(
         'ただし',
         # だぶるぜーたばーじょん Chai Maxx -ZZ ver.-,DNA狂詩曲 -ZZ ver.-,GOUNN -ZZ ver.-,MOON PRIDE -ZZ ver.-,Moon Revenge -ZZ ver.-,My Dear Fellow -ZZ ver.-,ZZ ver.,全力少女 -ZZ ver.-,月虹 -ZZ ver.-,白い風 -ZZ ver.-
         'だぶるぜーたばーじょん',
+        # きょうのほんこん /今日の香港、明日の台湾、明後日の沖縄/
+        # きょうのほんこんあすのたいわん /今日の香港、明日の台湾/
+        'きょうのほんこん',
+        'きょうのほんこんあすのたいわん',
     ])
 
 
