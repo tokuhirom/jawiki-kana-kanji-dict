@@ -12,6 +12,8 @@ from jawiki.jachars import HIRAGANA_BLOCK, KATAKANA_BLOCK, \
 INVALID_KANJI_PATTERNS = [
     # 9代式守伊之助
     re.compile(r'^\d+(月|世紀|年代|代|年)'),
+    # 第42回NHK紅白歌合戦
+    re.compile(r'^第\d+回'),
     # TITLE<<Intel 4004>> KANJI<<4004>> YOMI<<よんまるまるよん>> 8
     re.compile(r'^[0-9]+$'),
     # '''10.『七変化狸御殿』'''（しちへんげ たぬきごてん）
