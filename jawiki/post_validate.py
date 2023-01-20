@@ -66,7 +66,7 @@ class PostValidator:
         if msg:
             return msg
 
-        msg = self.__validate_with_janome(kanji, yomi)
+        msg = self.__validate_with_jaconv(kanji, yomi)
         if msg:
             return msg
 
@@ -177,7 +177,7 @@ class PostValidator:
 
     # うちゅうけいじたましい /宇宙刑事魂 THE SPACE SHERIFF SPIRITS/
     # のようなケースを除外したい。
-    def __validate_with_janome(self, kanji, yomi):
+    def __validate_with_jaconv(self, kanji, yomi):
         # しくらちよまる /志倉千代丸/ が、「こころざしくらちよまる」になるケースを特別に除外する
         # きしなみかお /岸波香桜/ -> *きしなみかお*りさくら
         # くらちれお /倉知玲鳳/ -> *くらちれお*おとり
@@ -185,20 +185,20 @@ class PostValidator:
             if c in kanji:
                 return None
 
-        janome_yomi = jaconv.kata2hira(''.join(
+        jaconv_yomi = jaconv.kata2hira(''.join(
             [n.reading if str(n.reading) != '*' else n.base_form for n in self.tokenizer.tokenize(kanji)]))
-        normalized_janome_yomi = normalize_hiragana(janome_yomi)
+        normalized_jaconv_yomi = normalize_hiragana(jaconv_yomi)
         normalized_yomi = normalize_hiragana(yomi)
 
-        self.logger.debug(f"yomi={yomi} normalized_yomi={normalized_yomi}, janome_yomi={janome_yomi},"
-                          f" normalized_janome_yomi={normalized_janome_yomi}")
-        if normalized_yomi in normalized_janome_yomi:
-            extra = len(re.sub(normalized_yomi, '', normalized_janome_yomi, 1))
+        self.logger.debug(f"yomi={yomi} normalized_yomi={normalized_yomi}, jaconv_yomi={jaconv_yomi},"
+                          f" normalized_jaconv_yomi={normalized_jaconv_yomi}")
+        if normalized_yomi in normalized_jaconv_yomi:
+            extra = len(re.sub(normalized_yomi, '', normalized_jaconv_yomi, 1))
 
             # 2 に意味はない。
-            # 愛植男=あいうえお が janome だと あいうえおとこ になるのの救済をしている。
+            # 愛植男=あいうえお が jaconv だと あいうえおとこ になるのの救済をしている。
             if extra > 3:
-                return f"kanji may contain extra chars(janome): janome_yomi={janome_yomi}"
+                return f"kanji may contain extra chars(jaconv): jaconv_yomi={jaconv_yomi}"
             else:
                 return None
 
