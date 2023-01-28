@@ -11,7 +11,7 @@ class PreValidator:
                              f'title={title}, kanji={kanji}, yomi={yomi}')
             return False
 
-        for yomi_prefix in ['[[', 'いま、', 'あるいは', 'もしくは', '▢']:
+        for yomi_prefix in ['[[', 'いま、', 'あるいは', 'もしくは', 'のうち、', '▢']:
             if yomi.startswith(yomi_prefix):
                 self.logger.info(f'ignorable yomi prefix: {yomi_prefix}. ' +
                                  f'title={title}, kanji={kanji}, yomi={yomi}')
