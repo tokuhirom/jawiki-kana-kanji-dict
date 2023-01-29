@@ -16,7 +16,7 @@ dat/jawiki-latest-pages-articles.xml.bz2:
 	wget --no-verbose --no-clobber -O dat/jawiki-latest-pages-articles.xml.bz2 https://dumps.wikimedia.org/jawiki/latest/jawiki-latest-pages-articles.xml.bz2
 
 dat/jawiki-latest-pages-articles.xml: dat/jawiki-latest-pages-articles.xml.bz2
-	bunzip2 --keep dat/jawiki-latest-pages-articles.xml.bz2
+	bunzip2 --keep --force dat/jawiki-latest-pages-articles.xml.bz2
 
 dat/grepped.txt: dat/jawiki-latest-pages-articles.xml
 	grep -E "<title>.*</title>|'''[』|（(]" dat/jawiki-latest-pages-articles.xml > dat/grepped.txt
