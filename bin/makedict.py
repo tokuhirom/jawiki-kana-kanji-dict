@@ -178,6 +178,10 @@ def should_skip(kanji, yomi, skkdict):
             logging.debug("skipped entry: yomi=%s skk_kanji=%s kanji=%s" % (yomi, skk_kanji, kanji))
             return True
 
+    # 読みの方が短いものは除去する
+    if len(kanji) > len(yomi):
+        return True
+
     return False
 
 
