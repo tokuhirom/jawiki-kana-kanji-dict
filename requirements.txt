@@ -1,5 +1,5 @@
 jaconv==0.3.3
-python-Levenshtein==0.12.0
+python-Levenshtein==0.20.9
 romkan==0.2.1
 Janome==0.4.2
 
