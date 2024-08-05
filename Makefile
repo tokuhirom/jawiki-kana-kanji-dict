@@ -12,11 +12,8 @@ test:
 	autopep8 --max-line-length 180 -i *.py */*.py
 	flake8 . --count --exit-zero --max-complexity=30 --max-line-length=1200 --statistics
 
-dat/jawiki-latest-pages-articles.xml.bz2:
-	wget --no-verbose --no-clobber -O dat/jawiki-latest-pages-articles.xml.bz2 https://dumps.wikimedia.org/jawiki/latest/jawiki-latest-pages-articles.xml.bz2
-
-dat/jawiki-latest-pages-articles.xml: dat/jawiki-latest-pages-articles.xml.bz2
-	bunzip2 --keep --force dat/jawiki-latest-pages-articles.xml.bz2
+dat/jawiki-latest-pages-articles.xml:
+	curl -s https://dumps.wikimedia.org/jawiki/latest/jawiki-latest-pages-articles.xml.bz2 | bunzip2 > dat/jawiki-latest-pages-articles.xml
 
 dat/grepped.txt: dat/jawiki-latest-pages-articles.xml
 	grep -E "<title>.*</title>|'''[』|（(]" dat/jawiki-latest-pages-articles.xml > dat/grepped.txt
