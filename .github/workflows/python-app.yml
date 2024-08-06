@@ -61,12 +61,14 @@ jobs:
         lindera build --build-user-dic --dic-type ipadic lindera-userdic.csv ./
     - name: Commit
       run: |
-        git config --global user.email "tokuhriom@gmail.com"
-        git config --global user.name "tokuhirom by github actions"
+        git config --global user.name 'github-actions[bot]'
+        git config --global user.email 'github-actions[bot]@users.noreply.github.com'
         git diff --quiet && git diff --staged --quiet || git commit -a -m 'Update dictionary'
     - name: push
       run: git push origin master
       if: github.ref == 'refs/heads/master'
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     - name: Check result
       run: |
         make check
