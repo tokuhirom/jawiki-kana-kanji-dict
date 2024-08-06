@@ -3,7 +3,7 @@ import re
 from typing import Optional
 
 import jaconv
-import romkan
+import jawiki.romkan
 
 from jawiki.jachars import HIRAGANA_BLOCK, KATAKANA_BLOCK, \
     is_hiragana, HIRAGANA_NORMALIZER, \
