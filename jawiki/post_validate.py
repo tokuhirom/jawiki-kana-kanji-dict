@@ -3,7 +3,7 @@ import re
 from typing import Optional
 
 import jaconv
-import jawiki.romkan
+from jawiki.romkan import to_roma
 
 from jawiki.jachars import HIRAGANA_BLOCK, KATAKANA_BLOCK, \
     is_hiragana, HIRAGANA_NORMALIZER, \
@@ -98,7 +98,7 @@ class PostValidator:
             # など。
             return f'yomi is tooooo long! {len(yomi)}<2'
 
-        if len(romkan.to_roma(yomi)) * 1.5 < len(kanji):
+        if len(to_roma(yomi)) * 1.5 < len(kanji):
             return 'yomi is too short...'
 
         if not is_hiragana(yomi):
