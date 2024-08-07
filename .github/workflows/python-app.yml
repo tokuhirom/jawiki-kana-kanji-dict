@@ -34,10 +34,10 @@ jobs:
       with:
         command: install
         args: lindera-cli --features ipadic
-    - name: Set up Python 3.8
+    - name: Set up Python 3.12
       uses: actions/setup-python@v5
       with:
-        python-version: 3.8
+        python-version: 3.12
     - name: Install dependencies
       run: |
         sudo apt-get install skkdic skkdic-extra
