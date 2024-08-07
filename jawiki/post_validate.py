@@ -55,6 +55,9 @@ INVALID_KANJI_PATTERNS = [
     re.compile(r'^.*[都道府県]の(観光地|高校入試|資格者配置路線|城|記念物|ワイン|石材用手押軌道群|高校野球|ラーメン|人口統計|年表|暴力団|苗字|高等学校設立年表|年中行事|花街道|文学史)$'),
     re.compile(r'^.*(に関する特別措置法|に関する政令|を提供する法律|との間の協定|ニ関スル法律|に関する省令|を改正する法律)$'),
     re.compile(r'^地域医療連携推進法人.+$'),
+    # https://github.com/tokuhirom/jawiki-kana-kanji-dict/issues/20
+    re.compile(r'^.*のゲーム$'),
+    re.compile(r'^.*の用語$'),
     # のろわれたむら /呪われた村<ジェルサレムズ・ロット>/
     re.compile(r'.*[<>].*'),
 ]
