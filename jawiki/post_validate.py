@@ -58,6 +58,8 @@ INVALID_KANJI_PATTERNS = [
     # https://github.com/tokuhirom/jawiki-kana-kanji-dict/issues/20
     re.compile(r'^.*のゲーム$'),
     re.compile(r'^.*の用語$'),
+    # ししょうしりーずししょうとぼくと /師匠シリーズ 〜師匠と僕と〜/
+    re.compile(r'^.*〜.*〜.*$'),
     # のろわれたむら /呪われた村<ジェルサレムズ・ロット>/
     re.compile(r'.*[<>].*'),
 ]
