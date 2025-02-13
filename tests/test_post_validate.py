@@ -3,7 +3,7 @@ from janome.tokenizer import Tokenizer
 
 from jawiki.post_validate import PostValidator
 
-tokenizer = Tokenizer("user_simpledic.csv", udic_type="simpledic", udic_enc="utf8")
+tokenizer = Tokenizer("../user_simpledic.csv", udic_type="simpledic", udic_enc="utf8")
 f = PostValidator(tokenizer)
 
 
