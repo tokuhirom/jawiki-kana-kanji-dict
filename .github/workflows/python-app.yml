@@ -58,7 +58,7 @@ jobs:
         make
     - name: Build lindera binary user dict
       run: |
-        lindera build --build-user-dic --dic-type ipadic lindera-userdic.csv ./
+        lindera build --build-user-dictionary --dictionary-kind ipadic lindera-userdic.csv ./
     - name: Commit
       run: |
         git config --global user.name 'github-actions[bot]'
