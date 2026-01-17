@@ -21,19 +21,6 @@ jobs:
       with:
         submodules: true
         lfs: true
-    - uses: actions/cache@v4
-      with:
-        path: |
-          ~/.cargo/registry
-          ~/.cargo/git
-        key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
-    - uses: actions-rs/toolchain@v1
-      with:
-        toolchain: stable
-    - uses: actions-rs/cargo@v1
-      with:
-        command: install
-        args: lindera-cli --features ipadic
     - name: Set up Python 3.12
       uses: actions/setup-python@v5
       with:
@@ -56,9 +43,6 @@ jobs:
     - name: make
       run: |
         make
-    - name: Build lindera binary user dict
-      run: |
-        lindera build --build-user-dictionary --dictionary-kind ipadic lindera-userdic.csv ./
     - name: Commit
       run: |
         git config --global user.name 'github-actions[bot]'
