@@ -28,7 +28,7 @@ jobs:
         run: uv run pytest
 
   build-and-release:
-    if: github.ref == 'refs/heads/master' && (github.event_name == 'push' || github.event_name == 'schedule' || github.event_name == 'workflow_dispatch')
+    if: github.ref == 'refs/heads/master' && (github.event_name == 'schedule' || github.event_name == 'workflow_dispatch')
     needs: test
     runs-on: ubuntu-latest
     permissions:
@@ -50,10 +50,7 @@ jobs:
       - name: Create calver tag
         id: tag
         run: |
-          TAG="v$(date +%Y.%m.%d)"
-          if git rev-parse "$TAG" >/dev/null 2>&1; then
-            TAG="${TAG}.${GITHUB_RUN_NUMBER}"
-          fi
+          TAG="v$(date -u +%Y.%m.%d.%H%M%S)"
           echo "tag=$TAG" >> "$GITHUB_OUTPUT"
       - name: Release
         uses: softprops/action-gh-release@v2
