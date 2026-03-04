@@ -3,13 +3,11 @@ import logging
 
 from jawiki import pre_validate
 
-logging.basicConfig(filename='logs/pre_validate.log', level=logging.INFO)
+logging.basicConfig(filename="logs/pre_validate.log", level=logging.INFO)
 
 t0 = time.time()
 
-with open('dat/scanned.tsv', 'r', encoding='utf-8') as rfp, \
-        open('dat/pre_validated.tsv', 'w', encoding='utf-8') as wfp:
-
+with open("dat/scanned.tsv", "r", encoding="utf-8") as rfp, open("dat/pre_validated.tsv", "w", encoding="utf-8") as wfp:
     pre_validator = pre_validate.PreValidator()
     for line in rfp:
         cols = line.strip().split("\t")

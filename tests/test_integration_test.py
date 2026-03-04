@@ -10,7 +10,7 @@ pre_validator = PreValidator()
 post_validator = PostValidator(tokenizer)
 
 testdata = []
-with open('tests/mapping.tsv', 'r') as fp:
+with open("tests/mapping.tsv", "r") as fp:
     for line in fp:
         m = line.strip().split("\t")
         if len(m) == 3:

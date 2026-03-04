@@ -3,14 +3,14 @@ import re
 
 def scan_until_closing_paren(s, start_level=1):
     level = start_level
-    yomi = ''
+    yomi = ""
     for i in range(len(s)):
-        if s[i] == '（' or s[i] == '(':
+        if s[i] == "（" or s[i] == "(":
             level += 1
-        elif s[i] == '）' or s[i] == ')':
+        elif s[i] == "）" or s[i] == ")":
             level -= 1
             if level == 0:
-                s = s[i+1:]
+                s = s[i + 1 :]
                 return s, yomi
         yomi += s[i]
 
@@ -23,7 +23,9 @@ def scan_until_closing_paren(s, start_level=1):
 # '''漢字'''（ふりがな）
 # 『'''漢字'''』（ふりがな）
 # 『'''EX大衆'''（イーエックスたいしゅう）』
-YOMI_PATTERN = re.compile(r"""\{\{読み仮名\|'''(.+?)'''\|([^|]+?)\|?(?:\{\{[^}]+\}\})?\}\}|'''([^']+)'''[^（』]|'''(.+?)'''（(.+?)(?:[）\)]|$)|『'''(.+?)'''』?（(.+?)(?:[）\)]|$)""")
+YOMI_PATTERN = re.compile(
+    r"""\{\{読み仮名\|'''(.+?)'''\|([^|]+?)\|?(?:\{\{[^}]+\}\})?\}\}|'''([^']+)'''[^（』]|'''(.+?)'''（(.+?)(?:[）\)]|$)|『'''(.+?)'''』?（(.+?)(?:[）\)]|$)"""
+)
 
 
 def scan_words(s):
@@ -33,12 +35,12 @@ def scan_words(s):
             # {{読み仮名|'''漢字'''|かな}}
             if m[1] and m[2]:
                 yield m[1], m[2]
-                s = s[m.end():]
+                s = s[m.end() :]
                 continue
 
             # （='''糞掃'''）
             if m[3]:
-                s = s[m.end():]
+                s = s[m.end() :]
                 continue
 
             # '''漢字'''（ふりがな）
@@ -46,12 +48,12 @@ def scan_words(s):
                 if m[i] and m[j]:
                     kanji = m[i]
                     yomi = m[j]
-                    if '（' in yomi:
-                        s = s[m.end():]
-                        s, ext_yomi = scan_until_closing_paren(s, start_level=yomi.count('（')+0)
-                        yomi += '）' + ext_yomi
+                    if "（" in yomi:
+                        s = s[m.end() :]
+                        s, ext_yomi = scan_until_closing_paren(s, start_level=yomi.count("（") + 0)
+                        yomi += "）" + ext_yomi
                     else:
-                        s = s[m.end():]
+                        s = s[m.end() :]
                     yield kanji, yomi
                     break
 

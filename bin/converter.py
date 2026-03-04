@@ -16,14 +16,12 @@ def converter_worker(chunk):
     return results
 
 
-if __name__ == '__main__':
-    with open('dat/converted.tsv', 'w', encoding='utf-8') as ofh:
+if __name__ == "__main__":
+    with open("dat/converted.tsv", "w", encoding="utf-8") as ofh:
+
         def converter_writer(result):
             kanji, yomi = result
             ofh.write(f"{kanji}\t{yomi}\n")
 
         file_processor = FileProcessor()
-        file_processor.run(
-            'dat/pre_validated.tsv', converter_worker,
-            converter_writer
-        )
+        file_processor.run("dat/pre_validated.tsv", converter_worker, converter_writer)

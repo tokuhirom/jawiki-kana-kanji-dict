@@ -13,3 +13,5 @@ __pycache__
 /post_validated.tsv
 /logs/*.log
 /build/
+SKK-JISYO.jawiki
+mecab-userdic.csv

@@ -7,10 +7,9 @@ check: SKK-JISYO.jawiki
 	pytest check.py
 
 test:
-	pytest
-	pyflakes *.py */*.py
-	autopep8 --max-line-length 180 -i *.py */*.py
-	flake8 . --count --exit-zero --max-complexity=30 --max-line-length=1200 --statistics
+	uv run ruff check .
+	uv run ruff format --check .
+	uv run pytest
 
 dat/jawiki-latest-pages-articles.xml:
 	curl -s https://dumps.wikimedia.org/jawiki/latest/jawiki-latest-pages-articles.xml.bz2 | bunzip2 > dat/jawiki-latest-pages-articles.xml

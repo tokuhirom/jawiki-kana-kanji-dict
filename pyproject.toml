@@ -1,0 +1,24 @@
+[project]
+name = "jawiki-kana-kanji-dict"
+version = "0.0.0"
+description = "Japanese Wikipedia based kana-kanji dictionary"
+license = "MIT"
+requires-python = ">=3.12"
+dependencies = [
+    "jaconv>=0.5.0",
+    "python-Levenshtein>=0.27.3",
+    "Janome>=0.5.0",
+]
+
+[dependency-groups]
+dev = ["pytest", "ruff"]
+
+[tool.ruff]
+line-length = 180
+
+[tool.ruff.lint]
+select = ["E", "F", "W"]
+ignore = ["E501", "E731"]
+
+[tool.pytest.ini_options]
+disable_test_id_escaping_and_forfeit_all_rights_to_community_support = true

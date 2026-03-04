@@ -21,9 +21,9 @@ def worker(chunk):
     return results
 
 
-if __name__ == '__main__':
-    with open(f"logs/skipped-{datetime.now().strftime('%Y%m%d%H%M%S')}.log", 'w', encoding='utf-8') as skipfp, \
-            open('dat/post_validated.tsv', 'w', encoding='utf-8') as wfp:
+if __name__ == "__main__":
+    with open(f"logs/skipped-{datetime.now().strftime('%Y%m%d%H%M%S')}.log", "w", encoding="utf-8") as skipfp, open("dat/post_validated.tsv", "w", encoding="utf-8") as wfp:
+
         def writer(result):
             kanji, yomi, skip_reason = result
             if skip_reason:
@@ -32,7 +32,4 @@ if __name__ == '__main__':
                 wfp.write(f"{kanji}\t{yomi}\n")
 
         file_processor = FileProcessor()
-        file_processor.run(
-            'dat/converted.tsv', worker,
-            writer
-        )
+        file_processor.run("dat/converted.tsv", worker, writer)

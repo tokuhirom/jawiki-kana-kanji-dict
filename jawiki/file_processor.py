@@ -19,7 +19,7 @@ class FileProcessor:
         numprocs = mp.cpu_count()
         pool = mp.Pool(processes=numprocs)
         results_pool = []
-        with open(srcfname, 'r', encoding='utf-8') as fp:
+        with open(srcfname, "r", encoding="utf-8") as fp:
             buf = []
             for line in fp:
                 buf.append(line)
