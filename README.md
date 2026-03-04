@@ -4,16 +4,19 @@
 
 wikipedia 日本語版のデータを元に、SKK/MeCab の辞書をつくるスクリプトです。
 
-github actions で wikipedia から定期的にデータを取得して https://github.com/tokuhirom/skk-jisyo-jawiki/blob/master/SKK-JISYO.jawiki を、定期的に更新するようにしています。
-(github actions を利用することで、メンテナが何もしなくても自動的に更新されることを期待しています。)
+GitHub Actions で Wikipedia から定期的にデータを取得して辞書を生成し、[GitHub Releases](https://github.com/tokuhirom/jawiki-kana-kanji-dict/releases) で配布しています。
+
+## ダウンロード
+
+最新の辞書ファイルは [GitHub Releases](https://github.com/tokuhirom/jawiki-kana-kanji-dict/releases/latest) からダウンロードできます。
+
+- `SKK-JISYO.jawiki` - SKK 辞書
+- `mecab-userdic.csv` - MeCab ユーザー辞書
 
 ## Requirements
 
- * python 3.4+
-    * jaconv
-    * pytests
-    * Levenshtein
-    * janome
+ * python 3.12+
+ * [uv](https://docs.astral.sh/uv/)
  * bunzip2
  * gnu make
  * gnu grep
@@ -28,6 +31,8 @@ github actions で wikipedia から定期的にデータを取得して https://
 ## どう動いているのか
 
 `.github/workflows/python-app.yml` が github actions の定義ファイルです。これにより、定期的に辞書ファイルが再生成されます。
+
+Wikipedia のデータソースとしては、CirrusSearch dump ではなく XML dump (`jawiki-latest-pages-articles.xml.bz2`) を使用しています。XML dump の方がダウンロード容量が小さく済むためです。
 
 処理のフローは以下の通りです。試行錯誤/途中のステップのバグ発見しやすいように、複数ステップに分割されています。
 
