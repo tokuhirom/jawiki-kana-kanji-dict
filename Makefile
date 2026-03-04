@@ -18,19 +18,19 @@ dat/grepped.txt: dat/jawiki-latest-pages-articles.xml
 	grep -E "<title>.*</title>|'''[』|（(]" dat/jawiki-latest-pages-articles.xml > dat/grepped.txt
 
 dat/scanned.tsv: dat/grepped.txt bin/scanner.py jawiki/scanner.py
-	python3 bin/scanner.py
+	uv run python3 bin/scanner.py
 
 dat/pre_validated.tsv: dat/scanned.tsv bin/pre_validator.py jawiki/pre_validate.py
-	python3 bin/pre_validator.py
+	uv run python3 bin/pre_validator.py
 
 dat/converted.tsv: dat/pre_validated.tsv bin/converter.py jawiki/converter.py jawiki/hojin.py jawiki/jachars.py
-	python3 bin/converter.py
+	uv run python3 bin/converter.py
 
 dat/post_validated.tsv: dat/converted.tsv bin/post_validator.py jawiki/post_validate.py user_simpledic.csv
-	python3 bin/post_validator.py
+	uv run python3 bin/post_validator.py
 
 SKK-JISYO.jawiki: dat/post_validated.tsv bin/makedict.py jawiki/skkdict.py
-	python3 bin/makedict.py /usr/share/skk/SKK-JISYO.L /usr/share/skk/SKK-JISYO.jinmei /usr/share/skk/SKK-JISYO.geo
+	uv run python3 bin/makedict.py /usr/share/skk/SKK-JISYO.L /usr/share/skk/SKK-JISYO.jinmei /usr/share/skk/SKK-JISYO.geo
 
 .PHONY: all test check
 
