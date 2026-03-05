@@ -275,6 +275,10 @@ def preproc(dic, skkdict):
     for y in IGNORE_YOMIS:
         dic.pop(y, None)
 
+    # 読みが長音記号「ー」で始まるエントリを除外する
+    for y in [k for k in dic if k.startswith("ー")]:
+        dic.pop(y)
+
     # remove entries in skk dict.
     for yomi in sorted(dic.keys()):
         dic[yomi] = [kanji for kanji in sorted(set(dic[yomi])) if not should_skip(kanji, yomi, skkdict)]
