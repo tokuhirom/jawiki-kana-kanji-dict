@@ -102,7 +102,7 @@ class PostValidator:
             #
             # きゃぷてんつばさせかいだいけっせんじゅにあわーるどかっぷ /キャプテン翼世界大決戦!! Jr.ワールドカップ/
             # など。
-            return f"yomi is tooooo long! {len(yomi)}<2"
+            return f"yomi is tooooo long! {len(yomi)}>=20"
 
         if len(to_roma(yomi)) * 1.5 < len(kanji):
             return "yomi is too short..."

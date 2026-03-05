@@ -27,8 +27,6 @@ class WikipediaXmlScanner:
 
                 if not ignorable:
                     for m in scanner.scan_words(line):
-                        if title == "令和":
-                            print(title, m[0], m[1])
                         yield (title, m[0], m[1])
 
     def is_ignorable_title(self, title):
