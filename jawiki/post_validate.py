@@ -7,6 +7,11 @@ from jawiki.romkan import to_roma
 
 from jawiki.jachars import HIRAGANA_BLOCK, KATAKANA_BLOCK, is_hiragana, HIRAGANA_NORMALIZER, normalize_hiragana
 
+_RE_KATAKANA_PREFIX = re.compile(r"^([" + KATAKANA_BLOCK + "]+)")
+_RE_HIRAGANA_PARTS = re.compile(r"([" + HIRAGANA_BLOCK + "]+)")
+_RE_KATAKANA_POSTFIX = re.compile(r".*?([" + KATAKANA_BLOCK + "]+)$")
+_RE_KANA_ONLY = re.compile(r"^([" + HIRAGANA_BLOCK + KATAKANA_BLOCK + "]+)$")
+
 INVALID_KANJI_PATTERNS = [
     # 9代式守伊之助
     re.compile(r"^\d+(月|世紀|年代|代|年)"),
@@ -73,17 +78,17 @@ class PostValidator:
         self.logger = logger
 
     def post_validate(self, kanji, yomi) -> Optional[str]:
-        msg = self.__validate_basic(kanji, yomi)
+        msg = self._validate_basic(kanji, yomi)
         if msg:
             return msg
 
-        msg = self.__validate_with_jaconv(kanji, yomi)
+        msg = self._validate_with_jaconv(kanji, yomi)
         if msg:
             return msg
 
         return None
 
-    def __validate_basic(self, kanji, yomi):
+    def _validate_basic(self, kanji, yomi):
         if len(kanji) == 0:
             return "kanji is empty"
 
@@ -162,7 +167,7 @@ class PostValidator:
 
         # katakana prefix
         normalized_yomi = normalize_hiragana(yomi)
-        m = re.match(r"^([" + KATAKANA_BLOCK + "]+)", kanji)
+        m = _RE_KATAKANA_PREFIX.match(kanji)
         if m:
             prefix = m[1]
             prefix_hira = normalize_hiragana(jaconv.kata2hira(prefix))
@@ -170,13 +175,13 @@ class PostValidator:
                 return f"Kanji prefix and yomi prefix aren't same: normalized_yomi={normalized_yomi} prefix_hira={prefix_hira}"
 
         # '''大切な者との記憶'''（キューブ） のようなものを除外。
-        for k in re.findall(r"([" + HIRAGANA_BLOCK + "]+)", kanji):
+        for k in _RE_HIRAGANA_PARTS.findall(kanji):
             k = normalize_hiragana(k)
             if k not in normalized_yomi:
                 return f"kana yomi and kanji missmatch: normalized_yomi={normalized_yomi}, k={k}"
 
         # katakana postfix
-        m = re.match(r".*?([" + KATAKANA_BLOCK + "]+)$", kanji)
+        m = _RE_KATAKANA_POSTFIX.match(kanji)
         if m:
             postfix = m[1]
             postfix_hira = jaconv.kata2hira(postfix).translate(HIRAGANA_NORMALIZER)
@@ -184,7 +189,7 @@ class PostValidator:
             if not normalized_yomi.endswith(postfix_hira):
                 return f"Kanji postfix and yomi postfix aren't same: normalized_yomi={normalized_yomi} postfix_hira={postfix_hira}"
 
-        m = re.match(r"^([" + HIRAGANA_BLOCK + KATAKANA_BLOCK + "]+)$", kanji)
+        m = _RE_KANA_ONLY.match(kanji)
         if m:
             if normalize_hiragana(jaconv.kata2hira(yomi)) != normalize_hiragana(jaconv.kata2hira(kanji)):
                 return "Kanji != Kana"
@@ -193,7 +198,7 @@ class PostValidator:
 
     # うちゅうけいじたましい /宇宙刑事魂 THE SPACE SHERIFF SPIRITS/
     # のようなケースを除外したい。
-    def __validate_with_jaconv(self, kanji, yomi):
+    def _validate_with_jaconv(self, kanji, yomi):
         # しくらちよまる /志倉千代丸/ が、「こころざしくらちよまる」になるケースを特別に除外する
         # きしなみかお /岸波香桜/ -> *きしなみかお*りさくら
         # くらちれお /倉知玲鳳/ -> *くらちれお*おとり
@@ -207,7 +212,7 @@ class PostValidator:
 
         self.logger.debug(f"yomi={yomi} normalized_yomi={normalized_yomi}, jaconv_yomi={jaconv_yomi}, normalized_jaconv_yomi={normalized_jaconv_yomi}")
         if normalized_yomi in normalized_jaconv_yomi:
-            extra = len(re.sub(normalized_yomi, "", normalized_jaconv_yomi, 1))
+            extra = len(normalized_jaconv_yomi.replace(normalized_yomi, "", 1))
 
             # 2 に意味はない。
             # 愛植男=あいうえお が jaconv だと あいうえおとこ になるのの救済をしている。
