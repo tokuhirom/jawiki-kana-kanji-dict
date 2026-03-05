@@ -32,44 +32,8 @@
 # (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 # SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-from __future__ import unicode_literals
-
 import re
-
-try:
-    from functools import cmp_to_key
-except ImportError:
-    # for python < 3.2; nicked from python 3.2
-    def cmp_to_key(mycmp):
-        """Convert a cmp= function into a key= function"""
-
-        class K(object):
-            __slots__ = ["obj"]
-
-            def __init__(self, obj):
-                self.obj = obj
-
-            def __lt__(self, other):
-                return mycmp(self.obj, other.obj) < 0
-
-            def __gt__(self, other):
-                return mycmp(self.obj, other.obj) > 0
-
-            def __eq__(self, other):
-                return mycmp(self.obj, other.obj) == 0
-
-            def __le__(self, other):
-                return mycmp(self.obj, other.obj) <= 0
-
-            def __ge__(self, other):
-                return mycmp(self.obj, other.obj) >= 0
-
-            def __ne__(self, other):
-                return mycmp(self.obj, other.obj) != 0
-
-            __hash__ = None
-
-        return K
+from functools import cmp_to_key
 
 
 #
