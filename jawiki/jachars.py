@@ -28,24 +28,15 @@ def kanji_normalize(s):
 
 
 def is_hiragana(s):
-    if HIRAGANA_PATTERN.match(s):
-        return True
-    else:
-        return False
+    return bool(HIRAGANA_PATTERN.match(s))
 
 
 def is_katakana(s):
-    if KATAKANA_PATTERN.match(s):
-        return True
-    else:
-        return False
+    return bool(KATAKANA_PATTERN.match(s))
 
 
 def is_kanji(s):
-    if KANJI_PATTERN.match(s):
-        return True
-    else:
-        return False
+    return bool(KANJI_PATTERN.match(s))
 
 
 # きうちきょう /木内キヤウ/
@@ -80,11 +71,16 @@ HIRAGANA_DAKUON_MAP = {
 }
 
 
+_RE_U_DAKUTEN = re.compile("う ゙")
+_RE_ODORIJI = re.compile(r"(.)ゝ")
+_RE_ODORIJI_DAKUON = re.compile(r"(.)ゞ")
+
+
 def normalize_hiragana(s):
     s = jaconv.normalize(s, "NFKC")
-    s = re.sub("う ゙", "ぶ", s)
-    s = re.sub(r"(.)ゝ", r"\1\1", s)
-    s = re.sub(r"(.)ゞ", lambda m: m[1] + HIRAGANA_DAKUON_MAP[m[1]], s)
+    s = _RE_U_DAKUTEN.sub("ぶ", s)
+    s = _RE_ODORIJI.sub(r"\1\1", s)
+    s = _RE_ODORIJI_DAKUON.sub(lambda m: m[1] + HIRAGANA_DAKUON_MAP[m[1]], s)
     ps = s
     while True:
         s = s.translate(HIRAGANA_NORMALIZER)
