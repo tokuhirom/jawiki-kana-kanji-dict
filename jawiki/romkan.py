@@ -426,7 +426,7 @@ ROMKAN.update({"du": "ヅ", "di": "ヂ", "fu": "フ", "ti": "チ", "wi": "ウィ
 _len_cmp = lambda x: -len(x)
 ROMPAT = re.compile("|".join(sorted(ROMKAN.keys(), key=_len_cmp)))
 
-_kanpat_cmp = lambda x, y: (len(y) > len(x)) - (len(y) < len(x)) or (len(KANROM[x]) > len(KANROM[x])) - (len(KANROM[x]) < len(KANROM[x]))
+_kanpat_cmp = lambda x, y: (len(y) > len(x)) - (len(y) < len(x)) or (len(KANROM[y]) > len(KANROM[x])) - (len(KANROM[y]) < len(KANROM[x]))
 KANPAT = re.compile("|".join(sorted(KANROM.keys(), key=cmp_to_key(_kanpat_cmp))))
 
 KUNREI = [y for (x, y) in pairs(re.split(r"\s+", KUNREITAB))]
@@ -466,7 +466,7 @@ ROMKAN_H.update({"du": "づ", "di": "ぢ", "fu": "ふ", "ti": "ち", "wi": "う�
 _len_cmp = lambda x: -len(x)
 ROMPAT_H = re.compile("|".join(sorted(ROMKAN_H.keys(), key=_len_cmp)))
 
-_kanpat_cmp = lambda x, y: (len(y) > len(x)) - (len(y) < len(x)) or (len(KANROM_H[x]) > len(KANROM_H[x])) - (len(KANROM_H[x]) < len(KANROM_H[x]))
+_kanpat_cmp = lambda x, y: (len(y) > len(x)) - (len(y) < len(x)) or (len(KANROM_H[y]) > len(KANROM_H[x])) - (len(KANROM_H[y]) < len(KANROM_H[x]))
 KANPAT_H = re.compile("|".join(sorted(KANROM_H.keys(), key=cmp_to_key(_kanpat_cmp))))
 
 KUNREI_H = [y for (x, y) in pairs(re.split(r"\s+", KUNREITAB_H))]
