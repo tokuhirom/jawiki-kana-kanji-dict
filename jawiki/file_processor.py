@@ -33,13 +33,17 @@ class FileProcessor:
     def write(self, results_pool, writer):
         finished_cnt = 0
         pool_size = len(results_pool)
-        while len(results_pool) > 0:
+        while results_pool:
+            remaining = []
             for r in results_pool:
                 if r.ready():
                     results = r.get()
                     for result in results:
                         writer(result)
                     finished_cnt += 1
-                    results_pool.remove(r)
                     self.logger.info(f"{finished_cnt}/{pool_size}")
-            time.sleep(0.1)
+                else:
+                    remaining.append(r)
+            results_pool = remaining
+            if results_pool:
+                time.sleep(0.1)
