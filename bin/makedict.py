@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
-from jawiki.skkdict import merge_skkdict, parse_skkdict, write_skkdict
 import logging
+import re
+
+from jawiki.skkdict import merge_skkdict, parse_skkdict, write_skkdict
 
 # post_validator.py で機械的にはとりのぞきにくいエントリを、このフェーズで除外。
 
@@ -266,6 +268,12 @@ IGNORE_YOMIS = {
     "ゔぉーかる",  # バンドのメンバー紹介項目
 }
 
+META_PAGE_PATTERNS = (
+    re.compile(r".*年表$"),
+    re.compile(r".*(?:の)?一覧$"),
+    re.compile(r".*用語集$"),
+)
+
 
 def read_filtered(fname):
     result = {}
@@ -296,6 +304,10 @@ def preproc(dic, skkdict):
 
 
 def should_skip(kanji, yomi, skkdict):
+    # メタページ（一覧・年表・用語集）を除外する
+    if any(pattern.fullmatch(kanji) for pattern in META_PAGE_PATTERNS):
+        return True
+
     if yomi not in skkdict:
         return False
 
