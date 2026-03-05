@@ -224,6 +224,8 @@ IGNORE_YOMIS = set(
         "おるがん",
         "そぷらの",
         "ゔぃおら",
+        # ゔぇるんど /神器錬成/
+        "ゔぇるんど",
         "いんでぃーず",
         # さんばーすと /Gibson Les Paul Standard 1959 Historic Collection/
         "さんばーすと",
