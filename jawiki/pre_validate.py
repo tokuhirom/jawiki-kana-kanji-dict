@@ -22,8 +22,8 @@ class PreValidator:
 
         # 「または」で始まるものは基本的に除外したほうがいいが、いくつかだけキャッチアップしよう。
         if yomi.startswith("または"):
-            if len([1 for n in ["またはちろう", "またはりひゃっかてん", "またはり"] if yomi.startswith(n)]) == 0:
-                self.logger.info(f"ignorable yomi prefix: {yomi_prefix}. title={title}, kanji={kanji}, yomi={yomi}")
+            if not any(yomi.startswith(n) for n in ["またはちろう", "またはりひゃっかてん", "またはり"]):
+                self.logger.info(f"ignorable yomi prefix: または. title={title}, kanji={kanji}, yomi={yomi}")
                 return False
 
         if title in [
