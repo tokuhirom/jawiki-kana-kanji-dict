@@ -3,7 +3,7 @@ import re
 
 def scan_until_closing_paren(s, start_level=1):
     level = start_level
-    yomi = ""
+    chars = []
     for i in range(len(s)):
         if s[i] == "（" or s[i] == "(":
             level += 1
@@ -11,11 +11,11 @@ def scan_until_closing_paren(s, start_level=1):
             level -= 1
             if level == 0:
                 s = s[i + 1 :]
-                return s, yomi
-        yomi += s[i]
+                return s, "".join(chars)
+        chars.append(s[i])
 
     # 最後まで対応するコッカが見つからない場合でも、返す。
-    return s, yomi
+    return s, "".join(chars)
 
 
 # {{読み仮名|'''漢字'''|かな}} のパターンを除去する
